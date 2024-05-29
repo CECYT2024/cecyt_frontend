@@ -1,6 +1,7 @@
 import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
 import 'package:app_cecyt/features/home/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
+import 'package:app_cecyt/features/home/start_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,13 +14,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'CECYT App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: LoginPage.path,
+      initialRoute: StartPage.path,
       routes: {
+        StartPage.path: (_) => const StartPage(),
         LoginPage.path: (_) => const LoginPage(),
         HomePage.path: (_) => const HomePage(),
       },
