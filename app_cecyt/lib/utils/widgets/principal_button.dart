@@ -5,19 +5,21 @@ class PrincipalButton extends StatelessWidget {
     required this.titulo,
     required this.color,
     required this.callback,
+    this.colortexto = Colors.white,
+    this.elevacion = 0,
     this.isIcon = false,
     this.icono,
     super.key,
     this.iconoPrincipal,
   });
-
   final String titulo;
   final IconData? icono;
   final IconData? iconoPrincipal;
   final void Function() callback;
   final Color color;
   final bool isIcon;
-
+  final Color colortexto;
+  final double elevacion;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -26,16 +28,14 @@ class PrincipalButton extends StatelessWidget {
         minWidth: MediaQuery.of(context).size.width,
         child: ElevatedButton(
           style: ButtonStyle(
+            elevation: WidgetStatePropertyAll(elevacion),
             backgroundColor: WidgetStateProperty.all(color),
             textStyle: WidgetStateProperty.all<TextStyle>(
-              Theme.of(context)
-                  .textTheme
-                  .headlineLarge!
-                  .copyWith(color: Colors.white),
+              Theme.of(context).textTheme.headlineLarge!.copyWith(color: colortexto),
             ),
             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(10),
                 // side: const BorderSide(color: Colors.transparent),
               ),
             ),
@@ -45,7 +45,7 @@ class PrincipalButton extends StatelessWidget {
           child: isIcon
               ? Icon(
                   iconoPrincipal,
-                  color: Colors.white,
+                  color: colortexto,
                 )
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -54,10 +54,7 @@ class PrincipalButton extends StatelessWidget {
                       child: Center(
                         child: Text(
                           titulo,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(color: Colors.white),
+                          style: Theme.of(context).textTheme.titleLarge!.copyWith(color: colortexto),
                         ),
                       ),
                     ),
