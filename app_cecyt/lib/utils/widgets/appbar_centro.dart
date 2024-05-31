@@ -6,6 +6,7 @@ class AppbarCentro extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.white,
       toolbarHeight: 100,
       title: Center(
         child: Image.asset(
