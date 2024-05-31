@@ -50,12 +50,10 @@ class PrincipalButton extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          titulo,
-                          style: Theme.of(context).textTheme.titleLarge!.copyWith(color: colortexto),
-                        ),
+                    Center(
+                      child: Text(
+                        titulo,
+                        style: Theme.of(context).textTheme.titleLarge!.copyWith(color: colortexto),
                       ),
                     ),
                     if (icono != null)

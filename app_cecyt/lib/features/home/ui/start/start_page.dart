@@ -12,31 +12,30 @@ class StartPage extends StatelessWidget {
       appBar: const AppbarCentro(),
       body: Column(
         children: [
+          Image.asset(
+            'assets/ejemplo.png',
+            scale: 3,
+          ),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(
-                width: 50,
+                width: 10,
               ),
-              SizedBox(
-                //Agregado porque da errores
-                height: 50,
-                width: 300,
-                child: PrincipalButton(
-                  titulo: 'Iniciar Sesion', //TODO:deberia ser una variable donde cambie si es que se inicio sesion
-                  color: Colors.white,
-                  colortexto: Colors.black,
-                  elevacion: 10,
-                  callback: () {
-                    Navigator.of(context).pushNamed('/login');
-                  },
-                ),
+              PrincipalButton(
+                titulo: 'Iniciar Sesión', //TODO:deberia ser una variable donde cambie si es que se inicio sesion
+                color: Colors.white,
+                colortexto: Colors.black,
+                elevacion: 10,
+                callback: () {
+                  Navigator.of(context).pushNamed('/login');
+                },
               ),
               const SizedBox(
-                width: 50,
+                width: 10,
               )
             ],
-          )
+          ),
         ],
       ),
     );
