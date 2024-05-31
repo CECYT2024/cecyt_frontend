@@ -1,4 +1,5 @@
 import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
+import 'package:app_cecyt/features/home/ui/pages/logout_page.dart';
 import 'package:app_cecyt/features/home/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:app_cecyt/features/home/ui/start/start_page.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         StartPage.path: (_) => const StartPage(),
         LoginPage.path: (_) => const LoginPage(),
-        HomePage.path: (_) => const HomePage(),
+        LogoutPage.path: (_) => const LogoutPage(),
       },
     );
   }

@@ -9,8 +9,10 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: const AppbarCentro(),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.asset(
             'assets/ejemplo.png',
@@ -23,10 +25,11 @@ class StartPage extends StatelessWidget {
                 width: 10,
               ),
               PrincipalButton(
-                titulo: 'Iniciar Sesión', //TODO:deberia ser una variable donde cambie si es que se inicio sesion
+                titulo:
+                    'Iniciar Sesión', //TODO:deberia ser una variable donde cambie si es que se inicio sesion
                 color: Colors.white,
                 colortexto: Colors.black,
-                elevacion: 10,
+                elevacion: 5,
                 callback: () {
                   Navigator.of(context).pushNamed('/login');
                 },
@@ -36,6 +39,32 @@ class StartPage extends StatelessWidget {
               )
             ],
           ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              const SizedBox(
+                width: 10,
+              ),
+              ElevatedButton(
+                style: const ButtonStyle(
+                    shape: WidgetStatePropertyAll(ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)))),
+                    backgroundColor: WidgetStatePropertyAll(Colors.white)),
+                onPressed: () {},
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'assets/foto1.jpg',
+                      scale: 10,
+                    ),
+                    const Text('Cyt League')
+                  ],
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );

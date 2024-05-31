@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-  static const String path = '/home';
+class LogoutPage extends StatelessWidget {
+  const LogoutPage({super.key});
+  static const String path = '/logout';
 
   @override
   Widget build(BuildContext context) {
