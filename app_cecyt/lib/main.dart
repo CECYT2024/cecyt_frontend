@@ -3,6 +3,8 @@ import 'package:app_cecyt/features/home/ui/pages/logout_page.dart';
 import 'package:app_cecyt/features/home/ui/pages/pages.dart';
 import 'package:flutter/material.dart';
 import 'package:app_cecyt/features/home/ui/start/start_page.dart';
+import 'package:app_cecyt/utils/widgets/bottom_appbar.dart';
+import 'package:app_cecyt/features/home/ui/pages/calendario_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +13,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,9 +21,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: StartPage.path,
+      home: const NavegatorBar(),
       routes: {
-        StartPage.path: (_) => const StartPage(),
         LoginPage.path: (_) => const LoginPage(),
         LogoutPage.path: (_) => const LogoutPage(),
       },

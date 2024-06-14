@@ -2,7 +2,7 @@ import 'package:app_cecyt/utils/widgets/principal_button.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
-import 'package:app_cecyt/utils/widgets/bottom_appbar.dart';
+//import 'package:app_cecyt/utils/widgets/bottom_appbar.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -11,7 +11,7 @@ class StartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const AppbarCentro(),bottomNavigationBar: const NavegatorBar(),
+      appBar: const AppbarCentro(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
