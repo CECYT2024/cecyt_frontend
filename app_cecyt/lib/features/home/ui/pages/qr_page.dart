@@ -2,9 +2,9 @@ import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:flutter/material.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
 
-class LogoutPage extends StatelessWidget {
-  const LogoutPage({super.key});
-  static const String path = '/logout';
+class QrPage extends StatelessWidget {
+  const QrPage({super.key});
+  static const String path = '/QRpage';
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class LogoutPage extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {},
-          child: const Text('Logout'),
+          child: const Text('Aqui deberia de haber un qr'),
         ),
       ),
     );

@@ -13,9 +13,7 @@ class CalendarPage extends StatelessWidget {
       bottomNavigationBar: const BottomNavCentro(),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/start');
-          },
+          onPressed: () {},
           child: const Text('Calendar'),
         ),
       ),
