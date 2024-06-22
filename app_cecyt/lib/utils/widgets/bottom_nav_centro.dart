@@ -38,7 +38,7 @@ String pageActual(int num) {
     "/start",
     "/calendar",
     "/information",
-    "/login"
+    "/QRpage"
   ];
   return paths[num];
 }
@@ -55,7 +55,7 @@ class BottomNavCentro extends StatelessWidget {
           items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              label: "Home",
+              label: "Inicio",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),
@@ -67,16 +67,21 @@ class BottomNavCentro extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.people),
-              label: "Usuario",
+              label: "Mi QR",
             ),
           ],
           currentIndex: state.selectedIndex,
           selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.black,
+          unselectedItemColor: Colors.grey,
           backgroundColor: Colors.white,
           onTap: (index) {
-            BlocProvider.of<NavigationBloc>(context).add(PageTapped(index));
-            Navigator.of(context).pushNamed(pageActual(index));
+            if (index != state.selectedIndex) {
+              BlocProvider.of<NavigationBloc>(context).add(PageTapped(index));
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                pageActual(index),
+                (route) => false,
+              );
+            }
           },
         );
       },
