@@ -35,6 +35,7 @@ class _QrPageState extends State<QrPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: const AppbarCentro(),
       bottomNavigationBar: const BottomNavCentro(),
       body: Center(
