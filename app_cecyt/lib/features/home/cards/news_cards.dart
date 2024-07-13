@@ -12,9 +12,7 @@ class NewsCardsOne extends StatelessWidget {
       appBar: const AppbarCentro(),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pushNamed('/start');
-          },
+          onPressed: () {},
           child: const Text('Noticias 1'),
         ),
       ),

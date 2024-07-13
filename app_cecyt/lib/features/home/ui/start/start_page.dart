@@ -1,10 +1,13 @@
 // start_page.dart
 import 'package:app_cecyt/features/auth/presentation/bloc/bottom_nav_bloc.dart';
+import 'package:app_cecyt/features/home/cards/news_cards.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
+import 'package:app_cecyt/utils/widgets/card_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
 import 'package:app_cecyt/utils/widgets/principal_button.dart';
+import 'package:page_transition/page_transition.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -30,12 +33,12 @@ class StartPage extends StatelessWidget {
                 width: 10,
               ),
               PrincipalButton(
-                titulo: 'Iniciar Sesión',
+                titulo: 'Iniciar Sesión', //TODO: Tiene que decir Cerrar Sesion si iniciada
                 color: Colors.white,
                 colortexto: Colors.black,
                 elevacion: 5,
                 callback: () {
-                  Navigator.of(context).pushNamed('/login');
+                  Navigator.of(context).popAndPushNamed('/login');
                 },
               ),
               const SizedBox(
@@ -53,62 +56,21 @@ class StartPage extends StatelessWidget {
               //const SizedBox(
               //  width: 15,
               //),
-              ElevatedButton(
-                style: const ButtonStyle(
-                  elevation: WidgetStatePropertyAll(10),
-                  shape: WidgetStatePropertyAll(
-                    ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                  ),
-                  backgroundColor: WidgetStatePropertyAll(Colors.white),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/news1');
-                },
-                child: Column(
-                  children: [
-                    Image.asset(
-                      'assets/foto1.jpg',
-                      scale: 5,
-                    ),
-                    const Text(
-                      textScaler: TextScaler.linear(1),
-                      'Questionario',
-                      style: TextStyle(color: Color.fromARGB(255, 21, 98, 160)),
-                    )
-                  ],
-                ),
-              ),
+              CardImage(
+                  title: "Questionario",
+                  imageassetpath: 'assets/foto1.jpg',
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/news1');
+                  }),
               const SizedBox(
                 width: 20,
               ),
-              ElevatedButton(
-                style: const ButtonStyle(
-                  elevation: WidgetStatePropertyAll(10),
-                  shape: WidgetStatePropertyAll(
-                    ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                  ),
-                  backgroundColor: WidgetStatePropertyAll(Colors.white),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/news2');
-                },
-                child: Column(
-                  children: [
-                    Image.asset(
-                      'assets/foto1.jpg',
-                      scale: 5,
-                    ),
-                    const Text(
-                      'Registro al Innotec',
-                      style: TextStyle(color: Color.fromARGB(255, 21, 98, 160)),
-                    )
-                  ],
-                ),
-              )
+              CardImage(
+                  title: "Registro de Charlas",
+                  imageassetpath: 'assets/foto1.jpg',
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/news2');
+                  })
             ],
           )
         ],

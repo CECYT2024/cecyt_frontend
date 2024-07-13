@@ -1,10 +1,18 @@
 // navigation_event.dart
 
 import 'package:app_cecyt/features/auth/presentation/bloc/bottom_nav_bloc.dart';
+import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
+import 'package:app_cecyt/features/home/ui/start/start_page.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:page_transition/page_transition.dart';
 
+import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/home/ui/pages/calendar_page.dart';
+import '../../features/home/ui/pages/information_page.dart';
+
+//Animaciones para el buttom nav bar
 abstract class NavigationEvent extends Equatable {
   const NavigationEvent();
 }
@@ -77,14 +85,40 @@ class BottomNavCentro extends StatelessWidget {
           onTap: (index) {
             if (index != state.selectedIndex) {
               BlocProvider.of<NavigationBloc>(context).add(PageTapped(index));
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                pageActual(index),
-                (route) => false,
-              );
+              _navigateToPage(context, pageActual(index));
             }
           },
         );
       },
     );
   }
+
+  void _navigateToPage(BuildContext context, String route) {
+    Widget page;
+
+    switch (route) {
+      case '/calendar':
+        page = const CalendarPage();
+        break;
+      case '/information':
+        page = const InformationPage();
+        break;
+      case '/QRpage':
+        page = const QrPage();
+        break;
+      case '/start':
+      default:
+        page = const StartPage();
+    }
+
+    Navigator.pushReplacement(
+      context,
+      PageTransition(
+        alignment: Alignment.center,
+        type: PageTransitionType.fade,
+        child: page,
+      ),
+    );
+  }
+  //Animaciones para el buttom nav bar
 }
