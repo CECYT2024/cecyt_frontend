@@ -11,11 +11,12 @@ class CalendarPage extends StatefulWidget {
 }
 
 class HorarioContainer extends StatelessWidget {
-  const HorarioContainer(this.sala, this.hora, this.name, {super.key});
+  const HorarioContainer(this.sala, this.hora, this.speaker, this.title, {super.key});
 
   final String sala;
   final String hora;
-  final String name;
+  final String speaker;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class HorarioContainer extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.all(8.0),
-      height: 45,
+      height: 80, // Adjusted height to fit the content better
       child: Row(
         children: [
           Expanded(
@@ -43,13 +44,26 @@ class HorarioContainer extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Text(
-              name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  speaker,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+                Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(
@@ -114,7 +128,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: selectedDay == 1
-                      ? const Color.fromARGB(255, 97, 170, 248)
+                      ? Color.fromARGB(255, 102, 178, 236)
                       : Colors.grey, // Color del botón cuando está seleccionado
                 ),
                 child: const Text(
@@ -134,7 +148,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: selectedDay == 2
-                      ? const Color.fromARGB(255, 97, 170, 248)
+                      ? const Color.fromARGB(255, 102, 178, 236)
                       : Colors.grey, // Color del botón cuando está seleccionado
                 ),
                 child: const Text(
@@ -152,40 +166,14 @@ class _CalendarPageState extends State<CalendarPage> {
             child: selectedDay == 1
                 ? ListView(
                     children: const [
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
+                      HorarioContainer('Sala 1', '16:00', 'Speaker 1', 'Title 1'),
+                      HorarioContainer('Sala 2', '18:00', 'Speaker 2', 'Title 2'),
                     ],
                   )
                 : ListView(
                     children: const [
-                      HorarioContainer('Sala 3', '10:00', 'mati'),
-                      HorarioContainer('Sala 4', '12:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mat'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mat'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
-                      HorarioContainer('Sala 1', '16:00', 'mati'),
-                      HorarioContainer('Sala 2', '18:00', 'mati'),
+                      HorarioContainer('Sala 3', '10:00', 'Speaker 3', 'Title 3'),
+                      HorarioContainer('Sala 4', '12:00', 'Speaker 4', 'Title 4'),
                     ],
                   ),
           ),
@@ -194,3 +182,4 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 }
+
