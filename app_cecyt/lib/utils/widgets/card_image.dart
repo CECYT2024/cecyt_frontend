@@ -17,31 +17,44 @@ class CardImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        elevation: WidgetStatePropertyAll(elevacion),
-        shape: const WidgetStatePropertyAll(
-          ContinuousRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: elevacion,
+            offset: const Offset(0, 0),
           ),
-        ),
-        backgroundColor: const WidgetStatePropertyAll(Colors.white),
-      ),
-      onPressed: () {
-        onTap();
-      },
-      child: Column(
-        children: [
-          Image.asset(
-            imageassetpath,
-            scale: escala,
-          ),
-          Text(
-            textScaler: const TextScaler.linear(1),
-            title,
-            style: const TextStyle(color: Color.fromARGB(255, 21, 98, 160)),
-          )
         ],
+      ),
+      child: ElevatedButton(
+        style: const ButtonStyle(
+          shape: WidgetStatePropertyAll(
+            ContinuousRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
+          ),
+          backgroundColor: const WidgetStatePropertyAll(Colors.white),
+        ),
+        onPressed: () {
+          onTap();
+        },
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Image.asset(
+                imageassetpath,
+                scale: escala,
+              ),
+            ),
+            Text(
+              textScaler: const TextScaler.linear(1),
+              title,
+              style: const TextStyle(color: Color.fromARGB(255, 21, 98, 160)),
+            )
+          ],
+        ),
       ),
     );
   }

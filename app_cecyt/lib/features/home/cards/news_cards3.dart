@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class NewsCardsOne extends StatelessWidget {
-  const NewsCardsOne({super.key});
-  static const String path = '/news1';
+class NewsCardsThree extends StatelessWidget {
+  const NewsCardsThree({super.key});
+  static const String path = '/news3';
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class NewsCardsOne extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {},
-          child: const Text('Noticias 1'),
+          child: const Text('Noticias 3'),
         ),
       ),
     );

@@ -1,6 +1,50 @@
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
+
+class Event {
+  final String day;
+  final String place;
+  final String name;
+  final String speaker;
+  final String startTime;
+
+  Event({
+    required this.day,
+    required this.place,
+    required this.name,
+    required this.speaker,
+    required this.startTime,
+  });
+}
+
+final List<Event> events = [
+  Event(
+      day: '1',
+      place: 'Sala 1',
+      name: 'Evento 1',
+      speaker: 'Disertante 1',
+      startTime: '10:00'),
+  Event(
+      day: '1',
+      place: 'Sala 1',
+      name: 'Evento 2',
+      speaker: 'Disertante 2',
+      startTime: '12:00'),
+  Event(
+      day: '2',
+      place: 'Sala 2',
+      name: 'Evento 3',
+      speaker: 'Disertante 3',
+      startTime: '14:00'),
+  Event(
+      day: '2',
+      place: 'Sala 3',
+      name: 'Evento 4',
+      speaker: 'Disertante 4',
+      startTime: '16:00'),
+];
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -22,59 +66,63 @@ class HorarioContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
       decoration: const BoxDecoration(
         color: Color.fromARGB(255, 255, 255, 255),
         border: Border(
-          top: BorderSide(width: 2.0, color: Colors.black),
-          bottom: BorderSide(width: 2.0, color: Colors.black),
+          top: BorderSide(width: 1.0, color: Color.fromARGB(54, 0, 0, 0)),
+          bottom: BorderSide(width: 1.0, color: Color.fromARGB(53, 0, 0, 0)),
         ),
       ),
       padding: const EdgeInsets.all(8.0),
-      height: 80, // Adjusted height to fit the content better
       child: Row(
         children: [
-          Expanded(
-            child: Text(
-              sala,
-              textAlign: TextAlign.left,
-              style: const TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 0, 0, 0),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                sala,
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Color.fromARGB(255, 19, 156, 224),
+                ),
               ),
-            ),
+              Text(
+                hora,
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
+            ],
           ),
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
                   speaker,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.right,
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 12,
                     color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
                 Text(
                   title,
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.right,
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 10,
                     color: Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
               ],
-            ),
-          ),
-          Expanded(
-            child: Text(
-              hora,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 20,
-                color: Color.fromARGB(255, 0, 0, 0),
-              ),
             ),
           ),
         ],
@@ -85,6 +133,12 @@ class HorarioContainer extends StatelessWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   int selectedDay = 1;
+
+  List<Event> getEventsForSelectedDay() {
+    return events
+        .where((event) => event.day == selectedDay.toString())
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +174,7 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ),
           ),
-          const SizedBox(height: 20), // Separación entre el texto y los botones
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -133,7 +187,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: selectedDay == 1
                       ? Color.fromARGB(255, 102, 178, 236)
-                      : Colors.grey, // Color del botón cuando está seleccionado
+                      : Colors.grey,
                 ),
                 child: const Text(
                   'Día 1',
@@ -143,7 +197,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   ),
                 ),
               ),
-              const SizedBox(width: 60), // Separación entre los dos botones
+              const SizedBox(width: 60),
               ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -153,7 +207,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: selectedDay == 2
                       ? const Color.fromARGB(255, 102, 178, 236)
-                      : Colors.grey, // Color del botón cuando está seleccionado
+                      : Colors.grey,
                 ),
                 child: const Text(
                   'Día 2',
@@ -165,27 +219,18 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ],
           ),
-          const SizedBox(
-              height:
-                  20), // Separación entre los botones y los widgets desplazables
+          const SizedBox(height: 10),
           Expanded(
-            child: selectedDay == 1
-                ? ListView(
-                    children: const [
-                      HorarioContainer(
-                          'Sala 1', '16:00', 'Speaker 1', 'Title 1'),
-                      HorarioContainer(
-                          'Sala 2', '18:00', 'Speaker 2', 'Title 2'),
-                    ],
-                  )
-                : ListView(
-                    children: const [
-                      HorarioContainer(
-                          'Sala 3', '10:00', 'Speaker 3', 'Title 3'),
-                      HorarioContainer(
-                          'Sala 4', '12:00', 'Speaker 4', 'Title 4'),
-                    ],
-                  ),
+            child: ListView(
+              children: getEventsForSelectedDay().map((event) {
+                return HorarioContainer(
+                  event.place,
+                  event.startTime,
+                  event.name,
+                  event.speaker,
+                );
+              }).toList(),
+            ),
           ),
         ],
       ),

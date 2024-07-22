@@ -1,13 +1,9 @@
 // start_page.dart
-import 'package:app_cecyt/features/auth/presentation/bloc/bottom_nav_bloc.dart';
-import 'package:app_cecyt/features/home/cards/news_cards.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:app_cecyt/utils/widgets/card_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
 import 'package:app_cecyt/utils/widgets/principal_button.dart';
-import 'package:page_transition/page_transition.dart';
 
 class StartPage extends StatelessWidget {
   const StartPage({super.key});
@@ -32,7 +28,7 @@ class StartPage extends StatelessWidget {
                 titulo:
                     'Iniciar Sesión', //TODO: Tiene que decir Cerrar Sesion si iniciada
                 color: Colors.white,
-                colortexto: Colors.black,
+                colortexto: Color.fromARGB(255, 21, 98, 160),
                 elevacion: 5,
                 callback: () {
                   Navigator.of(context).popAndPushNamed('/login');
@@ -54,6 +50,7 @@ class StartPage extends StatelessWidget {
               //  width: 15,
               //),
               CardImage(
+                  elevacion: 10,
                   title: "QUESTIONARIO",
                   imageassetpath: 'assets/foto1.jpg',
                   onTap: () {
@@ -63,6 +60,7 @@ class StartPage extends StatelessWidget {
                 width: 20,
               ),
               CardImage(
+                  elevacion: 10,
                   title: "INFORMACION",
                   imageassetpath: 'assets/innotec_logo.png',
                   escala: 13.5,
@@ -81,11 +79,22 @@ class StartPage extends StatelessWidget {
               CardImage(
                 title: "ORGANIZADORES INNOTEC 2024",
                 imageassetpath: 'assets/Organizadores.png',
-                onTap: () {},
-                escala: 10,
+                onTap: () {
+                  Navigator.of(context).pushNamed('/news3');
+                },
+                escala: 10.5,
                 elevacion: 10,
-              )
+              ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: PrincipalButton(
+                titulo: 'Administrador',
+                color: Colors.black,
+                callback: () {
+                  Navigator.of(context).pushNamed('/admin');
+                }),
           )
         ],
       ),

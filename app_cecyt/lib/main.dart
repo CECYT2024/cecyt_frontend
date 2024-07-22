@@ -1,6 +1,8 @@
 import 'package:app_cecyt/features/auth/presentation/bloc/bottom_nav_bloc.dart';
+import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/cards/news_cards.dart';
 import 'package:app_cecyt/features/home/cards/news_cards2.dart';
+import 'package:app_cecyt/features/home/cards/news_cards3.dart';
 import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: StartPage.path,
         routes: {
+          AdminCard.path: (_) => const AdminCard(),
           StartPage.path: (_) => const StartPage(),
           CalendarPage.path: (_) => const CalendarPage(),
           LoginPage.path: (_) => const LoginPage(),
@@ -35,6 +38,7 @@ class MyApp extends StatelessWidget {
           QrPage.path: (_) => const QrPage(),
           NewsCardsOne.path: (_) => const NewsCardsOne(),
           NewsCardsTwo.path: (_) => const NewsCardsTwo(),
+          NewsCardsThree.path: (_) => const NewsCardsThree(),
         },
         onGenerateRoute: (settings) {
           // Implementar generación dinámica de rutas si es necesario
