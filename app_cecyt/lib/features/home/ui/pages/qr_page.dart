@@ -12,6 +12,9 @@ class QrPage extends StatefulWidget {
 }
 
 class _QrPageState extends State<QrPage> {
+  final String qrUrl =
+      'https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbxZc2Qx4NfufZAmpXiLIp0P0n8kgIUufrsFp-Dv1oIG04HPRAzxjkchf0FpdnzUvBsw%2Fexec%3FMatricula%3DY11524%26Nombre%3DFede%26Apellido%3DAlonso%26Numero%3D993388897%26Email%3Dfederi.al2001%40gmail.com';
+
   @override
   void initState() {
     super.initState();
@@ -39,9 +42,20 @@ class _QrPageState extends State<QrPage> {
       appBar: const AppbarCentro(),
       bottomNavigationBar: const BottomNavCentro(),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () {},
-          child: const Text('Aqui deberia de haber un qr'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              qrUrl,
+              width: 512,
+              height: 512,
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              'Escanea este código QR',
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
         ),
       ),
     );
