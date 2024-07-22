@@ -9,7 +9,7 @@ class NewsCardsOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppbarCentro(),
+      appBar: AppBar(toolbarHeight: 75),
       body: Center(
         child: ElevatedButton(
           onPressed: () {},

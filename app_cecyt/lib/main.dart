@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
 import 'package:app_cecyt/features/home/ui/pages/calendar_page.dart';
-import 'package:app_cecyt/features/home/ui/pages/information_page.dart';
 import 'package:app_cecyt/features/home/ui/pages/logout_page.dart';
 import 'package:app_cecyt/features/home/ui/start/start_page.dart';
 
@@ -31,7 +30,6 @@ class MyApp extends StatelessWidget {
         routes: {
           StartPage.path: (_) => const StartPage(),
           CalendarPage.path: (_) => const CalendarPage(),
-          InformationPage.path: (_) => const InformationPage(),
           LoginPage.path: (_) => const LoginPage(),
           LogoutPage.path: (_) => const LogoutPage(),
           QrPage.path: (_) => const QrPage(),

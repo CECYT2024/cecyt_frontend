@@ -22,10 +22,6 @@ class StartPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/ejemplo.png',
-            scale: 3,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -33,7 +29,8 @@ class StartPage extends StatelessWidget {
                 width: 10,
               ),
               PrincipalButton(
-                titulo: 'Iniciar Sesión', //TODO: Tiene que decir Cerrar Sesion si iniciada
+                titulo:
+                    'Iniciar Sesión', //TODO: Tiene que decir Cerrar Sesion si iniciada
                 color: Colors.white,
                 colortexto: Colors.black,
                 elevacion: 5,
@@ -57,7 +54,7 @@ class StartPage extends StatelessWidget {
               //  width: 15,
               //),
               CardImage(
-                  title: "Questionario",
+                  title: "QUESTIONARIO",
                   imageassetpath: 'assets/foto1.jpg',
                   onTap: () {
                     Navigator.of(context).pushNamed('/news1');
@@ -66,11 +63,28 @@ class StartPage extends StatelessWidget {
                 width: 20,
               ),
               CardImage(
-                  title: "Registro de Charlas",
-                  imageassetpath: 'assets/foto1.jpg',
+                  title: "INFORMACION",
+                  imageassetpath: 'assets/innotec_logo.png',
+                  escala: 13.5,
                   onTap: () {
                     Navigator.of(context).pushNamed('/news2');
-                  })
+                  }),
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CardImage(
+                title: "ORGANIZADORES INNOTEC 2024",
+                imageassetpath: 'assets/Organizadores.png',
+                onTap: () {},
+                escala: 10,
+                elevacion: 10,
+              )
             ],
           )
         ],
