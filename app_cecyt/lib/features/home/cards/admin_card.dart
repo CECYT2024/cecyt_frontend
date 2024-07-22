@@ -117,9 +117,18 @@ class _AdminCardState extends State<AdminCard> {
                 ),
                 TextFormField(
                   initialValue: _startTime,
-                  decoration: InputDecoration(labelText: 'Hora de Inicio'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'El campo no puede estar vacío' : null,
+                  decoration: const InputDecoration(
+                      labelText: 'Hora de Inicio (HH:mm)'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'El campo no puede estar vacío';
+                    }
+                    final timeRegex = RegExp(r'^([01]\d|2[0-3]):([0-5]\d)$');
+                    if (!timeRegex.hasMatch(value)) {
+                      return 'La hora debe estar en formato HH:mm';
+                    }
+                    return null;
+                  },
                   onSaved: (value) => _startTime = value!,
                 ),
               ],
