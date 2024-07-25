@@ -28,12 +28,12 @@ class PrincipalButton extends StatelessWidget {
         minWidth: MediaQuery.of(context).size.width,
         child: ElevatedButton(
           style: ButtonStyle(
-            elevation: WidgetStatePropertyAll(elevacion),
-            backgroundColor: WidgetStateProperty.all(color),
-            textStyle: WidgetStateProperty.all<TextStyle>(
+            elevation: MaterialStatePropertyAll(elevacion),
+            backgroundColor: MaterialStatePropertyAll(color),
+            textStyle: MaterialStatePropertyAll<TextStyle>(
               Theme.of(context).textTheme.headlineLarge!.copyWith(color: colortexto),
             ),
-            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+            shape: MaterialStatePropertyAll<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
                 // side: const BorderSide(color: Colors.transparent),

@@ -1,5 +1,7 @@
-import 'package:app_cecyt/features/home/ui/pages/calendar_page.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:app_cecyt/features/home/ui/pages/calendar_page.dart';
+import 'package:app_cecyt/utils/helpers/event.dart';
 
 class AdminCard extends StatefulWidget {
   const AdminCard({super.key});
@@ -16,13 +18,8 @@ class _AdminCardState extends State<AdminCard> {
   void _addEvent() {
     if (_formKey.currentState!.validate()) {
       setState(() {
-        events.add(Event(
-            day: _day,
-            place: _place,
-            name: _name,
-            speaker: _speaker,
-            startTime: _startTime));
-        _sortEvents();
+        DateTime startTime = Event.parseDayAndTime(_day, _startTime);
+        events.add(Event(name: _name, place: _place, speaker: _speaker, startTime: startTime));
       });
       Navigator.of(context).pop();
     }
@@ -31,13 +28,8 @@ class _AdminCardState extends State<AdminCard> {
   void _editEvent(int index) {
     if (_formKey.currentState!.validate()) {
       setState(() {
-        events[index] = Event(
-            day: _day,
-            place: _place,
-            name: _name,
-            speaker: _speaker,
-            startTime: _startTime);
-        _sortEvents();
+        DateTime startTime = Event.parseDayAndTime(_day, _startTime);
+        events[index] = Event(name: _name, place: _place, speaker: _speaker, startTime: startTime);
       });
       Navigator.of(context).pop();
     }
@@ -46,7 +38,6 @@ class _AdminCardState extends State<AdminCard> {
   void _deleteEvent(int index) {
     setState(() {
       events.removeAt(index);
-      _sortEvents();
     });
   }
 
@@ -57,11 +48,11 @@ class _AdminCardState extends State<AdminCard> {
   void _showEventForm({int? index}) {
     if (index != null) {
       final event = events[index];
-      _day = event.day;
+      _day = event.startTime.day == 7 ? '1' : '2';
       _place = event.place;
       _name = event.name;
       _speaker = event.speaker;
-      _startTime = event.startTime;
+      _startTime = DateFormat('HH:mm').format(event.startTime as DateTime);
     } else {
       _day = '';
       _place = '';
@@ -96,35 +87,28 @@ class _AdminCardState extends State<AdminCard> {
                 TextFormField(
                   initialValue: _place,
                   decoration: const InputDecoration(labelText: 'Lugar'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'El campo no puede estar vacío' : null,
+                  validator: (value) => value!.isEmpty ? 'El campo no puede estar vacío' : null,
                   onSaved: (value) => _place = value!,
                 ),
                 TextFormField(
                   initialValue: _name,
-                  decoration:
-                      const InputDecoration(labelText: 'Nombre del Evento'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'El campo no puede estar vacío' : null,
+                  decoration: const InputDecoration(labelText: 'Nombre del Evento'),
+                  validator: (value) => value!.isEmpty ? 'El campo no puede estar vacío' : null,
                   onSaved: (value) => _name = value!,
                 ),
                 TextFormField(
                   initialValue: _speaker,
                   decoration: const InputDecoration(labelText: 'Disertante'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'El campo no puede estar vacío' : null,
+                  validator: (value) => value!.isEmpty ? 'El campo no puede estar vacío' : null,
                   onSaved: (value) => _speaker = value!,
                 ),
                 TextFormField(
                   initialValue: _startTime,
-                  decoration: const InputDecoration(
-                      labelText: 'Hora de Inicio (HH:mm)'),
+                  decoration: const InputDecoration(labelText: 'Hora de Inicio (24hrs)'),
                   validator: (value) {
-                    if (value!.isEmpty) {
+                    if (value == null || value.isEmpty) {
                       return 'El campo no puede estar vacío';
-                    }
-                    final timeRegex = RegExp(r'^([01]\d|2[0-3]):([0-5]\d)$');
-                    if (!timeRegex.hasMatch(value)) {
+                    } else if (!RegExp(r'^([01]?[0-9]|2[0-3]):[0-5][0-9]$').hasMatch(value)) {
                       return 'La hora debe estar en formato HH:mm';
                     }
                     return null;
@@ -138,15 +122,17 @@ class _AdminCardState extends State<AdminCard> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Cancelar'),
+            child: const Text('Cancelar'),
           ),
           ElevatedButton(
             onPressed: () {
-              _formKey.currentState!.save();
-              if (index == null) {
-                _addEvent();
-              } else {
-                _editEvent(index);
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+                if (index == null) {
+                  _addEvent();
+                } else {
+                  _editEvent(index);
+                }
               }
             },
             child: Text(index == null ? 'Agregar' : 'Guardar'),
@@ -158,13 +144,14 @@ class _AdminCardState extends State<AdminCard> {
 
   @override
   Widget build(BuildContext context) {
+    _sortEvents();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 75,
-        title: Text('Gestión de Eventos'),
+        title: const Text('Gestión de Eventos'),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () => _showEventForm(),
           ),
         ],
@@ -175,17 +162,16 @@ class _AdminCardState extends State<AdminCard> {
           final event = events[index];
           return ListTile(
             title: Text(event.name),
-            subtitle: Text(
-                'Día: ${event.day}, Lugar: ${event.place}, Disertante: ${event.speaker}, Hora: ${event.startTime}'),
+            subtitle: Text('Día: ${DateFormat('yyyy-MM-dd').format(event.startTime as DateTime)}, Lugar: ${event.place}, Disertante: ${event.speaker}, Hora: ${DateFormat('HH:mm').format(event.startTime as DateTime)}'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: Icon(Icons.edit),
+                  icon: const Icon(Icons.edit),
                   onPressed: () => _showEventForm(index: index),
                 ),
                 IconButton(
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () => _deleteEvent(index),
                 ),
               ],

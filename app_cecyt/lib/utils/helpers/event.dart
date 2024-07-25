@@ -1,76 +1,52 @@
-import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-// El siguiente codigo NO ESTA IMPLEMENTADO
-class Event {
-  final String day;
-  final String place;
-  final String name;
-  final String speaker;
-  final String startTime;
+class Question {
+  final String studentId;
+  final String text;
+  int likes;
 
-  Event({
-    required this.day,
-    required this.place,
-    required this.name,
-    required this.speaker,
-    required this.startTime,
+  Question({
+    required this.studentId,
+    required this.text,
+    this.likes = 0,
   });
 }
 
-class EventManager extends ChangeNotifier {
-  final List<Event> _events = [
-    Event(
-        day: '1',
-        place: 'Sala 1',
-        name: 'Evento 1',
-        speaker: 'Disertante 1',
-        startTime: '10:00'),
-    Event(
-        day: '1',
-        place: 'Sala 1',
-        name: 'Evento 2',
-        speaker: 'Disertante 2',
-        startTime: '12:00'),
-    Event(
-        day: '2',
-        place: 'Sala 2',
-        name: 'Evento 3',
-        speaker: 'Disertante 3',
-        startTime: '14:00'),
-    Event(
-        day: '2',
-        place: 'Sala 3',
-        name: 'Evento 4',
-        speaker: 'Disertante 4',
-        startTime: '16:00'),
-  ];
+class Event {
+  final String name;
+  final String place;
+  final String speaker;
+  final DateTime startTime;
+  List<Question> questions;
 
-  String selectedDay = '';
+  Event({
+    required this.name,
+    required this.place,
+    required this.speaker,
+    required this.startTime,
+    List<Question>? questions,
+  }) : questions = questions ?? [];
 
-  List<Event> get events => _events;
-
-  List<Event> getEventsForSelectedDay() {
-    return _events.where((event) => event.day == selectedDay).toList();
-  }
-
-  void addEvent(Event event) {
-    _events.add(event);
-    _sortEvents();
-    notifyListeners();
-  }
-
-  void editEvent(int index, Event event) {
-    _events[index] = event;
-    _sortEvents();
-    notifyListeners();
-  }
-
-  void deleteEvent(int index) {
-    _events.removeAt(index);
-    notifyListeners();
-  }
-
-  void _sortEvents() {
-    _events.sort((a, b) => a.startTime.compareTo(b.startTime));
+  static DateTime parseDayAndTime(String day, String time) {
+    int dayInt = int.parse(day);
+    String date = dayInt == 1 ? '2024-10-07' : '2024-10-08';
+    return DateFormat('yyyy-MM-dd HH:mm:ss').parse('$date $time:00');
   }
 }
+
+List<Event> events = [
+  Event(
+    name: 'Charla 1',
+    place: 'Auditorio',
+    speaker: 'Dr. Pérez',
+    startTime: DateTime.parse('2024-10-07 10:00:00'),
+    questions: [],
+  ),
+  Event(
+    name: 'Charla 2',
+    place: 'Sala 1',
+    speaker: 'Ing. López',
+    startTime: DateTime.parse('2024-10-08 14:00:00'),
+    questions: [],
+  ),
+];

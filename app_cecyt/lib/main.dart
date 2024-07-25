@@ -3,6 +3,7 @@ import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/cards/news_cards.dart';
 import 'package:app_cecyt/features/home/cards/news_cards2.dart';
 import 'package:app_cecyt/features/home/cards/news_cards3.dart';
+import 'package:app_cecyt/features/home/cards/news_cards4.dart';
 import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
           NewsCardsOne.path: (_) => const NewsCardsOne(),
           NewsCardsTwo.path: (_) => const NewsCardsTwo(),
           NewsCardsThree.path: (_) => const NewsCardsThree(),
+          NewsCardsFour.path: (_) => const NewsCardsFour()
         },
         onGenerateRoute: (settings) {
           // Implementar generación dinámica de rutas si es necesario
