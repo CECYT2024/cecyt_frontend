@@ -74,7 +74,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
   }
 
   void _likeQuestion(Question question) {
-    if (likeCount < 3) {
+    if (likeCount != 1) {
       setState(() {
         question.likes++;
         likeCount++;
