@@ -69,6 +69,12 @@ flutter:
     - assets/Innotec.png
     - assets/Organizadores.png
     - assets/innotec_logo.png
+    - assets/hackatonImage2.jpg
+    - assets/hackatonimage3.jpg
+    - assets/hackatonimage4.jpg
+    - assets/Innotec_Charla2.jpg
+    - assets/innotec_charla3.jpg
+    - assets/innotec_charla4.jpg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

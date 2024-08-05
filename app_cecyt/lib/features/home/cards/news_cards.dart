@@ -29,6 +29,7 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
       appBar: AppBar(
         title: const Text("Seleccionar charla"),
         toolbarHeight: 75,
+        backgroundColor: Colors.white,
       ),
       body: Column(
         children: [
