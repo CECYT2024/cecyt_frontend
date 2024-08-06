@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:intl/intl.dart';
 
 class Question {
@@ -17,6 +18,7 @@ class Event {
   final String place;
   final String speaker;
   final DateTime startTime;
+  final int id;
   List<Question> questions;
 
   Event({
@@ -24,6 +26,7 @@ class Event {
     required this.place,
     required this.speaker,
     required this.startTime,
+    required this.id,
     List<Question>? questions,
   }) : questions = questions ?? [];
 
@@ -32,21 +35,29 @@ class Event {
     String date = dayInt == 1 ? '2024-10-07' : '2024-10-08';
     return DateFormat('yyyy-MM-dd HH:mm:ss').parse('$date $time:00');
   }
+
+  // Método para convertir JSON en una lista de objetos Event
+  static List<Event> fromJson(String jsonString) {
+    final data = json.decode(jsonString);
+
+    // Manejo de errores
+    if (data is Map<String, dynamic> && data.containsKey('message')) {
+      if (data['message'] == "Unauthenticated.") {
+        throw Exception("Usuario no autenticado.");
+      }
+    }
+
+    final List<dynamic> eventsData = data['data'];
+    return eventsData.map((eventData) {
+      return Event(
+        name: eventData['title'],
+        place: eventData['place'],
+        speaker: eventData['speaker'],
+        startTime: DateTime.parse(eventData['time']),
+        id: eventData['id'],
+      );
+    }).toList();
+  }
 }
 
-List<Event> events = [
-  Event(
-    name: 'Charla 1',
-    place: 'Auditorio',
-    speaker: 'Dr. Pérez',
-    startTime: DateTime.parse('2024-10-07 10:00:00'),
-    questions: [],
-  ),
-  Event(
-    name: 'Charla 2',
-    place: 'Sala 1',
-    speaker: 'Ing. López',
-    startTime: DateTime.parse('2024-10-08 14:00:00'),
-    questions: [],
-  ),
-];
+List<Event> events = [];

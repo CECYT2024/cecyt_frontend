@@ -1,16 +1,16 @@
-import 'package:app_cecyt/features/auth/presentation/bloc/bottom_nav_bloc.dart';
-import 'package:app_cecyt/features/home/cards/admin_card.dart';
-import 'package:app_cecyt/features/home/cards/news_cards.dart';
-import 'package:app_cecyt/features/home/cards/news_cards2.dart';
-import 'package:app_cecyt/features/home/cards/news_cards3.dart';
-import 'package:app_cecyt/features/home/cards/news_cards4.dart';
-import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
-import 'package:app_cecyt/features/home/ui/pages/calendar_page.dart';
-import 'package:app_cecyt/features/home/ui/pages/logout_page.dart';
-import 'package:app_cecyt/features/home/ui/start/start_page.dart';
+import 'features/auth/presentation/pages/login_page.dart';
+import 'features/auth/presentation/bloc/bottom_nav_bloc.dart';
+import 'features/home/ui/pages/calendar_page.dart';
+import 'features/home/ui/pages/logout_page.dart';
+import 'features/home/ui/pages/qr_page.dart';
+import 'features/home/ui/start/start_page.dart';
+import 'features/home/cards/news_cards2.dart';
+import 'features/home/cards/news_cards3.dart';
+import 'features/home/cards/news_cards4.dart';
+import 'utils/helpers/events_bloc.dart';
+import 'utils/helpers/api_service.dart'; // Importa ApiService
 
 void main() {
   runApp(const MyApp());
@@ -21,8 +21,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => NavigationBloc(),
+    final apiService = ApiService(); // Crea una instancia de ApiService
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => NavigationBloc(),
+        ),
+        BlocProvider(
+          create: (context) => EventsBloc(apiService: apiService)..add(FetchEvents()),
+        ),
+      ],
       child: MaterialApp(
         title: 'CECYT App',
         theme: ThemeData(
@@ -31,20 +40,14 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: StartPage.path,
         routes: {
-          AdminCard.path: (_) => const AdminCard(),
           StartPage.path: (_) => const StartPage(),
           CalendarPage.path: (_) => const CalendarPage(),
           LoginPage.path: (_) => const LoginPage(),
           LogoutPage.path: (_) => const LogoutPage(),
           QrPage.path: (_) => const QrPage(),
-          NewsCardsOne.path: (_) => const NewsCardsOne(),
           NewsCardsTwo.path: (_) => const NewsCardsTwo(),
           NewsCardsThree.path: (_) => const NewsCardsThree(),
           NewsCardsFour.path: (_) => const NewsCardsFour()
-        },
-        onGenerateRoute: (settings) {
-          // Implementar generación dinámica de rutas si es necesario
-          return null;
         },
       ),
     );

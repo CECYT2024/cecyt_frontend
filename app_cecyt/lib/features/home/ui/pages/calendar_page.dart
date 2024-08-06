@@ -1,13 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
-import 'package:app_cecyt/utils/helpers/event.dart';
+import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:app_cecyt/utils/helpers/events_bloc.dart';
+import 'package:app_cecyt/utils/helpers/event.dart';
 import 'package:app_cecyt/utils/helpers/horarios_format.dart';
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
   static const String path = '/calendar';
+
+  const CalendarPage({super.key});
 
   @override
   _CalendarPageState createState() => _CalendarPageState();
@@ -16,7 +19,7 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   int selectedDay = 1;
 
-  List<Event> getEventsForSelectedDay() {
+  List<Event> getEventsForSelectedDay(List<Event> events) {
     return events.where((event) {
       final selectedDate = selectedDay == 1 ? DateTime(2024, 10, 7) : DateTime(2024, 10, 8);
       return event.startTime.year == selectedDate.year && event.startTime.month == selectedDate.month && event.startTime.day == selectedDate.day;
@@ -26,9 +29,9 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: const AppbarCentro(),
       bottomNavigationBar: const BottomNavCentro(),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           const SizedBox(height: 10),
@@ -98,10 +101,30 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: ListView(
-              children: getEventsForSelectedDay().map((event) {
-                return HorarioContainer(event.place, DateFormat('HH:mm').format(event.startTime), event.name, event.speaker);
-              }).toList(),
+            child: BlocBuilder<EventsBloc, EventState>(
+              builder: (context, state) {
+                if (state is EventsLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is EventsLoaded) {
+                  final events = getEventsForSelectedDay(state.events);
+                  print('Events loaded: ${events.length}');
+                  return ListView(
+                    children: events.map((event) {
+                      print('Event: ${event.place}, ${event.startTime}, ${event.speaker}, ${event.name}');
+                      return HorarioContainer(
+                        event.place,
+                        DateFormat('HH:mm').format(event.startTime),
+                        event.speaker,
+                        event.name,
+                      );
+                    }).toList(),
+                  );
+                } else if (state is EventsError) {
+                  return Center(child: Text(state.message));
+                } else {
+                  return const Center(child: Text('No hay eventos disponibles'));
+                }
+              },
             ),
           ),
         ],

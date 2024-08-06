@@ -88,7 +88,7 @@ class StartPage extends StatelessWidget {
                     title: "PREGUNTAS",
                     imageassetpath: 'assets/foto1.jpg',
                     onTap: () {
-                      Navigator.of(context).pushNamed('/news1');
+                      //Navigator.of(context).pushNamed('/news1');
                     }),
                 const SizedBox(
                   width: 20,
@@ -110,7 +110,7 @@ class StartPage extends StatelessWidget {
                   titulo: 'Administrador',
                   color: Colors.black,
                   callback: () {
-                    Navigator.of(context).pushNamed('/admin');
+                    //Navigator.of(context).pushNamed('/admin');
                   }),
             )
           ],
