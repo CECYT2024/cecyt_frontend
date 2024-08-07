@@ -1,3 +1,4 @@
+import 'package:app_cecyt/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final apiService = ApiService(); // Crea una instancia de ApiService
+    final apiService = ApiService(baseUrl: baseUrl); // Crea una instancia de ApiService
 
     return MultiBlocProvider(
       providers: [

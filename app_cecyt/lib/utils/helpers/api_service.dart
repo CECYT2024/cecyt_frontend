@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = ""; //TODO Agregar URL de la API
-
+  final String baseUrl; //TODO Agregar URL de la API
+  ApiService({required this.baseUrl});
   Future<http.Response> register(Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/register');
     final response = await http.post(url, body: formData);
@@ -52,12 +52,22 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> isAdmin(String token) async {
-    final url = Uri.parse('$baseUrl/user/rol');
-    final response = await http.get(url, headers: {
-      'Authorization': 'Bearer $token',
-    });
-    return response;
+  Future<bool> isAdmin(String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/checkAdmin'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final responseBody = jsonDecode(response.body);
+      print('Response Body: $responseBody'); // Log the response body
+      return responseBody['isAdmin'];
+    } else {
+      print('Failed to check admin status: ${response.statusCode}'); // Log the error status code
+      throw Exception('Failed to check admin status');
+    }
   }
 
   Future<http.Response> saveQrInDb(String token, Map<String, String> formData) async {

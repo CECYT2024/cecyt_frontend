@@ -1,8 +1,7 @@
+import 'package:app_cecyt/utils/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'event.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'api_service.dart'; // Importa ApiService
 
 // Definición de eventos
@@ -56,7 +55,7 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
   Future<void> _onFetchEvents(FetchEvents event, Emitter<EventState> emit) async {
     emit(EventsLoading());
     try {
-      final response = await apiService.getAllTalks(''); // TODO Reemplaza 'your_token_here' con el token real
+      final response = await apiService.getAllTalks(tokenCambiable); // Reemplaza 'your_token_here' con el token real
       if (response.statusCode == 200) {
         List<Event> events = Event.fromJson(response.body);
         emit(EventsLoaded(events: events));

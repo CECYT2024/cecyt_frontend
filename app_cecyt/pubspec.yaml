@@ -47,6 +47,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  shared_preferences: ^2.0.6
   
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -66,11 +67,13 @@ flutter:
 
   assets:
     - assets/cecytlogo.png
-    - assets/ejemplo.png
-    - assets/foto1.jpg
+    - assets/Informacion.png
+    - assets/InformacionFoto1.png
+    - assets/InformacionFoto2.png
     - assets/Innotec.png
     - assets/Organizadores.png
     - assets/innotec_logo.png
+    - assets/Preguntas.png
     - assets/hackatonImage2.jpg
     - assets/hackatonimage3.jpg
     - assets/hackatonimage4.jpg

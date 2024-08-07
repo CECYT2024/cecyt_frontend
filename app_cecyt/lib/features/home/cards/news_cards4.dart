@@ -31,7 +31,7 @@ class NewsCardsFour extends StatelessWidget {
                 ],
               ),
               child: const Text(
-                'Qué es Innotec?',
+                '¿Qué es Innotec?',
                 style: TextStyle(
                   fontSize: 32,
                   color: Colors.black,
