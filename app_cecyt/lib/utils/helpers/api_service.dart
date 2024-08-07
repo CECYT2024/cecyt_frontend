@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = "https://cecyt-app-api-33d7bb093309.herokuapp.com/api";
+  final String baseUrl = ""; //TODO Agregar URL de la API
 
   Future<http.Response> register(Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/register');

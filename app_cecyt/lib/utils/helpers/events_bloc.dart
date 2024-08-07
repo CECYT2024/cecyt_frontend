@@ -56,7 +56,7 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
   Future<void> _onFetchEvents(FetchEvents event, Emitter<EventState> emit) async {
     emit(EventsLoading());
     try {
-      final response = await apiService.getAllTalks('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vY2VjeXQtYXBwLWFwaS0zM2Q3YmIwOTMzMDkuaGVyb2t1YXBwLmNvbS9hcGkvbG9naW4iLCJpYXQiOjE3MjI5NTkyNDcsImV4cCI6MTcyMjk2Mjg0NywibmJmIjoxNzIyOTU5MjQ3LCJqdGkiOiJZMEVHekhRdzVCOXloVld5Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.aGAudDxchgr4O5S3iqj4nRt9OtVqZSbJaCB07noRHn4'); // Reemplaza 'your_token_here' con el token real
+      final response = await apiService.getAllTalks(''); // TODO Reemplaza 'your_token_here' con el token real
       if (response.statusCode == 200) {
         List<Event> events = Event.fromJson(response.body);
         emit(EventsLoaded(events: events));
