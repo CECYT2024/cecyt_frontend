@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'event.dart';
 
 class ApiService {
   final String baseUrl; //TODO Agregar URL de la API
@@ -88,28 +89,63 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> createTalk(String token, Map<String, String> formData) async {
+  Future<List<Event>> getTalks() async {
+    final response = await http.get(Uri.parse('$baseUrl/talks'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> body = jsonDecode(response.body)['data'];
+      List<Event> talks = body
+          .map((dynamic item) => Event(
+                id: item['id'],
+                name: item['title'],
+                place: item['place'],
+                speaker: item['speaker'],
+                startTime: DateTime.parse(item['time']),
+              ))
+          .toList();
+      return talks;
+    } else {
+      throw Exception('Failed to load talks');
+    }
+  }
+
+  Future<void> editTalk(int index, Event event) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/talks/$index'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'place': event.place,
+        'time': event.startTime.toIso8601String(),
+        'title': event.name,
+        'speaker': event.speaker,
+        'talk_id': event.id,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to edit talk');
+    }
+  }
+
+  Future<http.Response> createTalk(Event event, String token) async {
     final url = Uri.parse('$baseUrl/talks/create');
-    final response = await http.post(url,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-        body: formData);
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: jsonEncode(event.toJson()),
+    );
     return response;
   }
 
-  Future<http.Response> editTalk(String token, Map<String, String> formData) async {
-    final url = Uri.parse('$baseUrl/talks/edit');
-    final response = await http.post(url,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-        body: formData);
-    return response;
-  }
-
-  Future<http.Response> deleteTalk(String token, String talkId) async {
-    final url = Uri.parse('$baseUrl/talks/$talkId/delete');
+  Future<http.Response> deleteTalk(int id, String token) async {
+    String idS = id.toString();
+    final url = Uri.parse('$baseUrl/talks/$idS/delete');
     final response = await http.post(url, headers: {
       'Authorization': 'Bearer $token',
     });

@@ -7,8 +7,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
-
-import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/home/ui/pages/calendar_page.dart';
 
 //Animaciones para el buttom nav bar
@@ -22,7 +20,9 @@ class PageTapped extends NavigationEvent {
   const PageTapped(this.index);
 
   @override
-  List<Object> get props => [index];
+  List<Object> get props => [
+        index
+      ];
 }
 // navigation_state.dart
 
@@ -32,12 +32,18 @@ class NavigationState extends Equatable {
   const NavigationState(this.selectedIndex);
 
   @override
-  List<Object> get props => [selectedIndex];
+  List<Object> get props => [
+        selectedIndex
+      ];
 }
 // custom_bottom_nav_bar.dart
 
 String pageActual(int num) {
-  const paths = ["/start", "/calendar", "/QRpage"];
+  const paths = [
+    "/start",
+    "/calendar",
+    "/QRpage"
+  ];
   return paths[num];
 }
 

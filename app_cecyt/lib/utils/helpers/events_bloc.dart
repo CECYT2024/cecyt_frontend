@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app_cecyt/utils/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -50,17 +52,37 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
 
   EventsBloc({required this.apiService}) : super(EventsInitial()) {
     on<FetchEvents>(_onFetchEvents);
+    on<DeleteEvent>(_onDeleteEvent); // Agregar el manejador de eventos de eliminación
   }
 
   Future<void> _onFetchEvents(FetchEvents event, Emitter<EventState> emit) async {
     emit(EventsLoading());
     try {
-      final response = await apiService.getAllTalks(tokenCambiable); // Reemplaza 'your_token_here' con el token real
+      final response = await apiService.getAllTalks(tokenCambiable);
       if (response.statusCode == 200) {
         List<Event> events = Event.fromJson(response.body);
         emit(EventsLoaded(events: events));
       } else {
         emit(EventsError(message: 'Error al obtener los eventos'));
+      }
+    } catch (e) {
+      emit(EventsError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onDeleteEvent(DeleteEvent event, Emitter<EventState> emit) async {
+    try {
+      final response = await apiService.deleteTalk(event.event.id, tokenCambiable);
+      final responseBody = jsonDecode(response.body);
+      if (response.statusCode == 200 && responseBody['status'] == 'ok') {
+        // Eliminar el evento de la lista de eventos
+        final currentState = state;
+        if (currentState is EventsLoaded) {
+          final updatedEvents = currentState.events.where((e) => e.id != event.event.id).toList();
+          emit(EventsLoaded(events: updatedEvents));
+        }
+      } else {
+        emit(EventsError(message: 'Error al eliminar el evento'));
       }
     } catch (e) {
       emit(EventsError(message: e.toString()));

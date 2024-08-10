@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:app_cecyt/utils/helpers/events_bloc.dart';
 import 'package:intl/intl.dart';
 
 class Question {
@@ -18,17 +19,15 @@ class Event {
   final String place;
   final String speaker;
   final DateTime startTime;
-  final int id;
-  List<Question> questions;
+  final int id; // Cambiado a non-nullable
 
   Event({
     required this.name,
     required this.place,
     required this.speaker,
     required this.startTime,
-    required this.id,
-    List<Question>? questions,
-  }) : questions = questions ?? [];
+    required this.id, // Cambiado a required
+  });
 
   static DateTime parseDayAndTime(String day, String time) {
     int dayInt = int.parse(day);
@@ -40,7 +39,6 @@ class Event {
   static List<Event> fromJson(String jsonString) {
     final data = json.decode(jsonString);
 
-    // Manejo de errores
     if (data is Map<String, dynamic> && data.containsKey('message')) {
       if (data['message'] == "Unauthenticated.") {
         throw Exception("Usuario no autenticado.");
@@ -54,10 +52,31 @@ class Event {
         place: eventData['place'],
         speaker: eventData['speaker'],
         startTime: DateTime.parse(eventData['time']),
-        id: eventData['id'],
+        id: eventData['id'], // Asegurarse de que el id se almacene
       );
     }).toList();
   }
+
+  Map<String, dynamic> toJson() {
+    print('Numero tembo ${startTime}');
+    return {
+      'place': place,
+      'time': startTime.toString(),
+      'title': name,
+      'speaker': speaker,
+    };
+  }
+}
+
+class DeleteEvent extends EventEvent {
+  final Event event;
+
+  DeleteEvent(this.event);
+
+  @override
+  List<Object?> get props => [
+        event
+      ];
 }
 
 List<Event> events = [];

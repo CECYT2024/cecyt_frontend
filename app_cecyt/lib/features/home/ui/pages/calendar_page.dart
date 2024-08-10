@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:app_cecyt/utils/helpers/events_bloc.dart';
 import 'package:app_cecyt/utils/helpers/event.dart';
 import 'package:app_cecyt/utils/helpers/horarios_format.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class CalendarPage extends StatefulWidget {
   static const String path = '/calendar';
@@ -19,9 +20,16 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   int selectedDay = 1;
 
+  @override
+  void initState() {
+    super.initState();
+    // Cargar los eventos cuando la página se inicializa
+    context.read<EventsBloc>().add(FetchEvents());
+  }
+
   List<Event> getEventsForSelectedDay(List<Event> events) {
+    final selectedDate = selectedDay == 1 ? DateTime(2024, 10, 7) : DateTime(2024, 10, 8);
     return events.where((event) {
-      final selectedDate = selectedDay == 1 ? DateTime(2024, 10, 7) : DateTime(2024, 10, 8);
       return event.startTime.year == selectedDate.year && event.startTime.month == selectedDate.month && event.startTime.day == selectedDate.day;
     }).toList();
   }
@@ -57,7 +65,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
-          ),
+          ).animate().fadeIn(duration: 500.ms),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -78,7 +86,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     color: Colors.white,
                   ),
                 ),
-              ),
+              ).animate().slideX(duration: 500.ms),
               const SizedBox(width: 60),
               ElevatedButton(
                 onPressed: () {
@@ -96,7 +104,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     color: Colors.white,
                   ),
                 ),
-              ),
+              ).animate().slideX(duration: 500.ms),
             ],
           ),
           const SizedBox(height: 10),
@@ -114,8 +122,8 @@ class _CalendarPageState extends State<CalendarPage> {
                       return HorarioContainer(
                         event.place,
                         DateFormat('HH:mm').format(event.startTime),
-                        event.speaker,
                         event.name,
+                        event.speaker,
                       );
                     }).toList(),
                   );

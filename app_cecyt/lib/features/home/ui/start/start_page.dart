@@ -26,25 +26,30 @@ class _StartPageState extends State<StartPage> {
     _checkAdminStatus();
   }
 
+  //TODO: Lo de abajo solo funcionara cuando valde labure sobre eso
   Future<void> _checkAdminStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString(tokenCambiable); // Obtén el token almacenado
+    print('Token obtenido: $token');
 
-    if (token != null) {
+    if (token != null && token.isNotEmpty) {
       final apiService = ApiService(baseUrl: baseUrl);
       try {
         final adminStatus = await apiService.isAdmin(token);
+        print('Admin status obtenido: $adminStatus');
         setState(() {
-          isAdmin = true;
+          isAdmin = adminStatus; // Asegúrate de que adminStatus sea booleano
           isLoading = false;
         });
       } catch (e) {
+        print('Error al verificar el estado de admin: $e');
         setState(() {
           isLoading = false;
         });
         // Maneja el error
       }
     } else {
+      print('Token es null o vacío');
       setState(() {
         isLoading = false;
       });
@@ -153,7 +158,7 @@ class _StartPageState extends State<StartPage> {
                           titulo: 'Administrador',
                           color: Colors.black,
                           callback: () {
-                            //Navigator.of(context).pushNamed('/admin');
+                            Navigator.of(context).pushNamed('/admin');
                           }),
                     )
                 ],
