@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -48,8 +50,8 @@ class _AdminCardState extends State<AdminCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Delete'),
-          content: Text('Are you sure you want to delete this event?'),
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete this event?'),
           actions: <Widget>[
             TextButton(
               child: Text('Cancel'),
@@ -58,26 +60,158 @@ class _AdminCardState extends State<AdminCard> {
               },
             ),
             TextButton(
-              child: Text('Delete'),
+              child: const Text('Delete'),
               onPressed: () async {
-                if (event.id != null) {
-                  final response = await _eventsBloc.apiService.deleteTalk(event.id, tokenCambiable);
-                  if (response.statusCode == 200) {
-                    final responseBody = jsonDecode(response.body);
-                    if (responseBody['status'] == 'ok') {
-                      _eventsBloc.add(DeleteEvent(event));
-                    } else {
-                      print('Error al eliminar el evento: ${response.statusCode}');
-                    }
+                final response = await _eventsBloc.apiService.deleteTalk(event.id, tokenCambiable);
+                if (response.statusCode == 200) {
+                  final responseBody = jsonDecode(response.body);
+                  if (responseBody['status'] == 'ok') {
+                    _eventsBloc.add(DeleteEvent(event));
                   } else {
-                    if (response.statusCode == 201) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Evento eliminado, salir y entrar para ver los cambios')),
-                      );
-                    }
+                    print('Error al eliminar el evento: ${response.statusCode}');
+                  }
+                } else {
+                  if (response.statusCode == 201) {
+                    _eventsBloc.add(FetchEvents());
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Charla Eliminada')),
+                    );
                   }
                 }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showEditTalkDialog(Event event) {
+    _dayController.text = DateFormat('d').format(event.startTime);
+    _timeController.text = DateFormat('HH:mm').format(event.startTime);
+    _nameController.text = event.name;
+    _speakerController.text = event.speaker;
+    _placeController.text = event.place;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Editar Charla'),
+          content: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  TextFormField(
+                    controller: _dayController,
+                    decoration: const InputDecoration(labelText: 'Dia (1 o 2)'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'No puede estar vacio';
+                      }
+                      if (value != '1' && value != '2') {
+                        return 'Dia tiene que ser 1 o 2';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _timeController,
+                    decoration: const InputDecoration(labelText: 'Hora (HH:mm)'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'No puede estar vacio';
+                      }
+                      final timeRegex = RegExp(r'^\d{2}:\d{2}$');
+                      if (!timeRegex.hasMatch(value)) {
+                        return 'Se debe escribir HH:mm';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(labelText: 'Nombre de la charla'),
+                    maxLength: 128,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'No puede estar vacio';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _speakerController,
+                    decoration: const InputDecoration(labelText: 'Disertante'),
+                    maxLength: 128,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'No puede estar vacio';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: _placeController,
+                    decoration: const InputDecoration(labelText: 'Lugar'),
+                    maxLength: 20,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'No puede estar vacio';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
                 Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Guardar'),
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  final updatedEvent = Event(
+                    id: event.id,
+                    name: _nameController.text,
+                    place: _placeController.text,
+                    speaker: _speakerController.text,
+                    startTime: Event.parseDayAndTime(_dayController.text, _timeController.text),
+                  );
+                  try {
+                    final response = await ApiService(baseUrl: baseUrl).editTalk(updatedEvent, tokenCambiable);
+                    if (response.statusCode == 201) {
+                      final responseBody = jsonDecode(response.body);
+                      if (responseBody['status'] == 'ok') {
+                        _eventsBloc.add(FetchEvents());
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Charla editada con éxito')),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Error al editar la charla')),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error en la respuesta del servidor ${response.statusCode}')),
+                      );
+                    }
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error este: $e')),
+                    );
+                  }
+                }
               },
             ),
           ],
@@ -91,7 +225,7 @@ class _AdminCardState extends State<AdminCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Talk'),
+          title: const Text('Añadir Charla'),
           content: Form(
             key: _formKey,
             child: SingleChildScrollView(
@@ -99,60 +233,60 @@ class _AdminCardState extends State<AdminCard> {
                 children: <Widget>[
                   TextFormField(
                     controller: _dayController,
-                    decoration: InputDecoration(labelText: 'Day (1 or 2)'),
+                    decoration: const InputDecoration(labelText: 'Dia (1 o 2)'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a day';
+                        return 'No puede estar vacio';
                       }
                       if (value != '1' && value != '2') {
-                        return 'Day must be 1 or 2';
+                        return 'Dia tiene que ser 1 o 2';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
                     controller: _timeController,
-                    decoration: InputDecoration(labelText: 'Time (HH:mm)'),
+                    decoration: const InputDecoration(labelText: 'Hora (HH:mm)'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a time';
+                        return 'No puede estar vacio';
                       }
                       final timeRegex = RegExp(r'^\d{2}:\d{2}$');
                       if (!timeRegex.hasMatch(value)) {
-                        return 'Time must be in HH:mm format';
+                        return 'Se debe escribir HH:mm';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
                     controller: _nameController,
-                    decoration: InputDecoration(labelText: 'Name'),
+                    decoration: const InputDecoration(labelText: 'Nombre de la charla'),
                     maxLength: 128,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a name';
+                        return 'No puede estar vacio';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
                     controller: _speakerController,
-                    decoration: InputDecoration(labelText: 'Speaker'),
+                    decoration: const InputDecoration(labelText: 'Disertante'),
                     maxLength: 128,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a speaker';
+                        return 'No puede estar vacio';
                       }
                       return null;
                     },
                   ),
                   TextFormField(
                     controller: _placeController,
-                    decoration: InputDecoration(labelText: 'Place'),
+                    decoration: const InputDecoration(labelText: 'Lugar'),
                     maxLength: 20,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a place';
+                        return 'No puede estar vacio';
                       }
                       return null;
                     },
@@ -163,13 +297,13 @@ class _AdminCardState extends State<AdminCard> {
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text('Add'),
+              child: const Text('Añadir'),
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   final day = _dayController.text;
@@ -196,7 +330,7 @@ class _AdminCardState extends State<AdminCard> {
                         _eventsBloc.add(FetchEvents());
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Talk created successfully')),
+                          const SnackBar(content: Text('Charla creada')),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -209,7 +343,7 @@ class _AdminCardState extends State<AdminCard> {
                       );
                     }
                   } catch (e) {
-                    print(e);
+                    ;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Error: ${e.toString()}')),
                     );
@@ -227,10 +361,10 @@ class _AdminCardState extends State<AdminCard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin Panel'),
+        title: const Text('Administrador'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: _showAddTalkDialog,
           ),
         ],
@@ -239,26 +373,29 @@ class _AdminCardState extends State<AdminCard> {
         bloc: _eventsBloc,
         builder: (context, state) {
           if (state is EventsLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (state is EventsLoaded) {
             return ListView.builder(
               itemCount: state.events.length,
               itemBuilder: (context, index) {
                 final event = state.events[index];
                 return ListTile(
-                  title: Text(event.name),
-                  subtitle: Text(event.startTime.toString()),
+                  title: Text(
+                    '${event.name} , ${event.speaker}',
+                    textScaler: const TextScaler.linear(0.9),
+                  ),
+                  subtitle: Text('${event.startTime}' ' , ${event.place}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       IconButton(
-                        icon: Icon(Icons.edit),
+                        icon: const Icon(Icons.edit),
                         onPressed: () {
-                          // Add edit functionality here
+                          _showEditTalkDialog(event);
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () {
                           _confirmDelete(event);
                         },
@@ -269,7 +406,7 @@ class _AdminCardState extends State<AdminCard> {
               },
             );
           } else {
-            return Center(child: Text('Failed to load events'));
+            return const Center(child: Text('Failed to load events'));
           }
         },
       ),

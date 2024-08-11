@@ -115,10 +115,8 @@ class _CalendarPageState extends State<CalendarPage> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state is EventsLoaded) {
                   final events = getEventsForSelectedDay(state.events);
-                  print('Events loaded: ${events.length}');
                   return ListView(
                     children: events.map((event) {
-                      print('Event: ${event.place}, ${event.startTime}, ${event.speaker}, ${event.name}');
                       return HorarioContainer(
                         event.place,
                         DateFormat('HH:mm').format(event.startTime),

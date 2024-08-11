@@ -109,24 +109,45 @@ class ApiService {
     }
   }
 
-  Future<void> editTalk(int index, Event event) async {
+  Future<http.Response> editTalk(Event event, String token) async {
+    final url = Uri.parse('$baseUrl/talks/edit/');
     final response = await http.post(
-      Uri.parse('$baseUrl/talks/$index'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
       body: jsonEncode(<String, dynamic>{
         'place': event.place,
-        'time': event.startTime.toIso8601String(),
+        'time': event.startTime.toString(),
         'title': event.name,
         'speaker': event.speaker,
         'talk_id': event.id,
       }),
     );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to edit talk');
+    if (response.statusCode == 301 || response.statusCode == 302) {
+      final newUrl = response.headers['location'];
+      if (newUrl != null) {
+        final newResponse = await http.post(
+          Uri.parse(newUrl),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: jsonEncode(<String, dynamic>{
+            'place': event.place,
+            'time': event.startTime.toIso8601String(),
+            'title': event.name,
+            'speaker': event.speaker,
+            'talk_id': event.id,
+          }),
+        );
+        return newResponse;
+      }
     }
+    return response;
   }
 
   Future<http.Response> createTalk(Event event, String token) async {
