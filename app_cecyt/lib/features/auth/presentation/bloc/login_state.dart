@@ -18,6 +18,9 @@ final class LoginErrorState extends LoginState {
 
 final class LoginProgressState extends LoginState {}
 
-final class LoggedState extends LoginState {}
+final class LoggedState extends LoginState {
+  final LoginResponseModel data;
+  LoggedState(this.data);
+}
 
 final class LoginSuccessState extends LoginState {}

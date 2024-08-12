@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:app_cecyt/utils/constants.dart' as c;
 import 'package:http/http.dart' as http;
 import 'event.dart';
 
 class ApiService {
-  final String baseUrl; //TODO Agregar URL de la API
-  ApiService({required this.baseUrl});
+  final String baseUrl = c.baseUrl; //TODO Agregar URL de la API
+  ApiService();
   Future<http.Response> register(Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/register');
     final response = await http.post(url, body: formData);
@@ -66,12 +67,14 @@ class ApiService {
       print('Response Body: $responseBody'); // Log the response body
       return responseBody['isAdmin'];
     } else {
-      print('Failed to check admin status: ${response.statusCode}'); // Log the error status code
+      print(
+          'Failed to check admin status: ${response.statusCode}'); // Log the error status code
       throw Exception('Failed to check admin status');
     }
   }
 
-  Future<http.Response> saveQrInDb(String token, Map<String, String> formData) async {
+  Future<http.Response> saveQrInDb(
+      String token, Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/user/qr');
     final response = await http.post(url,
         headers: {
@@ -181,7 +184,8 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> getMostLikedQuestions(String token, String talkId) async {
+  Future<http.Response> getMostLikedQuestions(
+      String token, String talkId) async {
     final url = Uri.parse('$baseUrl/questions/$talkId/latest');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
@@ -189,7 +193,8 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> checkNumberOfQuestionsByUser(String token, String talkId) async {
+  Future<http.Response> checkNumberOfQuestionsByUser(
+      String token, String talkId) async {
     final url = Uri.parse('$baseUrl/questions/talks/$talkId/user/count');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
@@ -197,7 +202,8 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> likeQuestion(String token, Map<String, String> formData) async {
+  Future<http.Response> likeQuestion(
+      String token, Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/questions/like');
     final response = await http.post(url,
         headers: {
@@ -207,7 +213,8 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> saveQuestion(String token, Map<String, String> formData) async {
+  Future<http.Response> saveQuestion(
+      String token, Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/questions/save');
     final response = await http.post(url,
         headers: {

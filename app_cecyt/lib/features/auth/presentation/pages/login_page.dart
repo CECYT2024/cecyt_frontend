@@ -1,5 +1,9 @@
+import 'package:app_cecyt/core/cubit/global_cubit.dart';
+import 'package:app_cecyt/features/auth/data/api_datasource.dart';
+import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/presentation/bloc/login_bloc.dart';
 import 'package:app_cecyt/features/home/ui/pages/pages.dart';
+import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 
 import 'package:app_cecyt/utils/widgets/custom_password_field.dart';
@@ -31,7 +35,8 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginBloc(),
+      create: (context) =>
+          LoginBloc(ApiRepository(apiProvider: AuthApiDataSource())),
       child: const LoginForm(),
     );
   }
@@ -82,8 +87,8 @@ class _LoginFormState extends State<LoginForm>
     controller.forward();
 
     if (kDebugMode) {
-      matriculaCtrl.text = 'Y0000';
-      passCrl.text = 'asd';
+      matriculaCtrl.text = 'C06619';
+      passCrl.text = 'Postman69!';
     }
 
     super.initState();
@@ -143,12 +148,15 @@ class _LoginFormState extends State<LoginForm>
                     if (state is LoggedState) {
                       matriculaCtrl.clear();
                       passCrl.clear();
-                      Navigator.of(context).pushNamed(LogoutPage.path);
+                      context
+                          .read<GlobalCubit>()
+                          .setToken(state.data.accessToken);
+                      Navigator.of(context).pushReplacementNamed(QrPage.path);
                     }
                   },
                   child: BlocBuilder<LoginBloc, LoginState>(
                     builder: (BuildContext context, LoginState state) {
-                      print(state);
+                      // print(state);
                       return Form(
                         key: _key,
                         child: Column(
@@ -265,7 +273,7 @@ class AnimatedLogo extends AnimatedWidget {
         margin: const EdgeInsets.symmetric(vertical: 10),
         height: _sizeTween.evaluate(animation), // Aumenta la altura
         width: _sizeTween.evaluate(animation), // Aumenta el ancho
-        child: CECYTLogo(imagePath: 'assets/cecytlogo.png'),
+        child: const CECYTLogo(imagePath: 'assets/cecytlogo.png'),
         // decoration: const BoxDecoration(
         //   image: DecorationImage(image: AssetImage('assets/logo.png')),
         // ),
@@ -277,7 +285,7 @@ class AnimatedLogo extends AnimatedWidget {
 class CECYTLogo extends StatelessWidget {
   final String imagePath;
 
-  CECYTLogo({required this.imagePath});
+  const CECYTLogo({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {

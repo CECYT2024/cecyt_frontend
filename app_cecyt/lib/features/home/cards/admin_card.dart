@@ -30,7 +30,7 @@ class _AdminCardState extends State<AdminCard> {
   @override
   void initState() {
     super.initState();
-    _eventsBloc = EventsBloc(apiService: ApiService(baseUrl: baseUrl));
+    _eventsBloc = EventsBloc(apiService: ApiService());
     _eventsBloc.add(FetchEvents());
   }
 
@@ -54,7 +54,7 @@ class _AdminCardState extends State<AdminCard> {
           content: const Text('Are you sure you want to delete this event?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -62,13 +62,15 @@ class _AdminCardState extends State<AdminCard> {
             TextButton(
               child: const Text('Delete'),
               onPressed: () async {
-                final response = await _eventsBloc.apiService.deleteTalk(event.id, tokenCambiable);
+                final response = await _eventsBloc.apiService
+                    .deleteTalk(event.id, tokenCambiable);
                 if (response.statusCode == 200) {
                   final responseBody = jsonDecode(response.body);
                   if (responseBody['status'] == 'ok') {
                     _eventsBloc.add(DeleteEvent(event));
                   } else {
-                    print('Error al eliminar el evento: ${response.statusCode}');
+                    print(
+                        'Error al eliminar el evento: ${response.statusCode}');
                   }
                 } else {
                   if (response.statusCode == 201) {
@@ -119,7 +121,8 @@ class _AdminCardState extends State<AdminCard> {
                   ),
                   TextFormField(
                     controller: _timeController,
-                    decoration: const InputDecoration(labelText: 'Hora (HH:mm)'),
+                    decoration:
+                        const InputDecoration(labelText: 'Hora (HH:mm)'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'No puede estar vacio';
@@ -133,7 +136,8 @@ class _AdminCardState extends State<AdminCard> {
                   ),
                   TextFormField(
                     controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Nombre de la charla'),
+                    decoration:
+                        const InputDecoration(labelText: 'Nombre de la charla'),
                     maxLength: 128,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -184,26 +188,32 @@ class _AdminCardState extends State<AdminCard> {
                     name: _nameController.text,
                     place: _placeController.text,
                     speaker: _speakerController.text,
-                    startTime: Event.parseDayAndTime(_dayController.text, _timeController.text),
+                    startTime: Event.parseDayAndTime(
+                        _dayController.text, _timeController.text),
                   );
                   try {
-                    final response = await ApiService(baseUrl: baseUrl).editTalk(updatedEvent, tokenCambiable);
+                    final response = await ApiService()
+                        .editTalk(updatedEvent, tokenCambiable);
                     if (response.statusCode == 201) {
                       final responseBody = jsonDecode(response.body);
                       if (responseBody['status'] == 'ok') {
                         _eventsBloc.add(FetchEvents());
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Charla editada con éxito')),
+                          const SnackBar(
+                              content: Text('Charla editada con éxito')),
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Error al editar la charla')),
+                          const SnackBar(
+                              content: Text('Error al editar la charla')),
                         );
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error en la respuesta del servidor ${response.statusCode}')),
+                        SnackBar(
+                            content: Text(
+                                'Error en la respuesta del servidor ${response.statusCode}')),
                       );
                     }
                   } catch (e) {
@@ -246,7 +256,8 @@ class _AdminCardState extends State<AdminCard> {
                   ),
                   TextFormField(
                     controller: _timeController,
-                    decoration: const InputDecoration(labelText: 'Hora (HH:mm)'),
+                    decoration:
+                        const InputDecoration(labelText: 'Hora (HH:mm)'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'No puede estar vacio';
@@ -260,7 +271,8 @@ class _AdminCardState extends State<AdminCard> {
                   ),
                   TextFormField(
                     controller: _nameController,
-                    decoration: const InputDecoration(labelText: 'Nombre de la charla'),
+                    decoration:
+                        const InputDecoration(labelText: 'Nombre de la charla'),
                     maxLength: 128,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -323,7 +335,8 @@ class _AdminCardState extends State<AdminCard> {
                   );
 
                   try {
-                    final response = await ApiService(baseUrl: baseUrl).createTalk(newEvent, tokenCambiable);
+                    final response =
+                        await ApiService().createTalk(newEvent, tokenCambiable);
                     if (response.statusCode == 201) {
                       final responseBody = jsonDecode(response.body);
                       if (responseBody['status'] == 'ok') {
@@ -334,16 +347,19 @@ class _AdminCardState extends State<AdminCard> {
                         );
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Failed to create talk: ${responseBody['message']}')),
+                          SnackBar(
+                              content: Text(
+                                  'Failed to create talk: ${responseBody['message']}')),
                         );
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Failed to create talk, status code: ${response.statusCode}')),
+                        SnackBar(
+                            content: Text(
+                                'Failed to create talk, status code: ${response.statusCode}')),
                       );
                     }
                   } catch (e) {
-                    ;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('Error: ${e.toString()}')),
                     );

@@ -1,7 +1,10 @@
+import 'package:app_cecyt/core/cubit/global_cubit.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
-import 'package:app_cecyt/utils/constants.dart';
+import 'package:app_cecyt/utils/helpers/pref_manager.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/auth/presentation/bloc/bottom_nav_bloc.dart';
 import 'features/home/ui/pages/calendar_page.dart';
@@ -14,8 +17,15 @@ import 'features/home/cards/news_cards4.dart';
 import 'utils/helpers/events_bloc.dart';
 import 'utils/helpers/api_service.dart'; // Importa ApiService
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferences.getInstance().then(
+    (value) async {
+      PrefManager(value);
+      runApp(const MyApp());
+    },
+  );
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -23,15 +33,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final apiService = ApiService(baseUrl: baseUrl); // Crea una instancia de ApiService
+    final apiService = ApiService(); // Crea una instancia de ApiService
 
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          create: (context) => GlobalCubit(),
+        ),
+        BlocProvider(
           create: (context) => NavigationBloc(),
         ),
         BlocProvider(
-          create: (context) => EventsBloc(apiService: apiService)..add(FetchEvents()),
+          create: (context) =>
+              EventsBloc(apiService: apiService)..add(FetchEvents()),
         ),
       ],
       child: MaterialApp(

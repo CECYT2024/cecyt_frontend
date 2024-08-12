@@ -33,7 +33,7 @@ class _StartPageState extends State<StartPage> {
     print('Token obtenido: $token');
 
     if (token != null && token.isNotEmpty) {
-      final apiService = ApiService(baseUrl: baseUrl);
+      final apiService = ApiService();
       try {
         final adminStatus = await apiService.isAdmin(token);
         print('Admin status obtenido: $adminStatus');
@@ -75,7 +75,8 @@ class _StartPageState extends State<StartPage> {
                         width: 20,
                       ),
                       PrincipalButton(
-                        titulo: 'Iniciar Sesión', //TODO: Tiene que decir Cerrar Sesion si iniciada
+                        titulo:
+                            'Iniciar Sesión', //TODO: Tiene que decir Cerrar Sesion si iniciada
                         color: Colors.white,
                         colortexto: const Color.fromARGB(255, 21, 98, 160),
                         elevacion: 5,
