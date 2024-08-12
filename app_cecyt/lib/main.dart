@@ -1,7 +1,7 @@
 import 'package:app_cecyt/core/cubit/global_cubit.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
-import 'package:app_cecyt/utils/helpers/pref_manager.dart';
-
+import 'package:app_cecyt/features/home/cards/news_cards.dart';
+// import 'package:app_cecyt/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +16,7 @@ import 'features/home/cards/news_cards3.dart';
 import 'features/home/cards/news_cards4.dart';
 import 'utils/helpers/events_bloc.dart';
 import 'utils/helpers/api_service.dart'; // Importa ApiService
+import 'utils/helpers/pref_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
           LogoutPage.path: (_) => const LogoutPage(),
           QrPage.path: (_) => const QrPage(),
           AdminCard.path: (_) => const AdminCard(),
+          NewsCardsOne.path: (_) => const NewsCardsOne(),
           NewsCardsTwo.path: (_) => const NewsCardsTwo(),
           NewsCardsThree.path: (_) => const NewsCardsThree(),
           NewsCardsFour.path: (_) => const NewsCardsFour()

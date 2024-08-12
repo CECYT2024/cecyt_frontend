@@ -46,29 +46,46 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> getUserData(String token) async {
-    final url = Uri.parse('$baseUrl/user');
-    final response = await http.post(url, headers: {
+  Future<Map<String, dynamic>> getUserData(String token) async {
+    final url = Uri.parse('$baseUrl/user/');
+    final response = await _postWithRedirect(url, headers: {
       'Authorization': 'Bearer $token',
     });
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(
+          'Failed to load user data ${response.statusCode} ${response.body}');
+    }
+  }
+
+  Future<http.Response> _postWithRedirect(Uri url,
+      {required Map<String, String> headers}) async {
+    final response = await http.post(url, headers: headers);
+    if (response.statusCode == 301 || response.statusCode == 302) {
+      final newUrl = response.headers['location'];
+      if (newUrl != null) {
+        return await http.post(Uri.parse(newUrl), headers: headers);
+      } else {
+        throw Exception('Redirection without location header');
+      }
+    }
     return response;
   }
 
-  Future<bool> isAdmin(String token) async {
+  Future<http.Response> isAdmin(String token) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/checkAdmin'),
+      Uri.parse('$baseUrl/user/rol'),
       headers: {
         'Authorization': 'Bearer $token',
       },
     );
 
     if (response.statusCode == 200) {
-      final responseBody = jsonDecode(response.body);
-      print('Response Body: $responseBody'); // Log the response body
-      return responseBody['isAdmin'];
+      return response;
     } else {
-      print(
-          'Failed to check admin status: ${response.statusCode}'); // Log the error status code
+      // Log the error status code
       throw Exception('Failed to check admin status');
     }
   }
@@ -176,8 +193,8 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> getQuestionByTalk(String token, String talkId) async {
-    final url = Uri.parse('$baseUrl/questions/$talkId');
+  Future<http.Response> getQuestionByTalk(String token, int talkId) async {
+    final url = Uri.parse('$baseUrl/questions/${talkId.toString()}');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
@@ -194,22 +211,23 @@ class ApiService {
   }
 
   Future<http.Response> checkNumberOfQuestionsByUser(
-      String token, String talkId) async {
-    final url = Uri.parse('$baseUrl/questions/talks/$talkId/user/count');
+      String token, int talkId) async {
+    final url =
+        Uri.parse('$baseUrl/questions/talks/${talkId.toString()}/user/count');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
     return response;
   }
 
-  Future<http.Response> likeQuestion(
-      String token, Map<String, String> formData) async {
-    final url = Uri.parse('$baseUrl/questions/like');
-    final response = await http.post(url,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-        body: formData);
+  Future<http.Response> likeQuestion(String token, String questionUuid) async {
+    final url = Uri.parse('$baseUrl/questions/$questionUuid/like');
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
     return response;
   }
 

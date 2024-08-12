@@ -3,15 +3,29 @@ import 'package:app_cecyt/utils/helpers/events_bloc.dart';
 import 'package:intl/intl.dart';
 
 class Question {
-  final String studentId;
-  final String text;
-  int likes;
+  final String question;
+  final String questionUuid; // New field
+  final int talkId;
+  final String userName;
+  final int likes;
 
   Question({
-    required this.studentId,
-    required this.text,
-    this.likes = 0,
+    required this.question,
+    required this.questionUuid, // New field
+    required this.talkId,
+    required this.userName,
+    required this.likes,
   });
+
+  factory Question.fromJson(Map<String, dynamic> json) {
+    return Question(
+      question: json['question'],
+      questionUuid: json['question_uuid'], // Parse new field
+      talkId: json['talk_id'],
+      userName: json['user_name'],
+      likes: json['likes_count'],
+    );
+  }
 }
 
 class Event {

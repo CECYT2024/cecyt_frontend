@@ -1,3 +1,5 @@
+import 'package:app_cecyt/utils/constants.dart';
+import 'package:app_cecyt/utils/helpers/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
@@ -12,13 +14,18 @@ class QrPage extends StatefulWidget {
 }
 
 class _QrPageState extends State<QrPage> {
-  final String qrUrl =
-      'https://api.qrserver.com/v1/create-qr-code/?size=512x512&data=https%3A%2F%2Fscript.google.com%2Fmacros%2Fs%2FAKfycbxZc2Qx4NfufZAmpXiLIp0P0n8kgIUufrsFp-Dv1oIG04HPRAzxjkchf0FpdnzUvBsw%2Fexec%3FMatricula%3DY11524%26Nombre%3DFede%26Apellido%3DAlonso%26Numero%3D993388897%26Email%3Dfederi.al2001%40gmail.com';
+  late Future<Map<String, dynamic>> userDataFuture;
+  String? qrUrl;
+  String? name;
+  String? lastname;
+  String? studentId;
+  String? errorMessage;
 
   @override
   void initState() {
     super.initState();
     _secureScreen();
+    userDataFuture = _fetchUserData();
   }
 
   @override
@@ -35,28 +42,72 @@ class _QrPageState extends State<QrPage> {
     await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
+  Future<Map<String, dynamic>> _fetchUserData() async {
+    final apiService = ApiService();
+    try {
+      final userData = await apiService.getUserData(tokenCambiable);
+      setState(() {
+        qrUrl = userData['qr_link'];
+        name = userData['name'];
+        lastname = userData['lastname'];
+        studentId = userData['student_id'];
+      });
+      return userData;
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Error al cargar los datos del usuario: $e';
+      });
+      rethrow;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AppbarCentro(),
       bottomNavigationBar: const BottomNavCentro(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network(
-              qrUrl,
-              width: 512,
-              height: 512,
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Escanea este código QR',
-              style: TextStyle(fontSize: 20),
-            ),
-          ],
-        ),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: userDataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text(errorMessage ?? 'Error desconocido'));
+          } else if (snapshot.hasData) {
+            if (qrUrl == null || qrUrl!.isEmpty) {
+              return const Center(child: Text('No se tiene QR registrado'));
+            }
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.network(
+                    qrUrl!,
+                    width: 512,
+                    height: 512,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Escanea este código QR',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Nombre: $name $lastname',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    'Matricula: $studentId',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const Center(child: Text('No se encontraron datos'));
+          }
+        },
       ),
     );
   }

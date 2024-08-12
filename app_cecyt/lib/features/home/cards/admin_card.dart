@@ -400,7 +400,7 @@ class _AdminCardState extends State<AdminCard> {
                     '${event.name} , ${event.speaker}',
                     textScaler: const TextScaler.linear(0.9),
                   ),
-                  subtitle: Text('${event.startTime}' ' , ${event.place}'),
+                  subtitle: Text('${DateFormat('dd/MM/yyyy').format(event.startTime)},Hora: ${DateFormat('HH:mm').format(event.startTime)}' ' , ${event.place}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
