@@ -1,4 +1,6 @@
 // start_page.dart
+import 'dart:convert';
+
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:app_cecyt/utils/widgets/card_image.dart';
 import 'package:flutter/material.dart';
@@ -28,31 +30,29 @@ class _StartPageState extends State<StartPage> {
 
   //TODO: Lo de abajo solo funcionara cuando valde labure sobre eso
   Future<void> _checkAdminStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString(tokenCambiable); // Obtén el token almacenado
-    print('Token obtenido: $token');
-
-    if (token != null && token.isNotEmpty) {
-      final apiService = ApiService(baseUrl: baseUrl);
-      try {
-        final adminStatus = await apiService.isAdmin(token);
-        print('Admin status obtenido: $adminStatus');
+    final apiService = ApiService(baseUrl: baseUrl);
+    try {
+      final adminStatus = await apiService.isAdmin(tokenCambiable);
+      final responseBody = jsonDecode(adminStatus.body);
+      if (responseBody['isAdmin'] == true) {
+        print('Admin status obtenido');
         setState(() {
-          isAdmin = adminStatus; // Asegúrate de que adminStatus sea booleano
+          isAdmin = true;
           isLoading = false;
         });
-      } catch (e) {
-        print('Error al verificar el estado de admin: $e');
+      } else {
+        print('Admin status no obtenido');
         setState(() {
+          isAdmin = false;
           isLoading = false;
         });
-        // Maneja el error
       }
-    } else {
-      print('Token es null o vacío');
+    } catch (e) {
+      print('Error al verificar el estado de admin: $e');
       setState(() {
         isLoading = false;
       });
+      // Maneja el error
     }
   }
 
@@ -151,7 +151,7 @@ class _StartPageState extends State<StartPage> {
                       ),
                     ],
                   ),
-                  if (true) //TODO Cambiar
+                  if (isAdmin)
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: PrincipalButton(
