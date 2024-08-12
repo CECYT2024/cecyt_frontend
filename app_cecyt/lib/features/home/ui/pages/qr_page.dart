@@ -79,29 +79,31 @@ class _QrPageState extends State<QrPage> {
               return const Center(child: Text('No se tiene QR registrado'));
             }
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.network(
-                    qrUrl!,
-                    width: 512,
-                    height: 512,
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Escanea este código QR',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Nombre: $name $lastname',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  Text(
-                    'Matricula: $studentId',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.network(
+                      qrUrl!,
+                      width: 512,
+                      height: 512,
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Escanea este código QR',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Nombre: $name $lastname',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      'Matricula: $studentId',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
             );
           } else {
