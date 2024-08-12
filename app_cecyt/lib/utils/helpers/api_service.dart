@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'event.dart';
 
 class ApiService {
-  final String baseUrl = c.baseUrl; //TODO Agregar URL de la API
+  final String baseUrl = c.baseUrl;
   ApiService();
   Future<http.Response> register(Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/register');
