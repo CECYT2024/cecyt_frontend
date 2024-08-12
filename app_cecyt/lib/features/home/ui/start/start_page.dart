@@ -8,7 +8,6 @@ import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
 import 'package:app_cecyt/utils/widgets/principal_button.dart';
 import 'package:app_cecyt/utils/helpers/api_service.dart'; // Importa ApiService
 import 'package:app_cecyt/utils/constants.dart'; // Importa la constante
-import 'package:shared_preferences/shared_preferences.dart'; // Para manejar el token
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -28,31 +27,26 @@ class _StartPageState extends State<StartPage> {
     _checkAdminStatus();
   }
 
-  //TODO: Lo de abajo solo funcionara cuando valde labure sobre eso
   Future<void> _checkAdminStatus() async {
     final apiService = ApiService(baseUrl: baseUrl);
     try {
       final adminStatus = await apiService.isAdmin(tokenCambiable);
       final responseBody = jsonDecode(adminStatus.body);
       if (responseBody['isAdmin'] == true) {
-        print('Admin status obtenido');
         setState(() {
           isAdmin = true;
           isLoading = false;
         });
       } else {
-        print('Admin status no obtenido');
         setState(() {
           isAdmin = false;
           isLoading = false;
         });
       }
     } catch (e) {
-      print('Error al verificar el estado de admin: $e');
       setState(() {
         isLoading = false;
       });
-      // Maneja el error
     }
   }
 
@@ -135,7 +129,7 @@ class _StartPageState extends State<StartPage> {
                           title: "PREGUNTAS",
                           imageassetpath: 'assets/Preguntas.png',
                           onTap: () {
-                            //Navigator.of(context).pushNamed('/news1');
+                            Navigator.of(context).pushNamed('/news1');
                           }),
                       const SizedBox(
                         width: 20,

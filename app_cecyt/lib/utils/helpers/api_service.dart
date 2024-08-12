@@ -80,11 +80,9 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      final responseBody = jsonDecode(response.body);
-      print('Response Body: $responseBody'); // Log the response body
       return response;
     } else {
-      print('Failed to check admin status: ${response.statusCode}'); // Log the error status code
+      // Log the error status code
       throw Exception('Failed to check admin status');
     }
   }
@@ -191,8 +189,8 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> getQuestionByTalk(String token, String talkId) async {
-    final url = Uri.parse('$baseUrl/questions/$talkId');
+  Future<http.Response> getQuestionByTalk(String token, int talkId) async {
+    final url = Uri.parse('$baseUrl/questions/${talkId.toString()}');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
@@ -207,21 +205,22 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> checkNumberOfQuestionsByUser(String token, String talkId) async {
-    final url = Uri.parse('$baseUrl/questions/talks/$talkId/user/count');
+  Future<http.Response> checkNumberOfQuestionsByUser(String token, int talkId) async {
+    final url = Uri.parse('$baseUrl/questions/talks/${talkId.toString()}/user/count');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $token',
     });
     return response;
   }
 
-  Future<http.Response> likeQuestion(String token, Map<String, String> formData) async {
-    final url = Uri.parse('$baseUrl/questions/like');
-    final response = await http.post(url,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-        body: formData);
+  Future<http.Response> likeQuestion(String token, String questionUuid) async {
+    final url = Uri.parse('$baseUrl/questions/$questionUuid/like');
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
     return response;
   }
 

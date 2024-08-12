@@ -98,7 +98,7 @@ class _QrPageState extends State<QrPage> {
                     style: const TextStyle(fontSize: 16),
                   ),
                   Text(
-                    'ID de Estudiante: $studentId',
+                    'Matricula: $studentId',
                     style: const TextStyle(fontSize: 16),
                   ),
                 ],

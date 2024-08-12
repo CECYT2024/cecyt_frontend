@@ -1,4 +1,5 @@
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
+import 'package:app_cecyt/features/home/cards/news_cards.dart';
 import 'package:app_cecyt/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
           LogoutPage.path: (_) => const LogoutPage(),
           QrPage.path: (_) => const QrPage(),
           AdminCard.path: (_) => const AdminCard(),
+          NewsCardsOne.path: (_) => const NewsCardsOne(),
           NewsCardsTwo.path: (_) => const NewsCardsTwo(),
           NewsCardsThree.path: (_) => const NewsCardsThree(),
           NewsCardsFour.path: (_) => const NewsCardsFour()
