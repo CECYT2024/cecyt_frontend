@@ -2,6 +2,7 @@ import 'package:app_cecyt/core/cubit/global_cubit.dart';
 import 'package:app_cecyt/features/auth/data/api_datasource.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/presentation/bloc/login_bloc.dart';
+import 'package:app_cecyt/features/auth/presentation/pages/register_page.dart';
 import 'package:app_cecyt/features/home/ui/pages/pages.dart';
 import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
@@ -189,7 +190,8 @@ class _LoginFormState extends State<LoginForm>
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextButton(
-                                    onPressed: () => {},
+                                    onPressed: () => Navigator.of(context)
+                                        .pushNamed(RegisterPage.path),
                                     child: Text(
                                       'Nueva cuenta',
                                       style: Theme.of(context)

@@ -36,6 +36,20 @@ class AuthApiDataSource {
   Future<RegisterResponseModel> register(RegisterParams params) async {
     final url = Uri.parse('$baseUrl/register');
     final response = await http.post(url, body: params.toMap());
+    print(url);
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 401) {
+      throw BadRequestException(
+          message: 'Credenciales incorrectas, intente de nuevo');
+    }
+    if (response.statusCode == 500) {
+      throw BadRequestException(
+          message: 'Error en el servidor, intente de nuevo');
+    }
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      throw BadRequestException(message: json.decode(response.body)['error']);
+    }
     return RegisterResponseModel.fromRawJson(response.body);
   }
 }

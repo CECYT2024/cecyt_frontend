@@ -1,4 +1,5 @@
 import 'package:app_cecyt/core/cubit/global_cubit.dart';
+import 'package:app_cecyt/features/auth/presentation/pages/register_page.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/cards/news_cards.dart';
 // import 'package:app_cecyt/utils/constants.dart';
@@ -66,7 +67,8 @@ class MyApp extends StatelessWidget {
           NewsCardsOne.path: (_) => const NewsCardsOne(),
           NewsCardsTwo.path: (_) => const NewsCardsTwo(),
           NewsCardsThree.path: (_) => const NewsCardsThree(),
-          NewsCardsFour.path: (_) => const NewsCardsFour()
+          NewsCardsFour.path: (_) => const NewsCardsFour(),
+          RegisterPage.path: (_) => const RegisterPage(),
         },
       ),
     );
