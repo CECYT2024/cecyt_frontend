@@ -152,7 +152,7 @@ class _LoginFormState extends State<LoginForm>
                       context
                           .read<GlobalCubit>()
                           .setToken(state.data.accessToken);
-                      Navigator.of(context).pushReplacementNamed(QrPage.path);
+                      Navigator.of(context).pushNamed(QrPage.path);
                     }
                   },
                   child: BlocBuilder<LoginBloc, LoginState>(
