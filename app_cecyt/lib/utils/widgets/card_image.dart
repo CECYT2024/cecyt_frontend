@@ -19,7 +19,14 @@ class CardImage extends StatelessWidget {
   final double alto;
   final double ancho;
   final void Function() onTap;
-
+//_showQuestions(event)
+/*ListTile(
+                        title: Text('${event.name}, ${event.speaker}'),
+                        subtitle: Text(
+                          'Día: ${DateFormat('dd/MM/yyyy').format(event.startTime)}, ${event.place}, Hora: ${DateFormat('HH:mm').format(event.startTime)}',
+                        ),
+                        onTap: () => _showQuestions(event),
+                      ) */
   @override
   Widget build(BuildContext context) {
     return Container(

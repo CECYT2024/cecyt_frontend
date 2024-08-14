@@ -15,7 +15,7 @@ class RegisterParams {
 
   Map<String, String> toMap() {
     return {
-      'studentID': studentID,
+      'student_id': studentID,
       'password': password,
       "email": email,
       'name': name,

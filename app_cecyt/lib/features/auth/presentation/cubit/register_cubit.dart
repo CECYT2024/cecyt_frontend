@@ -14,7 +14,11 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterProgressState());
     try {
       final response = await repository.register(params);
-      emit(RegisterSuccessState(response));
+      if (response.status == "ok") {
+        emit(RegisterSuccessState(response));
+      } else {
+        emit(const RegisterErrorState("Error al crear la cuenta"));
+      }
     } catch (e) {
       emit(RegisterErrorState(e.toString()));
     }

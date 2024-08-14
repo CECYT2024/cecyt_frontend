@@ -12,7 +12,11 @@ import 'package:app_cecyt/utils/widgets/principal_button.dart';
 import 'package:app_cecyt/utils/helpers/api_service.dart'; // Importa ApiService
 import 'package:app_cecyt/utils/constants.dart'; // Importa la constante
 
-enum LoginTypes { logged, notLogged, admin }
+enum LoginTypes {
+  logged,
+  notLogged,
+  admin
+}
 
 extension LoginTypesExtension on LoginTypes {
   bool get isAdmin => this == LoginTypes.admin;
@@ -102,34 +106,6 @@ class _StartPageState extends State<StartPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        PrincipalButton(
-                          titulo: loginType.title,
-                          color: Colors.white,
-                          colortexto: const Color.fromARGB(255, 21, 98, 160),
-                          elevacion: 5,
-                          callback: () {
-                            // Navigator.of(context).popAndPushNamed('/login');
-                            if (loginType != LoginTypes.notLogged) {
-                              PrefManager(null).logout();
-                              loginType = LoginTypes.notLogged;
-                            } else {
-                              Navigator.of(context)
-                                  .pushNamed(loginType.pathRedirect);
-                            }
-                            setState(() {});
-                          },
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        )
-                      ],
-                    ),
                     const SizedBox(
                       height: 15,
                     ),
@@ -191,6 +167,36 @@ class _StartPageState extends State<StartPage> {
                             Navigator.of(context).pushNamed('/news2');
                           },
                         ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        PrincipalButton(
+                          titulo: loginType.title,
+                          color: Colors.white,
+                          colortexto: const Color.fromARGB(255, 21, 98, 160),
+                          elevacion: 5,
+                          callback: () {
+                            // Navigator.of(context).popAndPushNamed('/login');
+                            if (loginType != LoginTypes.notLogged) {
+                              PrefManager(null).logout();
+                              loginType = LoginTypes.notLogged;
+                            } else {
+                              Navigator.of(context).popAndPushNamed(loginType.pathRedirect);
+                            }
+                            setState(() {});
+                          },
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        )
                       ],
                     ),
                     if (loginType.isAdmin)

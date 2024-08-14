@@ -55,7 +55,7 @@ class _QrPageState extends State<QrPage> {
       return userData;
     } catch (e) {
       setState(() {
-        errorMessage = 'Error al cargar los datos del usuario: $e';
+        errorMessage = 'Inicie sesión para ver su código QR';
       });
       rethrow;
     }

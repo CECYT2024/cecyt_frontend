@@ -36,8 +36,7 @@ class RegisterView extends StatefulWidget {
   State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView>
-    with SingleTickerProviderStateMixin {
+class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -135,8 +134,7 @@ class _RegisterViewState extends State<RegisterView>
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width *
-                      .8, // 300.0, //size.width * .6,
+                  width: MediaQuery.of(context).size.width * .8, // 300.0, //size.width * .6,
                   child: BlocConsumer<RegisterCubit, RegisterState>(
                     listener: (context, state) {
                       if (state is RegisterErrorState) {
@@ -145,9 +143,13 @@ class _RegisterViewState extends State<RegisterView>
                       if (state is RegisterSuccessState) {
                         matriculaCtrl.clear();
                         passCrl.clear();
-                        context
-                            .read<GlobalCubit>()
-                            .setToken(state.userData.token);
+                        emailCtrl.clear();
+                        namesCtrl.clear();
+                        lastNamesCtrl.clear();
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Cuenta creada correctamente'),
+                        ));
+                        context.read<GlobalCubit>().setToken(state.userData.token);
                         // Navigator.of(context).pushReplacementNamed(QrPage.path);
                       }
                     },
@@ -182,7 +184,7 @@ class _RegisterViewState extends State<RegisterView>
                               }
                               return null;
                             },
-                            maxLength: 20,
+                            maxLength: 40,
                             onSave: (text) => _email = text ?? '',
                           ),
                           CustomTextField(

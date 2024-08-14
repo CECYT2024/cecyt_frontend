@@ -63,7 +63,7 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
         List<Event> events = Event.fromJson(response.body);
         emit(EventsLoaded(events: events));
       } else {
-        emit(EventsError(message: 'Error al obtener los eventos'));
+        emit(EventsError(message: 'Iniciar sesión para ver los eventos'));
       }
     } catch (e) {
       emit(EventsError(message: e.toString()));

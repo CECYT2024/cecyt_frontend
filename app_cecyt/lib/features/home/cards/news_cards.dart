@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:app_cecyt/utils/constants.dart';
+import 'package:app_cecyt/utils/helpers/talks_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:app_cecyt/utils/helpers/event.dart';
@@ -33,9 +34,10 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
       if (response.statusCode == 200) {
         List<Event> loadedEvents = Event.fromJson(response.body);
         setState(() {
-          events = loadedEvents
-              .where((event) => event.startTime.isAfter(DateTime.now()))
-              .toList()
+          events = loadedEvents.where((event) {
+            final now = DateTime.now();
+            return event.startTime.isAfter(now.subtract(Duration(hours: 2)));
+          }).toList()
             ..sort((a, b) => a.startTime.compareTo(b.startTime));
           isLoading = false;
         });
@@ -43,8 +45,7 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
         setState(() {
           isLoading = false;
         });
-        _showErrorDialog(
-            'Error al obtener las charlas ${response.statusCode},${response.body}');
+        _showErrorDialog('Iniciar sesión o registrate para ver las preguntas');
       }
     } catch (e) {
       setState(() {
@@ -56,26 +57,21 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
 
   void _showQuestions(Event event) async {
     try {
-      final response =
-          await apiService.getQuestionByTalk(tokenCambiable, event.id);
+      final response = await apiService.getQuestionByTalk(tokenCambiable, event.id);
       if (response.statusCode == 200) {
         if (response.body.isNotEmpty) {
           final Map<String, dynamic> responseBody = json.decode(response.body);
           if (responseBody['status'] == 'ok' && responseBody['data'] != null) {
-            List<Question> questions = (responseBody['data'] as List)
-                .map((questionJson) => Question.fromJson(questionJson))
-                .toList();
+            List<Question> questions = (responseBody['data'] as List).map((questionJson) => Question.fromJson(questionJson)).toList();
             questions.sort((a, b) => b.likes.compareTo(a.likes));
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    QuestionsPage(event: event, questions: questions),
+                builder: (context) => QuestionsPage(event: event, questions: questions),
               ),
             );
           } else {
-            _showErrorDialog(
-                'Unexpected response format. ${response.statusCode},${response.body}');
+            _showErrorDialog('Unexpected response format. ${response.statusCode},${response.body}');
           }
         } else {
           _showErrorDialog('No questions found.');
@@ -84,13 +80,11 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                QuestionsPage(event: event, questions: const []),
+            builder: (context) => QuestionsPage(event: event, questions: const []),
           ),
         );
       } else {
-        _showErrorDialog(
-            'Error al obtener las preguntas ${response.statusCode}${response.body}');
+        _showErrorDialog('Error al obtener las preguntas');
       }
     } catch (e) {
       _showErrorDialog(e.toString());
@@ -135,12 +129,14 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
                     itemCount: events.length,
                     itemBuilder: (context, index) {
                       final event = events[index];
-                      return ListTile(
-                        title: Text('${event.name}, ${event.speaker}'),
-                        subtitle: Text(
-                          'Día: ${DateFormat('dd/MM/yyyy').format(event.startTime)}, ${event.place}, Hora: ${DateFormat('HH:mm').format(event.startTime)}',
-                        ),
-                        onTap: () => _showQuestions(event),
+                      return TalksSelector(
+                        sala: event.place,
+                        hora: DateFormat('HH:mm').format(event.startTime),
+                        speaker: event.speaker,
+                        title: event.name,
+                        onTap: () {
+                          _showQuestions(event);
+                        },
                       );
                     },
                   ),
@@ -155,8 +151,7 @@ class QuestionsPage extends StatefulWidget {
   final Event event;
   final List<Question> questions;
 
-  const QuestionsPage(
-      {super.key, required this.event, required this.questions});
+  const QuestionsPage({super.key, required this.event, required this.questions});
 
   @override
   _QuestionsPageState createState() => _QuestionsPageState();
@@ -200,8 +195,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
   }
 
   Future<List<Question>> _showQuestions(Event event) async {
-    final response =
-        await apiService.getQuestionByTalk(tokenCambiable, event.id);
+    final response = await apiService.getQuestionByTalk(tokenCambiable, event.id);
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = json.decode(response.body);
       if (responseBody['status'] == 'ok' && responseBody['data'] != null) {
@@ -243,30 +237,21 @@ class _QuestionsPageState extends State<QuestionsPage> {
                           children: [
                             Text('Likes: ${question.likes}'),
                             IconButton(
-                              icon: Icon(Icons.thumb_up,
-                                  color: question.likes > 0
-                                      ? Colors.blue
-                                      : Colors.grey),
+                              icon: Icon(Icons.thumb_up, color: question.likes > 0 ? Colors.blue : Colors.grey),
                               onPressed: () async {
-                                final response = await apiService.likeQuestion(
-                                    tokenCambiable, question.questionUuid);
+                                final response = await apiService.likeQuestion(tokenCambiable, question.questionUuid);
                                 if (response.statusCode == 200) {
-                                  final Map<String, dynamic> responseBody =
-                                      json.decode(response.body);
+                                  final Map<String, dynamic> responseBody = json.decode(response.body);
                                   if (responseBody['status'] == 'ok') {
                                     _refreshQuestions();
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Error al dar like a la pregunta')),
+                                      const SnackBar(content: Text('Error al dar like a la pregunta')),
                                     );
                                   }
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Error al dar like a la pregunta')),
+                                    const SnackBar(content: Text('Error al dar like a la pregunta')),
                                   );
                                 }
                               },
@@ -288,8 +273,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
   }
 
   void _addQuestion(BuildContext context) async {
-    final response = await apiService.checkNumberOfQuestionsByUser(
-        tokenCambiable, widget.event.id);
+    final response = await apiService.checkNumberOfQuestionsByUser(tokenCambiable, widget.event.id);
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseBody = json.decode(response.body);
       if (responseBody['status'] == 'ok' && responseBody['data'] != null) {
@@ -298,16 +282,13 @@ class _QuestionsPageState extends State<QuestionsPage> {
           _showAddQuestionDialog(context);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Solo se permiten 3 preguntas por usuario')),
+            const SnackBar(content: Text('Solo se permiten 3 preguntas por usuario')),
           );
         }
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                'Error al verificar el número de preguntas ${response.statusCode},${response.body}')),
+        SnackBar(content: Text('Error al verificar el número de preguntas ${response.statusCode},${response.body}')),
       );
     }
   }
@@ -321,8 +302,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
           title: const Text('Agregar Pregunta'),
           content: TextField(
             controller: questionController,
-            decoration:
-                const InputDecoration(hintText: 'Escribe tu pregunta aquí'),
+            decoration: const InputDecoration(hintText: 'Escribe tu pregunta aquí'),
           ),
           actions: [
             TextButton(
@@ -339,20 +319,16 @@ class _QuestionsPageState extends State<QuestionsPage> {
                     'talk_id': widget.event.id.toString(),
                     'uuid': uuid,
                   };
-                  final response =
-                      await apiService.saveQuestion(tokenCambiable, formData);
+                  final response = await apiService.saveQuestion(tokenCambiable, formData);
                   if (response.statusCode == 200) {
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Pregunta agregada exitosamente')),
+                      const SnackBar(content: Text('Pregunta agregada exitosamente')),
                     );
                     _refreshQuestions();
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(
-                              'Error al agregar la pregunta, ${response.statusCode},${response.body}')),
+                      SnackBar(content: Text('Error al agregar la pregunta, ${response.statusCode},${response.body}')),
                     );
                   }
                 }
