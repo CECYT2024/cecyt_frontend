@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:app_cecyt/core/exceptions/exceptions.dart';
@@ -41,11 +42,44 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
+  Future<LoginResponseModel> _postRefreshToken() async {
+    try {
+      final token = PrefManager(null).token ?? '';
+      final response = await repository.refreshToken(token);
+      return response;
+    } catch (e) {
+      if (e is SocketException) {
+        throw const ServerFailureExeception(message: 'No internet connection');
+      }
+      rethrow;
+    }
+  }
+
+  // Función para refrescar el token
+  Future<void> _refreshToken() async {
+    try {
+      final newToken = await _postRefreshToken();
+      PrefManager(null).setToken(newToken.accessToken);
+      tokenCambiable = newToken.accessToken;
+      print("Token refreshed successfully");
+    } catch (e) {
+      print("Error refreshing token: $e");
+    }
+  }
+
+  // Función para iniciar el temporizador de refresco de token
+  void _startTokenRefreshTimer(int durationInMinutes) {
+    Timer.periodic(Duration(minutes: durationInMinutes), (timer) async {
+      await _refreshToken();
+    });
+  }
+
   Future<void> login(LoginParams params, Emitter<LoginState> emit) async {
     try {
       final data = await _postLogin(params);
       PrefManager(null).setToken(data.accessToken);
       tokenCambiable = data.accessToken;
+      _startTokenRefreshTimer(data.expiresIn);
 
       emit(LoggedState(data));
     } on BadRequestException catch (e) {

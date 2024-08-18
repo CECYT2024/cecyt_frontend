@@ -13,6 +13,10 @@ class ApiRepository {
     return apiProvider.login(params);
   }
 
+  Future<LoginResponseModel> refreshToken(String token) async {
+    return apiProvider.refreshToken(token);
+  }
+
   Future<RegisterResponseModel> register(RegisterParams params) async {
     return apiProvider.register(params);
   }
