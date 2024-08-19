@@ -35,7 +35,8 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginBloc(ApiRepository(apiProvider: AuthApiDataSource())),
+      create: (context) =>
+          LoginBloc(ApiRepository(apiProvider: AuthApiDataSource())),
       child: const LoginForm(),
     );
   }
@@ -48,7 +49,8 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMixin {
+class _LoginFormState extends State<LoginForm>
+    with SingleTickerProviderStateMixin {
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -136,7 +138,8 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * .8, // 300.0, //size.width * .6,
+                width: MediaQuery.of(context).size.width *
+                    .8, // 300.0, //size.width * .6,
                 child: BlocListener<LoginBloc, LoginState>(
                   listener: (context, state) {
                     if (state is LoginErrorState) {
@@ -145,8 +148,11 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                     if (state is LoggedState) {
                       matriculaCtrl.clear();
                       passCrl.clear();
-                      context.read<GlobalCubit>().setToken(state.data.accessToken);
-                      Navigator.of(context).pushReplacementNamed(StartPage.path);
+                      context
+                          .read<GlobalCubit>()
+                          .setToken(state.data.accessToken);
+                      Navigator.of(context)
+                          .pushReplacementNamed(StartPage.path);
                     }
                   },
                   child: BlocBuilder<LoginBloc, LoginState>(
@@ -180,21 +186,30 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextButton(
-                                    onPressed: () => Navigator.of(context).pushNamed(RegisterPage.path),
+                                    onPressed: () => Navigator.of(context)
+                                        .pushNamed(RegisterPage.path),
                                     child: Text(
                                       'Nueva cuenta',
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
                                             color: Colors.green,
-                                            decoration: TextDecoration.underline,
+                                            decoration:
+                                                TextDecoration.underline,
                                           ),
                                     ),
                                   ),
                                   Text(
                                     '¿Olvidó su contraseña?',
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
                                           color: Colors.teal,
                                           decoration: TextDecoration.underline,
                                         ),
@@ -244,7 +259,8 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
 }
 
 class AnimatedLogo extends AnimatedWidget {
-  const AnimatedLogo({required this.animation, super.key}) : super(listenable: animation);
+  const AnimatedLogo({required this.animation, super.key})
+      : super(listenable: animation);
   // Maneja los Tween estáticos debido a que estos no cambian.
   static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
   static final _sizeTween = Tween<double>(begin: 0, end: 150);
