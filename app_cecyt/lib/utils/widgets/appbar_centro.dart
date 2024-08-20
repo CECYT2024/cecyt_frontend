@@ -7,7 +7,7 @@ class AppbarCentro extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      toolbarHeight: 100,
+      toolbarHeight: 75,
       title: Center(
         child: Image.asset(
           'assets/cecytlogo.png',
@@ -19,5 +19,5 @@ class AppbarCentro extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(100);
+  Size get preferredSize => const Size.fromHeight(75);
 }

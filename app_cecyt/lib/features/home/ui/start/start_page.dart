@@ -11,12 +11,9 @@ import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
 import 'package:app_cecyt/utils/widgets/principal_button.dart';
 import 'package:app_cecyt/utils/helpers/api_service.dart'; // Importa ApiService
 import 'package:app_cecyt/utils/constants.dart'; // Importa la constante
+import 'package:flutter_animate/flutter_animate.dart';
 
-enum LoginTypes {
-  logged,
-  notLogged,
-  admin
-}
+enum LoginTypes { logged, notLogged, admin }
 
 extension LoginTypesExtension on LoginTypes {
   bool get isAdmin => this == LoginTypes.admin;
@@ -52,7 +49,7 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  bool isLoading = true;
+  bool isLoading = false;
   LoginTypes loginType = LoginTypes.notLogged;
 
   @override
@@ -66,30 +63,31 @@ class _StartPageState extends State<StartPage> {
     try {
       final token = PrefManager(null).token;
       if (token != null) {
+        isLoading = true;
         tokenCambiable = token;
         loginType = LoginTypes.logged;
+        try {
+          final adminStatus = await apiService.isAdmin(tokenCambiable);
+          final responseBody = jsonDecode(adminStatus.body);
+          if (responseBody['isAdmin'] == true) {
+            setState(() {
+              // isAdmin = true;
+              loginType = LoginTypes.admin;
+              isLoading = false;
+            });
+          } else {
+            setState(() {
+              // isAdmin = false;
+              isLoading = false;
+            });
+          }
+        } catch (e) {
+          setState(() {
+            isLoading = false;
+          });
+        }
       }
     } catch (e) {}
-    try {
-      final adminStatus = await apiService.isAdmin(tokenCambiable);
-      final responseBody = jsonDecode(adminStatus.body);
-      if (responseBody['isAdmin'] == true) {
-        setState(() {
-          // isAdmin = true;
-          loginType = LoginTypes.admin;
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          // isAdmin = false;
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   @override
@@ -122,7 +120,9 @@ class _StartPageState extends State<StartPage> {
                             Navigator.of(context).pushNamed('/news4');
                           },
                           escala: 1,
-                        ),
+                        )
+                            .animate(delay: Duration(milliseconds: 440))
+                            .slideY(curve: Curves.easeIn),
                       ],
                     ),
                     const SizedBox(
@@ -138,7 +138,9 @@ class _StartPageState extends State<StartPage> {
                       },
                       escala: 1,
                       elevacion: 10,
-                    ),
+                    )
+                        .animate(delay: Duration(milliseconds: 360))
+                        .slideY(curve: Curves.easeIn),
                     const SizedBox(
                       height: 15,
                     ),
@@ -147,14 +149,16 @@ class _StartPageState extends State<StartPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CardImage(
-                            escala: 2,
-                            elevacion: 10,
-                            fontScale: 1,
-                            title: "PREGUNTAS",
-                            imageassetpath: 'assets/Preguntas.png',
-                            onTap: () {
-                              Navigator.of(context).pushNamed('/news1');
-                            }),
+                                escala: 2,
+                                elevacion: 10,
+                                fontScale: 1,
+                                title: "PREGUNTAS",
+                                imageassetpath: 'assets/Preguntas.png',
+                                onTap: () {
+                                  Navigator.of(context).pushNamed('/news1');
+                                })
+                            .animate(delay: Duration(milliseconds: 160))
+                            .slideY(curve: Curves.easeIn),
                         const SizedBox(
                           width: 20,
                         ),
@@ -166,7 +170,9 @@ class _StartPageState extends State<StartPage> {
                           onTap: () {
                             Navigator.of(context).pushNamed('/news2');
                           },
-                        ),
+                        )
+                            .animate(delay: Duration(milliseconds: 200))
+                            .slideY(curve: Curves.easeIn),
                       ],
                     ),
                     const SizedBox(
@@ -189,11 +195,12 @@ class _StartPageState extends State<StartPage> {
                               PrefManager(null).logout();
                               loginType = LoginTypes.notLogged;
                             } else {
-                              Navigator.of(context).popAndPushNamed(loginType.pathRedirect);
+                              Navigator.of(context)
+                                  .popAndPushNamed(loginType.pathRedirect);
                             }
                             setState(() {});
                           },
-                        ),
+                        ).animate().slideX(),
                         const SizedBox(
                           width: 20,
                         )

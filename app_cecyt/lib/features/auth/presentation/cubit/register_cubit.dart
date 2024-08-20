@@ -5,7 +5,6 @@ import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/domain/register_params.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:app_cecyt/utils/helpers/events_bloc.dart';
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
