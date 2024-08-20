@@ -12,6 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+String convertToUpperCase(String input) {
+  return input.split('').map((char) {
+    if (char.contains(RegExp(r'[a-z]'))) {
+      return char.toUpperCase();
+    }
+    return char;
+  }).join('');
+}
+
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
   static const path = '/register';
@@ -36,7 +45,8 @@ class RegisterView extends StatefulWidget {
   State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
+class _RegisterViewState extends State<RegisterView>
+    with SingleTickerProviderStateMixin {
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -134,7 +144,8 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * .8, // 300.0, //size.width * .6,
+                  width: MediaQuery.of(context).size.width *
+                      .8, // 300.0, //size.width * .6,
                   child: BlocConsumer<RegisterCubit, RegisterState>(
                     listener: (context, state) {
                       if (state is RegisterErrorState) {
@@ -146,10 +157,13 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                         emailCtrl.clear();
                         namesCtrl.clear();
                         lastNamesCtrl.clear();
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
                           content: Text('Cuenta creada correctamente'),
                         ));
-                        context.read<GlobalCubit>().setToken(state.userData.token);
+                        context
+                            .read<GlobalCubit>()
+                            .setToken(state.userData.token);
                         // Navigator.of(context).pushReplacementNamed(QrPage.path);
                       }
                     },
@@ -167,6 +181,8 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Introduzca una matricula';
+                              } else if (value.length < 6) {
+                                return 'La matricula debe tener al menos 6 caracteres';
                               }
                               return null;
                             },
@@ -244,7 +260,8 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
 
                                   context.read<RegisterCubit>().register(
                                         RegisterParams(
-                                          studentID: _matricula,
+                                          studentID:
+                                              convertToUpperCase(_matricula),
                                           email: _email,
                                           name: _name,
                                           lastname: _lastName,

@@ -204,16 +204,6 @@ class _LoginFormState extends State<LoginForm>
                                           ),
                                     ),
                                   ),
-                                  Text(
-                                    '¿Olvidó su contraseña?',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: Colors.teal,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                  ),
                                 ],
                               ),
                             ),
