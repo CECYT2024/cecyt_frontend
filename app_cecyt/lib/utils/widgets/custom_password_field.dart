@@ -61,7 +61,7 @@ class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
             },
             icon: Icon(
               !_isVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.white,
+              color: Color.fromARGB(199, 0, 0, 0),
             ),
           ),
           hintStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(

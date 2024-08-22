@@ -121,7 +121,7 @@ class _StartPageState extends State<StartPage> {
                           },
                           escala: 1,
                         )
-                            .animate(delay: Duration(milliseconds: 440))
+                            .animate(delay: Duration(milliseconds: 420))
                             .slideY(curve: Curves.easeIn),
                       ],
                     ),
@@ -139,7 +139,7 @@ class _StartPageState extends State<StartPage> {
                       escala: 1,
                       elevacion: 10,
                     )
-                        .animate(delay: Duration(milliseconds: 360))
+                        .animate(delay: Duration(milliseconds: 320))
                         .slideY(curve: Curves.easeIn),
                     const SizedBox(
                       height: 15,
@@ -157,7 +157,7 @@ class _StartPageState extends State<StartPage> {
                                 onTap: () {
                                   Navigator.of(context).pushNamed('/news1');
                                 })
-                            .animate(delay: Duration(milliseconds: 160))
+                            .animate(delay: Duration(milliseconds: 100))
                             .slideY(curve: Curves.easeIn),
                         const SizedBox(
                           width: 20,
@@ -171,7 +171,7 @@ class _StartPageState extends State<StartPage> {
                             Navigator.of(context).pushNamed('/news2');
                           },
                         )
-                            .animate(delay: Duration(milliseconds: 200))
+                            .animate(delay: Duration(milliseconds: 220))
                             .slideY(curve: Curves.easeIn),
                       ],
                     ),
@@ -194,13 +194,16 @@ class _StartPageState extends State<StartPage> {
                             if (loginType != LoginTypes.notLogged) {
                               PrefManager(null).logout();
                               loginType = LoginTypes.notLogged;
+                              tokenCambiable = '';
                             } else {
                               Navigator.of(context)
                                   .popAndPushNamed(loginType.pathRedirect);
                             }
                             setState(() {});
                           },
-                        ).animate().slideX(),
+                        )
+                            .animate()
+                            .slideX(duration: Duration(milliseconds: 250)),
                         const SizedBox(
                           width: 20,
                         )
