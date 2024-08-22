@@ -133,7 +133,8 @@ class _CalendarPageState extends State<CalendarPage> {
                     }).toList(),
                   );
                 } else if (state is EventsError) {
-                  return Center(child: Text(state.message));
+                  print(state.message);
+                  return Center(child: Text('Error al cargar los eventos'));
                 } else {
                   return const Center(
                       child: Text('No hay eventos disponibles'));

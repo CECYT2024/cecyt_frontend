@@ -17,11 +17,12 @@ class ApiService {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load user data ${response.statusCode} ${response.body}');
+      throw Exception('Failed to load user data ${response.statusCode}');
     }
   }
 
-  Future<http.Response> _postWithRedirect(Uri url, {required Map<String, String> headers}) async {
+  Future<http.Response> _postWithRedirect(Uri url,
+      {required Map<String, String> headers}) async {
     final response = await http.post(url, headers: headers);
     if (response.statusCode == 301 || response.statusCode == 302) {
       final newUrl = response.headers['location'];
@@ -51,7 +52,8 @@ class ApiService {
     }
   }
 
-  Future<http.Response> saveQrInDb(String token, Map<String, String> formData) async {
+  Future<http.Response> saveQrInDb(
+      String token, Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/user/qr');
     final response = await http.post(url,
         headers: {
@@ -144,7 +146,8 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> getMostLikedQuestions(String token, String talkId) async {
+  Future<http.Response> getMostLikedQuestions(
+      String token, String talkId) async {
     final url = Uri.parse('$baseUrl/questions/$talkId/latest');
     final response = await http.get(url, headers: {
       'Accept': 'application/json',
@@ -153,8 +156,10 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> checkNumberOfQuestionsByUser(String token, int talkId) async {
-    final url = Uri.parse('$baseUrl/questions/talks/${talkId.toString()}/user/count');
+  Future<http.Response> checkNumberOfQuestionsByUser(
+      String token, int talkId) async {
+    final url =
+        Uri.parse('$baseUrl/questions/talks/${talkId.toString()}/user/count');
     final response = await http.get(url, headers: {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
@@ -174,7 +179,8 @@ class ApiService {
     return response;
   }
 
-  Future<http.Response> saveQuestion(String token, Map<String, String> formData) async {
+  Future<http.Response> saveQuestion(
+      String token, Map<String, String> formData) async {
     final url = Uri.parse('$baseUrl/questions/save');
     final response = await http.post(url,
         headers: {
