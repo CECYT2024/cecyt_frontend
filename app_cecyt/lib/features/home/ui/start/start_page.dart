@@ -79,7 +79,7 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppbarCentro(
+      appBar: const AppbarCentro(
         isHome: true,
       ),
       bottomNavigationBar: const BottomNavCentro(

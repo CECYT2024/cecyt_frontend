@@ -65,10 +65,13 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
       } else if (response.statusCode == 503) {
         emit(EventsError(message: 'El servidor esta en mantenimiento'));
       } else {
-        emit(EventsError(message: 'Error desconocido'));
+        emit(EventsError(message: 'Error desconocido${response.body}'));
       }
     } catch (e) {
-      emit(EventsError(message: 'Error desconocido'));
+      if (e.toString() == 'Instance of \'NotAuthException\'') {
+        emit(EventsError(message: 'Iniciar sesión para ver los eventos'));
+      }
+      emit(EventsError(message: 'No se pudo cargar los eventos'));
     }
   }
 

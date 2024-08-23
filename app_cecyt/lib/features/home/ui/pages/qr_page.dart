@@ -104,10 +104,10 @@ class _QrPageState extends State<QrPage> {
                     children: [
                       Image.network(
                         qrUrl!,
-                        width: 512,
-                        height: 512,
+                        width: 412,
+                        height: 412,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       const Text(
                         'Escanea este código QR',
                         style: TextStyle(fontSize: 20),

@@ -248,10 +248,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                           children: [
                             Text('Likes: ${question.likes}'),
                             IconButton(
-                              icon: Icon(Icons.thumb_up,
-                                  color: question.likes > 0
-                                      ? Colors.blue
-                                      : Colors.grey),
+                              icon: Icon(Icons.thumb_up, color: Colors.blue),
                               onPressed: () async {
                                 final response = await apiService.likeQuestion(
                                     tokenCambiable, question.questionUuid);
@@ -329,9 +326,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-
                 'Error al verificar el número de preguntas ${response.statusCode}')),
-
       );
     }
   }
@@ -376,11 +371,10 @@ class _QuestionsPageState extends State<QuestionsPage> {
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-
                           content: response.statusCode != 403
                               ? Text(
                                   'Error al agregar la pregunta, ${response.statusCode},${response.body}')
-                              : Text(
+                              : const Text(
                                   'Se requiere de comprar la entrada para hacer preguntas')),
                     );
                   }

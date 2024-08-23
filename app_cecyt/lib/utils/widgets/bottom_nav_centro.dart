@@ -18,25 +18,36 @@ abstract class NavigationEvent extends Equatable {
   const NavigationEvent();
 }
 
-// class PageTapped extends NavigationEvent {
-//   final int index;
+void _navigateToPage(BuildContext context, String route) {
+  Widget page;
 
-//   const PageTapped(this.index);
+  switch (route) {
+    case CalendarPage.path:
+      page = const CalendarPage();
+      break;
+    case QrPage.path:
+      page = const QrPage();
+      break;
+    case LoginPage.path:
+      page = const LoginPage();
+      break;
+    case StartPage.path:
+    default:
+      page = const StartPage();
+  }
 
-//   @override
-//   List<Object> get props => [index];
-// }
-// // navigation_state.dart
-
-// class NavigationState extends Equatable {
-//   final int selectedIndex;
-
-//   const NavigationState(this.selectedIndex);
-
-//   @override
-//   List<Object> get props => [selectedIndex];
-// }
-// custom_bottom_nav_bar.dart
+  if (route == StartPage.path) {
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  } else {
+    Navigator.push(
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        child: page,
+      ),
+    );
+  }
+}
 
 String pageActual(int num) {
   const paths = [
@@ -75,11 +86,11 @@ class BottomNavCentro extends StatelessWidget {
               label: "Calendario",
             ),
             const BottomNavigationBarItem(
-              icon: Icon(Icons.people),
+              icon: Icon(Icons.qr_code),
               label: "Mi QR",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.supervised_user_circle_sharp),
+              icon: Icon(Icons.account_circle),
               label: state.loginType.title,
             ),
           ],
@@ -96,11 +107,7 @@ class BottomNavCentro extends StatelessWidget {
               if (newIndex == 0) {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               } else {
-                if (index != 0) {
-                  Navigator.pushReplacementNamed(context, pageActual(newIndex));
-                } else {
-                  Navigator.pushNamed(context, pageActual(newIndex));
-                }
+                _navigateToPage(context, pageActual(newIndex));
               }
             }
           },
@@ -108,37 +115,38 @@ class BottomNavCentro extends StatelessWidget {
       },
     );
   }
-
-  void _navigateToPage(BuildContext context, String route) {
-    // Widget page;
-
-    // switch (route) {
-    //   case '/calendar':
-    //     page = const CalendarPage();
-    //     break;
-    //   case '/QRpage':
-    //     page = const QrPage();
-    //     break;
-    //   case LoginPage.path:
-    //     page = const LoginPage();
-    //     break;
-    //   case '/start':
-    //   default:
-    //     page = const StartPage();
-    // }
-    if (route == StartPage.path) {
-      Navigator.of(context).popUntil((route) => route.isFirst);
-    } else {
-      // Navigator.pushReplacement(
-      //   context,
-      //   PageTransition(
-      //     alignment: Alignment.center,
-      //     type: PageTransitionType.fade,
-      //     child: page,
-      //   ),
-      // );
-      Navigator.pushNamed(context, route);
-    }
-  }
-  //Animaciones para el buttom nav bar
 }
+
+void _navigateToPage1(BuildContext context, String route) {
+  // Widget page;
+
+  // switch (route) {
+  //   case '/calendar':
+  //     page = const CalendarPage();
+  //     break;
+  //   case '/QRpage':
+  //     page = const QrPage();
+  //     break;
+  //   case LoginPage.path:
+  //     page = const LoginPage();
+  //     break;
+  //   case '/start':
+  //   default:
+  //     page = const StartPage();
+  // }
+  if (route == StartPage.path) {
+    Navigator.of(context).popUntil((route) => route.isFirst);
+  } else {
+    // Navigator.pushReplacement(
+    //   context,
+    //   PageTransition(
+    //     alignment: Alignment.center,
+    //     type: PageTransitionType.fade,
+    //     child: page,
+    //   ),
+    // );
+    Navigator.pushNamed(context, route);
+  }
+}
+  //Animaciones para el buttom nav bar
+
