@@ -1,6 +1,9 @@
 // navigation_event.dart
 
+import 'package:app_cecyt/core/cubit/session_cubit.dart';
+import 'package:app_cecyt/core/utils/login_types.dart';
 import 'package:app_cecyt/features/auth/presentation/bloc/bottom_nav_bloc.dart';
+import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
 import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
 import 'package:app_cecyt/features/home/ui/start/start_page.dart';
 import 'package:equatable/equatable.dart';
@@ -15,62 +18,90 @@ abstract class NavigationEvent extends Equatable {
   const NavigationEvent();
 }
 
-class PageTapped extends NavigationEvent {
-  final int index;
+// class PageTapped extends NavigationEvent {
+//   final int index;
 
-  const PageTapped(this.index);
+//   const PageTapped(this.index);
 
-  @override
-  List<Object> get props => [index];
-}
-// navigation_state.dart
+//   @override
+//   List<Object> get props => [index];
+// }
+// // navigation_state.dart
 
-class NavigationState extends Equatable {
-  final int selectedIndex;
+// class NavigationState extends Equatable {
+//   final int selectedIndex;
 
-  const NavigationState(this.selectedIndex);
+//   const NavigationState(this.selectedIndex);
 
-  @override
-  List<Object> get props => [selectedIndex];
-}
+//   @override
+//   List<Object> get props => [selectedIndex];
+// }
 // custom_bottom_nav_bar.dart
 
 String pageActual(int num) {
-  const paths = ["/start", "/calendar", "/QRpage"];
+  const paths = [
+    StartPage.path,
+    CalendarPage.path,
+    QrPage.path,
+    LoginPage.path
+  ];
   return paths[num];
 }
 
+enum TabsEnum {
+  home,
+  calendar,
+  qr,
+  session,
+}
+
 class BottomNavCentro extends StatelessWidget {
-  const BottomNavCentro({super.key});
+  const BottomNavCentro({super.key, required this.index});
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavigationBloc, NavigationState>(
+    return BlocBuilder<SessionCubit, SessionState>(
       builder: (context, state) {
         return BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
+          items: [
+            const BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: "Inicio",
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),
               label: "Calendario",
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.people),
               label: "Mi QR",
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.supervised_user_circle_sharp),
+              label: state.loginType.title,
+            ),
           ],
-          currentIndex: state.selectedIndex,
+          currentIndex: index,
           selectedItemColor: Colors.blue,
           unselectedItemColor: Colors.grey,
           backgroundColor: Colors.white,
-          onTap: (index) {
-            if (index != state.selectedIndex) {
-              BlocProvider.of<NavigationBloc>(context).add(PageTapped(index));
-              _navigateToPage(context, pageActual(index));
+          onTap: (newIndex) {
+            if (index != newIndex) {
+              if (newIndex == 3 && state is SessionLoaded) {
+                BlocProvider.of<SessionCubit>(context).logout();
+                return;
+              }
+              if (newIndex == 0) {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              } else {
+                if (index != 0) {
+                  Navigator.pushReplacementNamed(context, pageActual(newIndex));
+                } else {
+                  Navigator.pushNamed(context, pageActual(newIndex));
+                }
+              }
             }
           },
         );
@@ -79,28 +110,35 @@ class BottomNavCentro extends StatelessWidget {
   }
 
   void _navigateToPage(BuildContext context, String route) {
-    Widget page;
+    // Widget page;
 
-    switch (route) {
-      case '/calendar':
-        page = const CalendarPage();
-        break;
-      case '/QRpage':
-        page = const QrPage();
-        break;
-      case '/start':
-      default:
-        page = const StartPage();
+    // switch (route) {
+    //   case '/calendar':
+    //     page = const CalendarPage();
+    //     break;
+    //   case '/QRpage':
+    //     page = const QrPage();
+    //     break;
+    //   case LoginPage.path:
+    //     page = const LoginPage();
+    //     break;
+    //   case '/start':
+    //   default:
+    //     page = const StartPage();
+    // }
+    if (route == StartPage.path) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    } else {
+      // Navigator.pushReplacement(
+      //   context,
+      //   PageTransition(
+      //     alignment: Alignment.center,
+      //     type: PageTransitionType.fade,
+      //     child: page,
+      //   ),
+      // );
+      Navigator.pushNamed(context, route);
     }
-
-    Navigator.pushReplacement(
-      context,
-      PageTransition(
-        alignment: Alignment.center,
-        type: PageTransitionType.fade,
-        child: page,
-      ),
-    );
   }
   //Animaciones para el buttom nav bar
 }

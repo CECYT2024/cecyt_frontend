@@ -41,7 +41,9 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppbarCentro(),
-      bottomNavigationBar: const BottomNavCentro(),
+      bottomNavigationBar: const BottomNavCentro(
+        index: 1,
+      ),
       backgroundColor: Colors.white,
       body: Column(
         children: [

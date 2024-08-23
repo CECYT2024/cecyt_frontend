@@ -10,7 +10,7 @@ class LogoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppbarCentro(),
-      bottomNavigationBar: const BottomNavCentro(),
+      // bottomNavigationBar: const BottomNavCentro(),
       body: Center(
         child: ElevatedButton(
           onPressed: () {},

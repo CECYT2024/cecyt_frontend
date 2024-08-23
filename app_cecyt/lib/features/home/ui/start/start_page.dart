@@ -1,7 +1,11 @@
 // start_page.dart
 import 'dart:convert';
 
+import 'package:app_cecyt/core/cubit/session_cubit.dart';
+import 'package:app_cecyt/core/exceptions/exceptions.dart';
+
 import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
+import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/ui/pages/logout_page.dart';
 import 'package:app_cecyt/utils/helpers/pref_manager.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
@@ -12,33 +16,7 @@ import 'package:app_cecyt/utils/widgets/principal_button.dart';
 import 'package:app_cecyt/utils/helpers/api_service.dart'; // Importa ApiService
 import 'package:app_cecyt/utils/constants.dart'; // Importa la constante
 import 'package:flutter_animate/flutter_animate.dart';
-
-enum LoginTypes { logged, notLogged, admin }
-
-extension LoginTypesExtension on LoginTypes {
-  bool get isAdmin => this == LoginTypes.admin;
-  String get title {
-    switch (this) {
-      case LoginTypes.logged:
-        return 'Cerrar Sesión';
-      case LoginTypes.notLogged:
-        return 'Iniciar Sesión';
-      case LoginTypes.admin:
-        return 'Cerrar Sesión';
-    }
-  }
-
-  String get pathRedirect {
-    switch (this) {
-      case LoginTypes.logged:
-        return LogoutPage.path;
-      case LoginTypes.notLogged:
-        return LoginPage.path;
-      case LoginTypes.admin:
-        return LogoutPage.path;
-    }
-  }
-}
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -50,7 +28,7 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   bool isLoading = false;
-  LoginTypes loginType = LoginTypes.notLogged;
+  // LoginTypes loginType = LoginTypes.notLogged;
 
   @override
   void initState() {
@@ -65,17 +43,19 @@ class _StartPageState extends State<StartPage> {
       if (token != null) {
         isLoading = true;
         tokenCambiable = token;
-        loginType = LoginTypes.logged;
+
         try {
           final adminStatus = await apiService.isAdmin(tokenCambiable);
           final responseBody = jsonDecode(adminStatus.body);
-          if (responseBody['isAdmin'] == true) {
+          if (responseBody['isAdmin']) {
+            context.read<SessionCubit>().setSession(token, true);
             setState(() {
               // isAdmin = true;
-              loginType = LoginTypes.admin;
+              // loginType = LoginTypes.admin;
               isLoading = false;
             });
           } else {
+            context.read<SessionCubit>().setSession(token, false);
             setState(() {
               // isAdmin = false;
               isLoading = false;
@@ -87,6 +67,11 @@ class _StartPageState extends State<StartPage> {
           });
         }
       }
+    } on NotAuthException catch (e) {
+      // PrefManager(null).logout();
+      // loginType = LoginTypes.notLogged;
+      // tokenCambiable = '';
+      context.read<SessionCubit>().logout();
     } catch (e) {}
   }
 
@@ -94,8 +79,12 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: const AppbarCentro(),
-      bottomNavigationBar: const BottomNavCentro(),
+      appBar: AppbarCentro(
+        isHome: true,
+      ),
+      bottomNavigationBar: const BottomNavCentro(
+        index: 0,
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -184,41 +173,42 @@ class _StartPageState extends State<StartPage> {
                         const SizedBox(
                           width: 20,
                         ),
-                        PrincipalButton(
-                          titulo: loginType.title,
-                          color: Colors.white,
-                          colortexto: const Color.fromARGB(255, 21, 98, 160),
-                          elevacion: 5,
-                          callback: () {
-                            // Navigator.of(context).popAndPushNamed('/login');
-                            if (loginType != LoginTypes.notLogged) {
-                              PrefManager(null).logout();
-                              loginType = LoginTypes.notLogged;
-                              tokenCambiable = '';
-                            } else {
-                              Navigator.of(context)
-                                  .popAndPushNamed(loginType.pathRedirect);
-                            }
-                            setState(() {});
-                          },
-                        )
-                            .animate()
-                            .slideX(duration: Duration(milliseconds: 250)),
+                        // PrincipalButton(
+                        //   titulo: loginType.title,
+                        //   color: Colors.white,
+                        //   colortexto: const Color.fromARGB(255, 21, 98, 160),
+                        //   elevacion: 5,
+                        //   callback: () {
+                        //     // Navigator.of(context).popAndPushNamed('/login');
+                        //     if (loginType != LoginTypes.notLogged) {
+                        //       PrefManager(null).logout();
+                        //       loginType = LoginTypes.notLogged;
+                        //       tokenCambiable = '';
+                        //       context.read<SessionCubit>().logout();
+                        //     } else {
+                        //       Navigator.of(context)
+                        //           .popAndPushNamed(loginType.pathRedirect);
+                        //     }
+                        //     setState(() {});
+                        //   },
+                        // )
+                        //     .animate()
+                        //     .slideX(duration: Duration(milliseconds: 250)),
                         const SizedBox(
                           width: 20,
                         )
                       ],
                     ),
-                    if (loginType.isAdmin)
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: PrincipalButton(
-                            titulo: 'Administrador',
-                            color: Colors.black,
-                            callback: () {
-                              Navigator.of(context).pushNamed('/admin');
-                            }),
-                      )
+                    // if (loginType.isAdmin)
+                    //   Padding(
+                    //     padding: const EdgeInsets.all(16.0),
+                    //     child: PrincipalButton(
+                    //         titulo: 'Administrador',
+                    //         color: Colors.black,
+                    //         callback: () {
+                    //           Navigator.of(context).pushNamed('/admin');
+                    //         }),
+                    //   )
                   ],
                 ),
               ),

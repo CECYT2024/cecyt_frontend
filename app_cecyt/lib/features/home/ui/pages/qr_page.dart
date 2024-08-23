@@ -66,7 +66,9 @@ class _QrPageState extends State<QrPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: const AppbarCentro(),
-      bottomNavigationBar: const BottomNavCentro(),
+      bottomNavigationBar: const BottomNavCentro(
+        index: 2,
+      ),
       body: FutureBuilder<Map<String, dynamic>>(
         future: userDataFuture,
         builder: (context, snapshot) {
@@ -80,29 +82,32 @@ class _QrPageState extends State<QrPage> {
             }
             return Center(
               child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                      qrUrl!,
-                      width: 512,
-                      height: 512,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Escanea este código QR',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Nombre: $name $lastname',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    Text(
-                      'Matricula: $studentId',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        qrUrl!,
+                        width: 512,
+                        height: 512,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Escanea este código QR',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Nombre: $name $lastname',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                      Text(
+                        'Matricula: $studentId',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

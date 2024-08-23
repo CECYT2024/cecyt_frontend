@@ -19,7 +19,7 @@ class TalksSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(6),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: const BoxDecoration(
         boxShadow: [
           BoxShadow(
