@@ -278,7 +278,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                             ),
                           ],
                         ),
-                        subtitle: Text('User: ${question.userName}'),
+                        subtitle: Text('Pregunta de ${question.userName}'),
                       );
                     },
                   ),
@@ -308,11 +308,30 @@ class _QuestionsPageState extends State<QuestionsPage> {
           );
         }
       }
+    } else if (response.statusCode == 403) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      if (responseBody['status'] == 'error' &&
+          responseBody['message'] ==
+              'User does not have qr_code. You need to purchase a ticket to like or dislike a question') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content:
+                  Text('Necesitas comprar un ticket para hacer una pregunta')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                  'Error al verificar el número de preguntas ${response.statusCode}')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
-                'Error al verificar el número de preguntas ${response.statusCode},${response.body}')),
+
+                'Error al verificar el número de preguntas ${response.statusCode}')),
+
       );
     }
   }
@@ -354,10 +373,15 @@ class _QuestionsPageState extends State<QuestionsPage> {
                     );
                     _refreshQuestions();
                   } else {
+                    Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                          content: Text(
-                              'Error al agregar la pregunta, ${response.statusCode},${response.body}')),
+
+                          content: response.statusCode != 403
+                              ? Text(
+                                  'Error al agregar la pregunta, ${response.statusCode},${response.body}')
+                              : Text(
+                                  'Se requiere de comprar la entrada para hacer preguntas')),
                     );
                   }
                 }
