@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:app_cecyt/utils/constants.dart';
 import 'package:app_cecyt/utils/helpers/api_service.dart';
+import 'package:app_cecyt/utils/helpers/events_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 
 class QrPage extends StatefulWidget {
   const QrPage({super.key});
@@ -20,17 +24,26 @@ class _QrPageState extends State<QrPage> {
   String? lastname;
   String? studentId;
   String? errorMessage;
+  final _noScreenshot = NoScreenshot.instance;
 
   @override
   void initState() {
     super.initState();
-    _secureScreen();
+    if (Platform.isAndroid) {
+      _secureScreen();
+    } else {
+      _noScreenshot.screenshotOff();
+    }
     userDataFuture = _fetchUserData();
   }
 
   @override
   void dispose() {
-    _unsecureScreen();
+    if (Platform.isAndroid) {
+      _unsecureScreen();
+    } else {
+      _noScreenshot.screenshotOn();
+    }
     super.dispose();
   }
 
@@ -55,7 +68,7 @@ class _QrPageState extends State<QrPage> {
       return userData;
     } catch (e) {
       setState(() {
-        errorMessage = 'Inicie sesión para ver su código QR';
+        errorMessage = EventsError(message: e.toString()) as String?;
       });
       rethrow;
     }
@@ -73,7 +86,9 @@ class _QrPageState extends State<QrPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text(errorMessage ?? 'Error desconocido'));
+            return Center(
+                child:
+                    Text(errorMessage ?? 'Inicie sesion para mostrar el QR'));
           } else if (snapshot.hasData) {
             if (qrUrl == null || qrUrl!.isEmpty) {
               return const Center(child: Text('No se tiene QR registrado'));

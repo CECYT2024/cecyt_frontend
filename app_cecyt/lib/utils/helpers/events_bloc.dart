@@ -30,9 +30,7 @@ class EventsLoaded extends EventState {
   EventsLoaded({required this.events});
 
   @override
-  List<Object?> get props => [
-        events
-      ];
+  List<Object?> get props => [events];
 }
 
 class EventsError extends EventState {
@@ -41,9 +39,7 @@ class EventsError extends EventState {
   EventsError({required this.message});
 
   @override
-  List<Object?> get props => [
-        message
-      ];
+  List<Object?> get props => [message];
 }
 
 // Bloc para manejar los eventos
@@ -52,33 +48,42 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
 
   EventsBloc({required this.apiService}) : super(EventsInitial()) {
     on<FetchEvents>(_onFetchEvents);
-    on<DeleteEvent>(_onDeleteEvent); // Agregar el manejador de eventos de eliminación
+    on<DeleteEvent>(
+        _onDeleteEvent); // Agregar el manejador de eventos de eliminación
   }
 
-  Future<void> _onFetchEvents(FetchEvents event, Emitter<EventState> emit) async {
+  Future<void> _onFetchEvents(
+      FetchEvents event, Emitter<EventState> emit) async {
     emit(EventsLoading());
     try {
       final response = await apiService.getAllTalks(tokenCambiable);
       if (response.statusCode == 200) {
         List<Event> events = Event.fromJson(response.body);
         emit(EventsLoaded(events: events));
-      } else {
+      } else if (response.statusCode == 401) {
         emit(EventsError(message: 'Iniciar sesión para ver los eventos'));
+      } else if (response.statusCode == 503) {
+        emit(EventsError(message: 'El servidor esta en mantenimiento'));
+      } else {
+        emit(EventsError(message: 'Error desconocido'));
       }
     } catch (e) {
-      emit(EventsError(message: e.toString()));
+      emit(EventsError(message: 'Error desconocido'));
     }
   }
 
-  Future<void> _onDeleteEvent(DeleteEvent event, Emitter<EventState> emit) async {
+  Future<void> _onDeleteEvent(
+      DeleteEvent event, Emitter<EventState> emit) async {
     try {
-      final response = await apiService.deleteTalk(event.event.id, tokenCambiable);
+      final response =
+          await apiService.deleteTalk(event.event.id, tokenCambiable);
       final responseBody = jsonDecode(response.body);
       if (response.statusCode == 200 && responseBody['status'] == 'ok') {
         // Eliminar el evento de la lista de eventos
         final currentState = state;
         if (currentState is EventsLoaded) {
-          final updatedEvents = currentState.events.where((e) => e.id != event.event.id).toList();
+          final updatedEvents =
+              currentState.events.where((e) => e.id != event.event.id).toList();
           emit(EventsLoaded(events: updatedEvents));
         }
       } else {

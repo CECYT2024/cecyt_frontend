@@ -52,17 +52,6 @@ class ApiService {
     }
   }
 
-  Future<http.Response> saveQrInDb(
-      String token, Map<String, String> formData) async {
-    final url = Uri.parse('$baseUrl/user/qr');
-    final response = await http.post(url,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-        body: formData);
-    return response;
-  }
-
   Future<http.Response> getAllTalks(String token) async {
     final url = Uri.parse('$baseUrl/talks');
     final response = await http.get(url, headers: {

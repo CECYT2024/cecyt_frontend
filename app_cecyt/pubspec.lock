@@ -248,6 +248,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  no_screenshot:
+    dependency: "direct main"
+    description:
+      name: no_screenshot
+      sha256: "93d4079541d1413261d5552ee09e23d28c183c171719079575d69809233884d0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.0"
   page_transition:
     dependency: "direct main"
     description:
