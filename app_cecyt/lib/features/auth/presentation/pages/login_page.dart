@@ -1,4 +1,5 @@
 import 'package:app_cecyt/core/cubit/global_cubit.dart';
+import 'package:app_cecyt/core/cubit/session_cubit.dart';
 import 'package:app_cecyt/features/auth/data/api_datasource.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/presentation/bloc/login_bloc.dart';
@@ -23,7 +24,7 @@ class LoginPage extends StatelessWidget {
     // return const BasePage(title: 'Iniciar Sesion', child: LoginView());
     return const Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavCentro(),
+      // bottomNavigationBar: BottomNavCentro(),
       body: LoginView(),
     );
   }
@@ -151,8 +152,12 @@ class _LoginFormState extends State<LoginForm>
                       context
                           .read<GlobalCubit>()
                           .setToken(state.data.accessToken);
-                      Navigator.of(context)
-                          .pushReplacementNamed(StartPage.path);
+                      context
+                          .read<SessionCubit>()
+                          .setSession(state.data.accessToken, false);
+                      // Navigator.of(context)
+                      //     .pushReplacementNamed(StartPage.path);
+                      Navigator.of(context).popUntil((route) => route.isFirst);
                     }
                   },
                   child: BlocBuilder<LoginBloc, LoginState>(

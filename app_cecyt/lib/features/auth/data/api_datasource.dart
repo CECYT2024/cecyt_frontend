@@ -13,8 +13,7 @@ class AuthApiDataSource {
     final url = Uri.parse('$baseUrl/login');
     final response = await http.post(url, body: params.toMap());
     if (response.statusCode == 401) {
-      throw BadRequestException(
-          message: 'Credenciales incorrectas, intente de nuevo');
+      throw NotAuthException();
     }
     if (response.statusCode == 500) {
       throw BadRequestException(
@@ -37,15 +36,14 @@ class AuthApiDataSource {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 401) {
-      throw BadRequestException(
-          message: 'Credenciales incorrectas, intente de nuevo');
+      throw NotAuthException();
     }
     if (response.statusCode == 500) {
       throw BadRequestException(
           message: 'Error en el servidor, intente de nuevo');
     }
     if (response.statusCode >= 400 && response.statusCode < 500) {
-      throw BadRequestException(message: json.decode(response.body)['error']);
+      throw BadRequestException(message: json.decode(response.body)['message']);
     }
     if (response.statusCode == 409) {
       throw BadRequestException(
@@ -60,8 +58,7 @@ class AuthApiDataSource {
       "Authorization": "Bearer $token",
     });
     if (response.statusCode == 401) {
-      throw BadRequestException(
-          message: 'Credenciales incorrectas, intente de nuevo');
+      throw NotAuthException();
     }
     if (response.statusCode == 500) {
       throw BadRequestException(

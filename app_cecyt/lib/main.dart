@@ -1,4 +1,6 @@
 import 'package:app_cecyt/core/cubit/global_cubit.dart';
+import 'package:app_cecyt/core/cubit/session_cubit.dart';
+
 import 'package:app_cecyt/features/auth/presentation/pages/register_page.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/cards/news_cards.dart';
@@ -43,8 +45,11 @@ class MyApp extends StatelessWidget {
           create: (context) => GlobalCubit(),
         ),
         BlocProvider(
-          create: (context) => NavigationBloc(),
+          create: (context) => SessionCubit(),
         ),
+        // BlocProvider(
+        //   create: (context) => NavigationBloc(),
+        // ),
         BlocProvider(
           create: (context) =>
               EventsBloc(apiService: apiService)..add(FetchEvents()),

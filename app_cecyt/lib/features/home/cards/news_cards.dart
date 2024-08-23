@@ -128,26 +128,29 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: events.length,
-                    itemBuilder: (context, index) {
-                      final event = events[index];
-                      return TalksSelector(
-                        sala: event.place,
-                        hora: DateFormat('HH:mm').format(event.startTime),
-                        speaker: event.speaker,
-                        title: event.name,
-                        onTap: () {
-                          _showQuestions(event);
-                        },
-                      );
-                    },
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        final event = events[index];
+                        return TalksSelector(
+                          sala: event.place,
+                          hora: DateFormat('HH:mm').format(event.startTime),
+                          speaker: event.speaker,
+                          title: event.name,
+                          onTap: () {
+                            _showQuestions(event);
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
     );
   }
@@ -326,7 +329,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
+
                 'Error al verificar el número de preguntas ${response.statusCode}')),
+
       );
     }
   }
@@ -371,6 +376,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
+
                           content: response.statusCode != 403
                               ? Text(
                                   'Error al agregar la pregunta, ${response.statusCode},${response.body}')

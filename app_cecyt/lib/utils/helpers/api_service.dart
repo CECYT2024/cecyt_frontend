@@ -1,11 +1,18 @@
 import 'dart:convert';
+import 'package:app_cecyt/core/exceptions/exceptions.dart';
 import 'package:app_cecyt/utils/constants.dart' as c;
 import 'package:http/http.dart' as http;
 import 'event.dart';
 
 class ApiService {
   final String baseUrl = c.baseUrl;
-  ApiService();
+
+  /// Singleton
+  static final ApiService _instance = ApiService._internal();
+  factory ApiService() {
+    return _instance;
+  }
+  ApiService._internal();
 
   Future<Map<String, dynamic>> getUserData(String token) async {
     final url = Uri.parse('$baseUrl/user');
@@ -13,6 +20,9 @@ class ApiService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -24,6 +34,9 @@ class ApiService {
   Future<http.Response> _postWithRedirect(Uri url,
       {required Map<String, String> headers}) async {
     final response = await http.post(url, headers: headers);
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     if (response.statusCode == 301 || response.statusCode == 302) {
       final newUrl = response.headers['location'];
       if (newUrl != null) {
@@ -44,6 +57,9 @@ class ApiService {
       },
     );
     print(response.body);
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     if (response.statusCode == 200) {
       return response;
     } else {
@@ -58,6 +74,9 @@ class ApiService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     return response;
   }
 
@@ -78,6 +97,9 @@ class ApiService {
         'talk_id': event.id,
       }),
     );
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     if (response.statusCode == 301 || response.statusCode == 302) {
       final newUrl = response.headers['location'];
       if (newUrl != null) {
@@ -113,6 +135,9 @@ class ApiService {
       },
       body: jsonEncode(event.toJson()),
     );
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     return response;
   }
 
@@ -123,6 +148,9 @@ class ApiService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     return response;
   }
 
@@ -132,6 +160,9 @@ class ApiService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     return response;
   }
 
@@ -142,6 +173,9 @@ class ApiService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     return response;
   }
 
@@ -153,6 +187,9 @@ class ApiService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     return response;
   }
 
@@ -165,6 +202,9 @@ class ApiService {
         'Authorization': 'Bearer $token',
       },
     );
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     return response;
   }
 
@@ -177,6 +217,9 @@ class ApiService {
           'Authorization': 'Bearer $token',
         },
         body: formData);
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
     return response;
   }
 }

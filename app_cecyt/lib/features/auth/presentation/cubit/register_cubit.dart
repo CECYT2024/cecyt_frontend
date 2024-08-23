@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_cecyt/core/exceptions/exceptions.dart';
 import 'package:app_cecyt/features/auth/data/models/register_response_model.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/domain/register_params.dart';
@@ -15,13 +16,17 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(RegisterProgressState());
     try {
       final response = await repository.register(params);
+      print(response.status);
       if (response.status == "ok") {
         emit(RegisterSuccessState(response));
       } else {
         emit(const RegisterErrorState("Error al crear la cuenta"));
       }
+    } on BadRequestException catch (e) {
+      emit(RegisterErrorState(e.message));
     } catch (e) {
       // Formatear el error de manera similar al EventsBloc
+      print(e);
       final errorMessage = _formatError(e);
       emit(RegisterErrorState(errorMessage));
     }
