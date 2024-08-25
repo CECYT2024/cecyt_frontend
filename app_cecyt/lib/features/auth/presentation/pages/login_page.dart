@@ -152,9 +152,8 @@ class _LoginFormState extends State<LoginForm>
                       context
                           .read<GlobalCubit>()
                           .setToken(state.data.accessToken);
-                      context
-                          .read<SessionCubit>()
-                          .setSession(state.data.accessToken, false);
+                      context.read<SessionCubit>().setSession(
+                          state.data.accessToken, state.data.isAdmin);
                       // Navigator.of(context)
                       //     .pushReplacementNamed(StartPage.path);
                       Navigator.of(context).popUntil((route) => route.isFirst);
