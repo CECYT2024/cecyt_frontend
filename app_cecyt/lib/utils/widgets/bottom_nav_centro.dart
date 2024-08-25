@@ -4,6 +4,7 @@ import 'package:app_cecyt/core/cubit/session_cubit.dart';
 import 'package:app_cecyt/core/utils/login_types.dart';
 import 'package:app_cecyt/features/auth/presentation/bloc/bottom_nav_bloc.dart';
 import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
+import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
 import 'package:app_cecyt/features/home/ui/start/start_page.dart';
 import 'package:equatable/equatable.dart';
@@ -90,7 +91,13 @@ class BottomNavCentro extends StatelessWidget {
           onTap: (newIndex) {
             if (index != newIndex) {
               if (newIndex == 3 && state is SessionLoaded) {
+                if (BlocProvider.of<SessionCubit>(context).state.loginType ==
+                    LoginTypes.admin) {
+                  Navigator.pushNamed(context, AdminCard.path);
+                  return;
+                }
                 BlocProvider.of<SessionCubit>(context).logout();
+
                 return;
               }
               if (newIndex == 0) {
