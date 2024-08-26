@@ -101,7 +101,20 @@ class _QrPageState extends State<QrPage> {
                   padding: const EdgeInsets.all(40.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.no_photography_outlined),
+                          Text(
+                            ' No tomar fotos del QR',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 114, 115, 115)),
+                          ),
+                        ],
+                      ),
                       Image.network(
                         qrUrl!,
                         width: 412,
