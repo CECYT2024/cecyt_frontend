@@ -184,7 +184,7 @@ class _RegisterViewState extends State<RegisterView>
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Introduzca una matricula';
-                              } else if (value.length < 6) {
+                              } else if (value.length < 9) {
                                 return 'La matricula debe tener al menos 6 caracteres';
                               }
                               return null;

@@ -51,34 +51,44 @@ class NewsCardsThree extends StatelessWidget {
                   SizedBox(height: 10),
                   Column(
                     children: [
-                      NombresLista('Giovanna Verenice Vallena Martinez'),
-                      NombresLista('Santiago José María Céspedes Vento'),
-                      NombresLista('María Alejandra Villa Larrosa'),
-                      NombresLista('Laura Verónica Wenz Aparici'),
-                      NombresLista('Agustin Spinzi Cantero'),
-                      NombresLista('Sebatián Andres Agüero Rachid'),
-                      NombresLista('Ignacio Javier Barrail Masulli'),
-                      NombresLista('Enzo Giuliano Barrios Sosa'),
-                      NombresLista('Nicole Wood Arza'),
-                      NombresLista('Leticia Maria Franco Benítez'),
-                      NombresLista('Melany Agustina Ojeda Cardozo'),
-                      NombresLista('María Paz Velázquez Aponte'),
-                      NombresLista('Jimena Cordero Correa'),
-                      NombresLista('Matías Samuel Pavón Saldivar'),
-                      NombresLista('Julio Javier Fernández León'),
-                      NombresLista('Leticia María Meyer Gauto'),
-                      NombresLista('Emmanuel Insfrán Caballero'),
-                      NombresLista('Walder Matías Pereira Gauto'),
-                      NombresLista('Maria Paz Mercado Gomez'),
-                      NombresLista('Miguel Angel Rojas Netto'),
-                      NombresLista('Jeandark Alejandra Chacal Méndez'),
-                      NombresLista('Fiorella Belén Sapienza Torales'),
-                      NombresLista('Maximiliano José Cárdenas García'),
-                      NombresLista('Ayesa Zamira Moreno Cáceres'),
-                      NombresLista('Julieta Vitale Fragnaud'),
-                      NombresLista('Samara Yasmin Esmeil Lesme'),
-                      NombresLista('Sebastián David Maidana Berino'),
-                      NombresLista('María Alejandra Barboza Guerrero'),
+                      NombresLista('Santiago J. Céspedes', 'DIRECTOR GENERAL'),
+                      NombresLista('Giovanna Vallena', 'PRESIDENTE CECYT'),
+                      NombresLista('Laura Wenz', 'DIRECTORA DE FINANZAS'),
+                      NombresLista('Agustin Spinzi', 'DIRECTOR DE FINANZAS'),
+                      NombresLista('Ignacio Barrail', 'DIRECTOR DE PRODUCCIÓN'),
+                      NombresLista(
+                          'Valentina Palarea', 'DIRECTORA DE PRODUCCIÓN'),
+                      NombresLista('Nicole Wood', 'DIRECTORA DE PRODUCCIÓN'),
+                      NombresLista(
+                          'Sebastian Agüero', 'DIRECTOR DE PRODUCCIÓN'),
+                      NombresLista('Leticia Franco', 'DIRECTORA DE MARKETING'),
+                      NombresLista('Rafa Chica', 'DIRECTOR DE MARKETING'),
+                      NombresLista('Melany Ojeda', 'DIRECTORA DE MARKETING'),
+                      NombresLista(
+                          'Ma. Alejandra Villa', 'DIRECTORA INSTITUCIONAL'),
+                      NombresLista('Male Barboza', 'DIRECTORA INSTITUCIONAL'),
+                      NombresLista(
+                          'María Paz Velázquez', 'DIRECTORA DE SPONSORS'),
+                      NombresLista('Paz Mercado', 'DIRECTORA DE SPONSORS'),
+                      NombresLista('Matías Pavón', 'DIRECTOR DE SPONSORS'),
+                      NombresLista('Lucas Ayala', 'DIRECTOR DE SPONSORS'),
+                      NombresLista('Hugo Miranda', 'DIRECTOR TECNOLOGICO'),
+                      NombresLista('Federico Alonso', 'DIRECTOR TECNOLOGICO'),
+                      NombresLista('Sergio Medina', 'DIRECTOR TECNOLOGICO'),
+                      NombresLista('Julio Fernández', 'DIRECTOR DE HACKATHON'),
+                      NombresLista('Leticia Meyer', 'DIRECTORA DE HACKATHON'),
+                      NombresLista('Emmanuel Insfrán', 'DIRECTOR DE HACKATHON'),
+                      NombresLista('Walder Pereira', 'DIRECTOR DE HACKATHON'),
+                      NombresLista('Miguel Rojas', 'DIRECTOR DE CONTENIDO'),
+                      NombresLista('Jeandy Chacal', 'DIRECTORA DE CONTENIDO'),
+                      NombresLista(
+                          'Fiorella Sapienza', 'DIRECTORA DE CONTENIDO'),
+                      NombresLista('Maximiliano Cárdenas', 'DIRECTOR RRPP'),
+                      NombresLista('Palo Rios', 'DIRECTORA RRPP'),
+                      NombresLista('Ayesa Moreno', 'DIRECTORA RRPP'),
+                      NombresLista('Julieta Vitale', 'DIRECTORA ACADÉMICA'),
+                      NombresLista('Samara Esmeil', 'DIRECTORA ACADÉMICA'),
+                      NombresLista('Sebastián Maidana', 'DIRECTOR ACADÉMICO'),
                     ],
                   ),
                 ],
@@ -92,9 +102,10 @@ class NewsCardsThree extends StatelessWidget {
 }
 
 class NombresLista extends StatelessWidget {
-  const NombresLista(this.nombreApellido, {super.key});
+  const NombresLista(this.nombreApellido, this.titulo, {super.key});
 
   final String nombreApellido;
+  final String titulo;
 
   @override
   Widget build(BuildContext context) {
@@ -109,13 +120,25 @@ class NombresLista extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(8.0),
       child: Center(
-        child: Text(
-          nombreApellido,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Color.fromARGB(255, 0, 0, 0),
-          ),
+        child: Column(
+          children: [
+            Text(
+              nombreApellido,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+            Text(
+              titulo,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Color.fromARGB(255, 100, 100, 100),
+              ),
+            ),
+          ],
         ),
       ),
     );

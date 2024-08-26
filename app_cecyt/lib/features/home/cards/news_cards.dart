@@ -129,7 +129,7 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: Column(
                 children: [
                   Expanded(

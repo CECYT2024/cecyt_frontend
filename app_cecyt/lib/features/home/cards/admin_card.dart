@@ -333,6 +333,11 @@ class _AdminCardState extends State<AdminCard> {
                     speaker: speaker,
                     startTime: startTime,
                   );
+                  _dayController.clear();
+                  _timeController.clear();
+                  _nameController.clear();
+                  _speakerController.clear();
+                  _placeController.clear();
 
                   try {
                     final response =
@@ -341,6 +346,7 @@ class _AdminCardState extends State<AdminCard> {
                       final responseBody = jsonDecode(response.body);
                       if (responseBody['status'] == 'ok') {
                         _eventsBloc.add(FetchEvents());
+
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Charla creada')),
@@ -400,7 +406,9 @@ class _AdminCardState extends State<AdminCard> {
                     '${event.name} , ${event.speaker}',
                     textScaler: const TextScaler.linear(0.9),
                   ),
-                  subtitle: Text('${DateFormat('dd/MM/yyyy').format(event.startTime)},Hora: ${DateFormat('HH:mm').format(event.startTime)}' ' , ${event.place}'),
+                  subtitle: Text(
+                      '${DateFormat('dd/MM/yyyy').format(event.startTime)},Hora: ${DateFormat('HH:mm').format(event.startTime)}'
+                      ' , ${event.place}'),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[

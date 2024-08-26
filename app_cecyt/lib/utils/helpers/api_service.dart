@@ -20,9 +20,9 @@ class ApiService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
-    if (response.statusCode == 401) {
-      throw NotAuthException();
-    }
+    //if (response.statusCode == 401) {
+    //throw NotAuthException();
+    //}
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -74,8 +74,9 @@ class ApiService {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
+    print(response.statusCode);
     if (response.statusCode == 401) {
-      throw NotAuthException();
+      throw Exception('Inicie sesion para ver preguntas');
     }
     return response;
   }
