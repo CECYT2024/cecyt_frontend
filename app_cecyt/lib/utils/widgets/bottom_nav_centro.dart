@@ -2,7 +2,7 @@
 
 import 'package:app_cecyt/core/cubit/session_cubit.dart';
 import 'package:app_cecyt/core/utils/login_types.dart';
-import 'package:app_cecyt/features/auth/presentation/bloc/bottom_nav_bloc.dart';
+
 import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';

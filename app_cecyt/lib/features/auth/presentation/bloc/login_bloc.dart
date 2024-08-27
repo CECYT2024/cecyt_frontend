@@ -35,6 +35,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       return response;
     } catch (e) {
+      print("er");
       if (e is SocketException) {
         throw const ServerFailureExeception(message: 'No internet connection');
       }
@@ -83,17 +84,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       emit(LoggedState(data));
     } on BadRequestException catch (e) {
+      print(e.message);
+      print("error");
       if (isClosed) {
         return;
       }
       emit(LoginErrorState(e.message));
-    } catch (e) {
-      if (e is ServerFailureExeception) {
-        if (isClosed) {
-          return;
-        }
-        emit(LoginErrorState(e.message));
+    } on NotAuthException {
+      if (isClosed) {
+        return;
       }
+      emit(LoginErrorState("Por favor varifica tus credenciales"));
+    } on ServerFailureExeception catch (e) {
+      if (isClosed) {
+        return;
+      }
+
+      emit(LoginErrorState(e.toString()));
     }
   }
 }

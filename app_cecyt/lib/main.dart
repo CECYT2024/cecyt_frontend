@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'features/auth/presentation/pages/login_page.dart';
-import 'features/auth/presentation/bloc/bottom_nav_bloc.dart';
+
 import 'features/home/ui/pages/calendar_page.dart';
 import 'features/home/ui/pages/logout_page.dart';
 import 'features/home/ui/pages/qr_page.dart';

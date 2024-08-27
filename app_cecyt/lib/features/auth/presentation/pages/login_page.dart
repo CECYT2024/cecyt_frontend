@@ -1,5 +1,6 @@
 import 'package:app_cecyt/core/cubit/global_cubit.dart';
 import 'package:app_cecyt/core/cubit/session_cubit.dart';
+import 'package:app_cecyt/core/extensions/build_context_extension.dart';
 import 'package:app_cecyt/features/auth/data/api_datasource.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/presentation/bloc/login_bloc.dart';
@@ -22,9 +23,12 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // return const BasePage(title: 'Iniciar Sesion', child: LoginView());
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       // bottomNavigationBar: BottomNavCentro(),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: LoginView(),
     );
   }
@@ -52,15 +56,6 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm>
     with SingleTickerProviderStateMixin {
-  void _showError(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
   late AnimationController controller;
 
   late Animation<double> animation;
@@ -144,7 +139,10 @@ class _LoginFormState extends State<LoginForm>
                 child: BlocListener<LoginBloc, LoginState>(
                   listener: (context, state) {
                     if (state is LoginErrorState) {
-                      _showError(context, state.message);
+                      context.showPopup(
+                          closeOnPressed: () => Navigator.of(context).pop(),
+                          type: DialogTypeEnum.error,
+                          message: state.message);
                     }
                     if (state is LoggedState) {
                       matriculaCtrl.clear();

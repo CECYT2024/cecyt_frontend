@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:app_cecyt/core/exceptions/exceptions.dart';
 import 'package:app_cecyt/features/auth/data/models/models.dart';
@@ -12,6 +13,9 @@ class AuthApiDataSource {
   Future<LoginResponseModel> login(LoginParams params) async {
     final url = Uri.parse('$baseUrl/login');
     final response = await http.post(url, body: params.toMap());
+    log(url.toString());
+    log(response.body);
+    log(response.statusCode.toString());
     if (response.statusCode == 401) {
       throw NotAuthException();
     }
