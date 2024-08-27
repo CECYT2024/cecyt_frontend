@@ -94,7 +94,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (isClosed) {
         return;
       }
-      emit(LoginErrorState("Por favor varifica tus credenciales"));
+      emit(LoginErrorState("Por favor verifica tus credenciales"));
     } on ServerFailureExeception catch (e) {
       if (isClosed) {
         return;
