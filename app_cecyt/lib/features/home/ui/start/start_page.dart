@@ -98,7 +98,8 @@ class _StartPageState extends State<StartPage> {
                       padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: const Color.fromARGB(255, 21, 98, 160),
+                          foregroundColor:
+                              const Color.fromARGB(255, 21, 98, 160),
                           backgroundColor: Colors.white,
                           elevation: 10,
                           shape: RoundedRectangleBorder(
@@ -126,13 +127,18 @@ class _StartPageState extends State<StartPage> {
                         ),
                       ),
                     ),
-                  ), //CardImage(title: 'ORGANIZADORES INNOTEC 2024', imageassetpath:'assets/Organizadores.png' , onTap: '/news3'),
+                  ).animate().slideY(
+                      delay: Duration(milliseconds: 50),
+                      duration: Duration(
+                          milliseconds:
+                              300)), //CardImage(title: 'ORGANIZADORES INNOTEC 2024', imageassetpath:'assets/Organizadores.png' , onTap: '/news3'),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor: const Color.fromARGB(255, 21, 98, 160),
+                          foregroundColor:
+                              const Color.fromARGB(255, 21, 98, 160),
                           backgroundColor: Colors.white,
                           elevation: 10,
                           shape: RoundedRectangleBorder(
@@ -160,7 +166,9 @@ class _StartPageState extends State<StartPage> {
                         ),
                       ),
                     ),
-                  ),
+                  ).animate().slideY(
+                      delay: Duration(milliseconds: 50),
+                      duration: Duration(milliseconds: 300)),
                   const Expanded(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -180,7 +188,9 @@ class _StartPageState extends State<StartPage> {
                         ],
                       ),
                     ),
-                  ),
+                  ).animate().slideY(
+                      delay: Duration(milliseconds: 1),
+                      duration: Duration(milliseconds: 300)),
                 ],
               ),
             ),
