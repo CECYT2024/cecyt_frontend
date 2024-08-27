@@ -14,6 +14,7 @@ import 'package:app_cecyt/utils/widgets/principal_button.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatelessWidget {
@@ -185,6 +186,9 @@ class _LoginFormState extends State<LoginForm>
                               maxLength: 100,
                               onSave: (text) => _contrasena = text ?? '',
                             ),
+                            // Importar el paquete para copiar al portapapeles
+
+// Dentro de la clase _LoginFormState, en el método build:
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Row(
@@ -195,6 +199,7 @@ class _LoginFormState extends State<LoginForm>
                                     onPressed: () => Navigator.of(context)
                                         .pushNamed(RegisterPage.path),
                                     child: Text(
+                                      textScaler: TextScaler.linear(0.7),
                                       'Nueva cuenta',
                                       style: Theme.of(context)
                                           .textTheme
@@ -204,6 +209,46 @@ class _LoginFormState extends State<LoginForm>
                                             decoration:
                                                 TextDecoration.underline,
                                           ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.support_agent,
+                                            size: 15, color: Colors.green),
+                                        const SizedBox(width: 5),
+                                        Expanded(
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Clipboard.setData(
+                                                  const ClipboardData(
+                                                      text:
+                                                          'ucacecyt@gmail.com'));
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                    content: Text(
+                                                        'Email copiado al portapapeles')),
+                                              );
+                                            },
+                                            child: Text(
+                                              textScaler:
+                                                  TextScaler.linear(0.7),
+                                              '¿Necesitas soporte? Escríbenos al email',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                    color: Colors.green,
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                  ),
+                                              overflow: TextOverflow
+                                                  .ellipsis, // Esto asegura que el texto no se desborde
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
