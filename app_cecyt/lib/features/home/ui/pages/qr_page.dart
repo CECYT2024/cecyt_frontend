@@ -39,12 +39,12 @@ class _QrPageState extends State<QrPage> {
 
   @override
   void dispose() {
+    super.dispose();
     if (Platform.isAndroid) {
       _unsecureScreen();
     } else {
       _noScreenshot.screenshotOn();
     }
-    super.dispose();
   }
 
   Future<void> _secureScreen() async {
@@ -88,7 +88,9 @@ class _QrPageState extends State<QrPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text(errorMessage ?? 'Inicie sesion para mostrar el QR'));
+            return Center(
+                child:
+                    Text(errorMessage ?? 'Inicie sesion para mostrar el QR'));
           } else if (snapshot.hasData) {
             if (qrUrl == null || qrUrl!.isEmpty) {
               return const Center(child: Text('No se tiene QR registrado'));
@@ -108,7 +110,8 @@ class _QrPageState extends State<QrPage> {
                           Icon(Icons.no_photography_outlined),
                           Text(
                             ' No tomar fotos del QR',
-                            style: TextStyle(color: Color.fromARGB(255, 114, 115, 115)),
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 114, 115, 115)),
                           ),
                         ],
                       ),

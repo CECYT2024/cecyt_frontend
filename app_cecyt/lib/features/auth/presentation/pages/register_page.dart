@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_cecyt/core/cubit/global_cubit.dart';
 import 'package:app_cecyt/features/auth/data/api_datasource.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
@@ -11,6 +13,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 
 String convertToUpperCase(String input) {
   return input.split('').map((char) {
@@ -79,9 +83,14 @@ class _RegisterViewState extends State<RegisterView>
   final lastNamesCtrl = TextEditingController();
 
   final passCrl = TextEditingController();
-
+  final _noScreenshot = NoScreenshot.instance;
   @override
   void initState() {
+    if (Platform.isAndroid) {
+      _unsecureScreen();
+    } else {
+      _noScreenshot.screenshotOn();
+    }
     controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -96,6 +105,10 @@ class _RegisterViewState extends State<RegisterView>
     }
 
     super.initState();
+  }
+
+  Future<void> _unsecureScreen() async {
+    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
   @override
