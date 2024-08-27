@@ -1,15 +1,19 @@
 // start_page.dart
 import 'dart:convert';
+import 'dart:io';
 import 'package:app_cecyt/core/cubit/session_cubit.dart';
 import 'package:app_cecyt/core/exceptions/exceptions.dart';
 import 'package:app_cecyt/utils/helpers/pref_manager.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
+import 'package:app_cecyt/utils/widgets/card_image.dart';
 import 'package:flutter/material.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
 import 'package:app_cecyt/utils/helpers/api_service.dart'; // Importa ApiService
 import 'package:app_cecyt/utils/constants.dart'; // Importa la constante
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:no_screenshot/no_screenshot.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -21,11 +25,24 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   bool isLoading = false;
-
+  final _noScreenshot = NoScreenshot.instance;
   @override
   void initState() {
     super.initState();
+    if (Platform.isAndroid) {
+      _unsecureScreen();
+    } else {
+      _noScreenshot.screenshotOn();
+    }
     _checkAdminStatus();
+  }
+
+  Future<void> _secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
+  Future<void> _unsecureScreen() async {
+    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
   Future<void> _checkAdminStatus() async {
@@ -73,16 +90,15 @@ class _StartPageState extends State<StartPage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor:
-                              const Color.fromARGB(255, 21, 98, 160),
+                          foregroundColor: const Color.fromARGB(255, 21, 98, 160),
                           backgroundColor: Colors.white,
                           elevation: 10,
                           shape: RoundedRectangleBorder(
@@ -104,20 +120,19 @@ class _StartPageState extends State<StartPage> {
                             const SizedBox(height: 1),
                             const Text(
                               "¿QUÉ ES EL INNOTEC?",
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 18),
                             ),
                           ],
                         ),
                       ),
                     ),
-                  ),
+                  ), //CardImage(title: 'ORGANIZADORES INNOTEC 2024', imageassetpath:'assets/Organizadores.png' , onTap: '/news3'),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          foregroundColor:
-                              const Color.fromARGB(255, 21, 98, 160),
+                          foregroundColor: const Color.fromARGB(255, 21, 98, 160),
                           backgroundColor: Colors.white,
                           elevation: 10,
                           shape: RoundedRectangleBorder(
@@ -139,82 +154,28 @@ class _StartPageState extends State<StartPage> {
                             const SizedBox(height: 1),
                             const Text(
                               "ORGANIZADORES INNOTEC 2024",
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 18),
                             ),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  Expanded(
+                  const Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: Row(
                         children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor:
-                                    const Color.fromARGB(255, 21, 98, 160),
-                                backgroundColor: Colors.white,
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pushNamed('/news1');
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Image.asset(
-                                      'assets/Preguntas.png',
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 1),
-                                  const Text(
-                                    "PREGUNTAS",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          CardImage(
+                            title: 'PREGUNTAS',
+                            imageassetpath: 'assets/Preguntas.png',
+                            onTap: '/news1',
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor:
-                                    const Color.fromARGB(255, 21, 98, 160),
-                                backgroundColor: Colors.white,
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).pushNamed('/news2');
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Image.asset(
-                                      'assets/Informacion.png',
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 1),
-                                  const Text(
-                                    "INFORMACIÓN",
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          SizedBox(width: 10),
+                          CardImage(
+                            title: 'INFORMACIÓN',
+                            imageassetpath: 'assets/Informacion.png',
+                            onTap: '/news2',
                           ),
                         ],
                       ),

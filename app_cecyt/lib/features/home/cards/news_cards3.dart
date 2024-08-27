@@ -51,24 +51,20 @@ class NewsCardsThree extends StatelessWidget {
                   SizedBox(height: 10),
                   Column(
                     children: [
-                      NombresLista('Santiago J. Céspedes', 'DIRECTOR GENERAL'),
                       NombresLista('Giovanna Vallena', 'PRESIDENTE CECYT'),
+                      NombresLista('Santiago J. Céspedes', 'DIRECTOR GENERAL'),
                       NombresLista('Laura Wenz', 'DIRECTORA DE FINANZAS'),
                       NombresLista('Agustin Spinzi', 'DIRECTOR DE FINANZAS'),
                       NombresLista('Ignacio Barrail', 'DIRECTOR DE PRODUCCIÓN'),
-                      NombresLista(
-                          'Valentina Palarea', 'DIRECTORA DE PRODUCCIÓN'),
+                      NombresLista('Valentina Palarea', 'DIRECTORA DE PRODUCCIÓN'),
                       NombresLista('Nicole Wood', 'DIRECTORA DE PRODUCCIÓN'),
-                      NombresLista(
-                          'Sebastian Agüero', 'DIRECTOR DE PRODUCCIÓN'),
+                      NombresLista('Sebastian Agüero', 'DIRECTOR DE PRODUCCIÓN'),
                       NombresLista('Leticia Franco', 'DIRECTORA DE MARKETING'),
                       NombresLista('Rafa Chica', 'DIRECTOR DE MARKETING'),
                       NombresLista('Melany Ojeda', 'DIRECTORA DE MARKETING'),
-                      NombresLista(
-                          'Ma. Alejandra Villa', 'DIRECTORA INSTITUCIONAL'),
+                      NombresLista('Ma. Alejandra Villa', 'DIRECTORA INSTITUCIONAL'),
                       NombresLista('Male Barboza', 'DIRECTORA INSTITUCIONAL'),
-                      NombresLista(
-                          'María Paz Velázquez', 'DIRECTORA DE SPONSORS'),
+                      NombresLista('María Paz Velázquez', 'DIRECTORA DE SPONSORS'),
                       NombresLista('Paz Mercado', 'DIRECTORA DE SPONSORS'),
                       NombresLista('Matías Pavón', 'DIRECTOR DE SPONSORS'),
                       NombresLista('Lucas Ayala', 'DIRECTOR DE SPONSORS'),
@@ -81,8 +77,7 @@ class NewsCardsThree extends StatelessWidget {
                       NombresLista('Walder Pereira', 'DIRECTOR DE HACKATHON'),
                       NombresLista('Miguel Rojas', 'DIRECTOR DE CONTENIDO'),
                       NombresLista('Jeandy Chacal', 'DIRECTORA DE CONTENIDO'),
-                      NombresLista(
-                          'Fiorella Sapienza', 'DIRECTORA DE CONTENIDO'),
+                      NombresLista('Fiorella Sapienza', 'DIRECTORA DE CONTENIDO'),
                       NombresLista('Maximiliano Cárdenas', 'DIRECTOR RRPP'),
                       NombresLista('Palo Rios', 'DIRECTORA RRPP'),
                       NombresLista('Ayesa Moreno', 'DIRECTORA RRPP'),

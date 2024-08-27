@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:app_cecyt/utils/helpers/events_bloc.dart';
 import 'package:app_cecyt/utils/helpers/event.dart';
 import 'package:app_cecyt/utils/helpers/horarios_format.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:no_screenshot/no_screenshot.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 class CalendarPage extends StatefulWidget {
   static const String path = '/calendar';
@@ -19,21 +23,31 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   int selectedDay = 1;
-
+  final _noScreenshot = NoScreenshot.instance;
   @override
   void initState() {
     super.initState();
     // Cargar los eventos cuando la página se inicializa
+    if (Platform.isAndroid) {
+      _unsecureScreen();
+    } else {
+      _noScreenshot.screenshotOn();
+    }
     context.read<EventsBloc>().add(FetchEvents());
   }
 
+  Future<void> _secureScreen() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
+  Future<void> _unsecureScreen() async {
+    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+  }
+
   List<Event> getEventsForSelectedDay(List<Event> events) {
-    final selectedDate =
-        selectedDay == 1 ? DateTime(2024, 10, 7) : DateTime(2024, 10, 8);
+    final selectedDate = selectedDay == 1 ? DateTime(2024, 10, 7) : DateTime(2024, 10, 8);
     return events.where((event) {
-      return event.startTime.year == selectedDate.year &&
-          event.startTime.month == selectedDate.month &&
-          event.startTime.day == selectedDate.day;
+      return event.startTime.year == selectedDate.year && event.startTime.month == selectedDate.month && event.startTime.day == selectedDate.day;
     }).toList();
   }
 
@@ -82,9 +96,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selectedDay == 1
-                      ? const Color.fromARGB(255, 102, 178, 236)
-                      : Colors.grey,
+                  backgroundColor: selectedDay == 1 ? const Color.fromARGB(255, 102, 178, 236) : Colors.grey,
                 ),
                 child: const Text(
                   'Día 1',
@@ -102,9 +114,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selectedDay == 2
-                      ? const Color.fromARGB(255, 102, 178, 236)
-                      : Colors.grey,
+                  backgroundColor: selectedDay == 2 ? const Color.fromARGB(255, 102, 178, 236) : Colors.grey,
                 ),
                 child: const Text(
                   'Día 2',
@@ -137,8 +147,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 } else if (state is EventsError) {
                   return Center(child: Text(state.message));
                 } else {
-                  return const Center(
-                      child: Text('No hay eventos disponibles'));
+                  return const Center(child: Text('No hay eventos disponibles'));
                 }
               },
             ),
