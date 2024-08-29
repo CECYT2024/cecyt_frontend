@@ -49,8 +49,7 @@ class RegisterView extends StatefulWidget {
   State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView>
-    with SingleTickerProviderStateMixin {
+class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -160,8 +159,7 @@ class _RegisterViewState extends State<RegisterView>
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width *
-                      .8, // 300.0, //size.width * .6,
+                  width: MediaQuery.of(context).size.width * .8, // 300.0, //size.width * .6,
                   child: BlocConsumer<RegisterCubit, RegisterState>(
                     listener: (context, state) {
                       if (state is RegisterErrorState) {
@@ -173,13 +171,10 @@ class _RegisterViewState extends State<RegisterView>
                         emailCtrl.clear();
                         namesCtrl.clear();
                         lastNamesCtrl.clear();
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Cuenta creada correctamente'),
                         ));
-                        context
-                            .read<GlobalCubit>()
-                            .setToken(state.userData.token);
+                        context.read<GlobalCubit>().setToken(state.userData.token);
                         // Navigator.of(context).pushReplacementNamed(QrPage.path);
                       }
                     },
@@ -193,12 +188,12 @@ class _RegisterViewState extends State<RegisterView>
                             controller: matriculaCtrl,
                             keyboard: TextInputType.text,
                             hint: '',
-                            label: 'Matricula',
+                            label: 'Matricula o C.I',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Introduzca una matricula';
+                                return 'Introduzca una matricula o C.I';
                               } else if (value.length < 6) {
-                                return 'La matricula debe tener al menos 6 caracteres';
+                                return 'Debe tener al menos 6 caracteres';
                               }
                               return null;
                             },
@@ -253,6 +248,14 @@ class _RegisterViewState extends State<RegisterView>
                             label: 'Contraseña',
                             maxLength: 100,
                             onSave: (text) => _contrasena = text ?? '',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Introduzca una contraseña';
+                              } else if (value.length < 8) {
+                                return 'La contraseña debe tener al menos 8 caracteres';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -276,8 +279,7 @@ class _RegisterViewState extends State<RegisterView>
 
                                   context.read<RegisterCubit>().register(
                                         RegisterParams(
-                                          studentID:
-                                              convertToUpperCase(_matricula),
+                                          studentID: convertToUpperCase(_matricula),
                                           email: _email,
                                           name: _name,
                                           lastname: _lastName,

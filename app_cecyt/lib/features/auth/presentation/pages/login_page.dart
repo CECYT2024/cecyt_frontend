@@ -41,8 +41,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          LoginBloc(ApiRepository(apiProvider: AuthApiDataSource())),
+      create: (context) => LoginBloc(ApiRepository(apiProvider: AuthApiDataSource())),
       child: const LoginForm(),
     );
   }
@@ -55,8 +54,7 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm>
-    with SingleTickerProviderStateMixin {
+class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
   late Animation<double> animation;
@@ -135,24 +133,17 @@ class _LoginFormState extends State<LoginForm>
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width *
-                    .8, // 300.0, //size.width * .6,
+                width: MediaQuery.of(context).size.width * .8, // 300.0, //size.width * .6,
                 child: BlocListener<LoginBloc, LoginState>(
                   listener: (context, state) {
                     if (state is LoginErrorState) {
-                      context.showPopup(
-                          closeOnPressed: () => Navigator.of(context).pop(),
-                          type: DialogTypeEnum.error,
-                          message: state.message);
+                      context.showPopup(closeOnPressed: () => Navigator.of(context).pop(), type: DialogTypeEnum.error, message: state.message);
                     }
                     if (state is LoggedState) {
                       matriculaCtrl.clear();
                       passCrl.clear();
-                      context
-                          .read<GlobalCubit>()
-                          .setToken(state.data.accessToken);
-                      context.read<SessionCubit>().setSession(
-                          state.data.accessToken, state.data.isAdmin);
+                      context.read<GlobalCubit>().setToken(state.data.accessToken);
+                      context.read<SessionCubit>().setSession(state.data.accessToken, state.data.isAdmin);
                       // Navigator.of(context)
                       //     .pushReplacementNamed(StartPage.path);
                       Navigator.of(context).popUntil((route) => route.isFirst);
@@ -169,10 +160,10 @@ class _LoginFormState extends State<LoginForm>
                               controller: matriculaCtrl,
                               keyboard: TextInputType.text,
                               hint: '',
-                              label: 'Matricula',
+                              label: 'Matricula o C.I',
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Introduzca una matricula';
+                                  return 'Introduzca una matricula o CI';
                                 }
                                 return null;
                               },
@@ -192,59 +183,40 @@ class _LoginFormState extends State<LoginForm>
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextButton(
-                                    onPressed: () => Navigator.of(context)
-                                        .pushNamed(RegisterPage.path),
+                                    onPressed: () => Navigator.of(context).pushNamed(RegisterPage.path),
                                     child: Text(
                                       textScaler: TextScaler.linear(0.7),
                                       'Nueva cuenta',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                             color: Colors.green,
-                                            decoration:
-                                                TextDecoration.underline,
+                                            decoration: TextDecoration.underline,
                                           ),
                                     ),
                                   ),
                                   Expanded(
                                     child: Row(
                                       children: [
-                                        Icon(Icons.support_agent,
-                                            size: 15, color: Colors.green),
+                                        Icon(Icons.support_agent, size: 15, color: Colors.green),
                                         const SizedBox(width: 5),
                                         Expanded(
                                           child: GestureDetector(
                                             onTap: () {
-                                              Clipboard.setData(
-                                                  const ClipboardData(
-                                                      text:
-                                                          'ucacecyt@gmail.com'));
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                const SnackBar(
-                                                    content: Text(
-                                                        'Email copiado al portapapeles')),
+                                              Clipboard.setData(const ClipboardData(text: 'ucacecyt@gmail.com'));
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(content: Text('Email copiado al portapapeles')),
                                               );
                                             },
                                             child: Text(
-                                              textScaler:
-                                                  TextScaler.linear(0.7),
+                                              textScaler: TextScaler.linear(0.7),
                                               '¿Necesitas soporte? Escríbenos al email',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(
+                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                                     color: Colors.green,
-                                                    decoration: TextDecoration
-                                                        .underline,
+                                                    decoration: TextDecoration.underline,
                                                   ),
-                                              overflow: TextOverflow
-                                                  .ellipsis, // Esto asegura que el texto no se desborde
+                                              overflow: TextOverflow.ellipsis, // Esto asegura que el texto no se desborde
                                             ),
                                           ),
                                         ),
@@ -296,8 +268,7 @@ class _LoginFormState extends State<LoginForm>
 }
 
 class AnimatedLogo extends AnimatedWidget {
-  const AnimatedLogo({required this.animation, super.key})
-      : super(listenable: animation);
+  const AnimatedLogo({required this.animation, super.key}) : super(listenable: animation);
   // Maneja los Tween estáticos debido a que estos no cambian.
   static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
   static final _sizeTween = Tween<double>(begin: 0, end: 150);
