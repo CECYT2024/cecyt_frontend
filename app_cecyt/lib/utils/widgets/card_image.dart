@@ -51,6 +51,7 @@ class CardImage extends StatelessWidget {
               ),
               const SizedBox(height: 1),
               Text(
+                overflow: TextOverflow.ellipsis,
                 title,
                 style: const TextStyle(fontSize: 16),
               ),

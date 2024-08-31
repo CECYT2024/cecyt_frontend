@@ -148,7 +148,7 @@ class _StartPageState extends State<StartPage> {
                         onPressed: () {
                           Navigator.of(context).pushNamed('/news3');
                         },
-                        child: Column(
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
@@ -158,7 +158,7 @@ class _StartPageState extends State<StartPage> {
                               ),
                             ),
                             const SizedBox(height: 1),
-                            const Text(
+                            const Text(textAlign: TextAlign.center,
                               "ORGANIZADORES INNOTEC 2024",
                               style: TextStyle(fontSize: 18),
                             ),
