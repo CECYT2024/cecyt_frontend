@@ -48,3 +48,4 @@ app.*.map.json
 
 # Ignorar el archivo constants.dart
 lib/utils/constants.dart
+/Users/fede-mac/Desktop/cecytfinal/cecyt_frontend/AndroidKey.jks
