@@ -12,15 +12,17 @@ import 'package:http/http.dart' as http;
 
 class AuthApiDataSource {
   // static String url = baseUrl;
-  static const headers = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  };
+  // static const headers = {
+  //   'Content-Type': 'application/json',
+  //   'Accept': 'application/json',
+  // };
 
   Future<LoginResponseModel> login(LoginParams params) async {
     final url = Uri.parse('$baseUrl/login');
-    final response =
-        await http.post(url, body: params.toMap(), headers: headers);
+    final response = await http.post(
+      url,
+      body: params.toMap(),
+    );
     log(url.toString());
     log(response.body);
     log(response.statusCode.toString());
@@ -43,8 +45,10 @@ class AuthApiDataSource {
 
   Future<RegisterResponseModel> register(RegisterParams params) async {
     final url = Uri.parse('$baseUrl/register');
-    final response =
-        await http.post(url, body: params.toMap(), headers: headers);
+    final response = await http.post(
+      url,
+      body: params.toMap(),
+    );
     print(url);
     print(response.body);
     print(response.statusCode);
@@ -69,7 +73,7 @@ class AuthApiDataSource {
     final url = Uri.parse('$baseUrl/refresh');
     final response = await http.post(url, headers: {
       "Authorization": "Bearer $token",
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
     });
     if (response.statusCode == 401) {
       throw NotAuthException();
@@ -91,7 +95,10 @@ class AuthApiDataSource {
   Future<ForgotPasswordModel> forgotSendEmail(
       Map<String, String> params) async {
     final url = Uri.parse('$baseUrl/forgot-password');
-    final response = await http.post(url, body: params, headers: headers);
+    final response = await http.post(
+      url,
+      body: params,
+    );
     print(url);
     print(response.body);
     print(response.statusCode);
@@ -112,8 +119,10 @@ class AuthApiDataSource {
   Future<ForgotPasswordModel> confirmForgotPass(
       ConfirmForgotPasswordParams params) async {
     final url = Uri.parse('$baseUrl/forgot-password/recover');
-    final response =
-        await http.post(url, body: params.toMap(), headers: headers);
+    final response = await http.post(
+      url,
+      body: params.toMap(),
+    );
     print(url);
     print(response.body);
     print(response.statusCode);
