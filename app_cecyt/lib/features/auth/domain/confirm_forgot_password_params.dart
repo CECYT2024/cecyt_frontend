@@ -14,7 +14,7 @@ class ConfirmForgotPasswordParams {
       'email': email,
       'code': code,
       'password': password,
-      'confirmPassword': confirmPassword,
+      'password_confirmation': confirmPassword,
     };
   }
 }
