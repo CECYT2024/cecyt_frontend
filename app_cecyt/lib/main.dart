@@ -1,5 +1,6 @@
 import 'package:app_cecyt/core/cubit/global_cubit.dart';
 import 'package:app_cecyt/core/cubit/session_cubit.dart';
+import 'package:app_cecyt/features/auth/presentation/pages/forgot_password_page.dart';
 
 import 'package:app_cecyt/features/auth/presentation/pages/register_page.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
@@ -74,6 +75,7 @@ class MyApp extends StatelessWidget {
           NewsCardsThree.path: (_) => const NewsCardsThree(),
           NewsCardsFour.path: (_) => const NewsCardsFour(),
           RegisterPage.path: (_) => const RegisterPage(),
+          ForgotPasswordPage.path: (_) => const ForgotPasswordPage(),
         },
       ),
     );

@@ -4,14 +4,11 @@ import 'package:app_cecyt/core/extensions/build_context_extension.dart';
 import 'package:app_cecyt/features/auth/data/api_datasource.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/presentation/bloc/login_bloc.dart';
+import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
 import 'package:app_cecyt/features/auth/presentation/pages/register_page.dart';
-import 'package:app_cecyt/features/home/ui/start/start_page.dart';
-import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
-
 import 'package:app_cecyt/utils/widgets/custom_password_field.dart';
 import 'package:app_cecyt/utils/widgets/custom_text_field.dart';
 import 'package:app_cecyt/utils/widgets/principal_button.dart';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,7 +38,8 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LoginBloc(ApiRepository(apiProvider: AuthApiDataSource())),
+      create: (context) =>
+          LoginBloc(ApiRepository(apiProvider: AuthApiDataSource())),
       child: const LoginForm(),
     );
   }
@@ -54,7 +52,8 @@ class LoginForm extends StatefulWidget {
   State<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMixin {
+class _LoginFormState extends State<LoginForm>
+    with SingleTickerProviderStateMixin {
   late AnimationController controller;
 
   late Animation<double> animation;
@@ -133,17 +132,24 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * .8, // 300.0, //size.width * .6,
+                width: MediaQuery.of(context).size.width *
+                    .8, // 300.0, //size.width * .6,
                 child: BlocListener<LoginBloc, LoginState>(
                   listener: (context, state) {
                     if (state is LoginErrorState) {
-                      context.showPopup(closeOnPressed: () => Navigator.of(context).pop(), type: DialogTypeEnum.error, message: state.message);
+                      context.showPopup(
+                          closeOnPressed: () => Navigator.of(context).pop(),
+                          type: DialogTypeEnum.error,
+                          message: state.message);
                     }
                     if (state is LoggedState) {
                       matriculaCtrl.clear();
                       passCrl.clear();
-                      context.read<GlobalCubit>().setToken(state.data.accessToken);
-                      context.read<SessionCubit>().setSession(state.data.accessToken, state.data.isAdmin);
+                      context
+                          .read<GlobalCubit>()
+                          .setToken(state.data.accessToken);
+                      context.read<SessionCubit>().setSession(
+                          state.data.accessToken, state.data.isAdmin);
                       // Navigator.of(context)
                       //     .pushReplacementNamed(StartPage.path);
                       Navigator.of(context).popUntil((route) => route.isFirst);
@@ -183,40 +189,59 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
                             Align(
                               alignment: Alignment.bottomRight,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   TextButton(
-                                    onPressed: () => Navigator.of(context).pushNamed(RegisterPage.path),
+                                    onPressed: () => Navigator.of(context)
+                                        .pushNamed(ForgotPasswordPage.path),
                                     child: Text(
                                       textScaler: TextScaler.linear(0.7),
                                       'Nueva cuenta',
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
                                             color: Colors.green,
-                                            decoration: TextDecoration.underline,
+                                            decoration:
+                                                TextDecoration.underline,
                                           ),
                                     ),
                                   ),
                                   Expanded(
                                     child: Row(
                                       children: [
-                                        Icon(Icons.support_agent, size: 15, color: Colors.green),
+                                        Icon(Icons.support_agent,
+                                            size: 15, color: Colors.green),
                                         const SizedBox(width: 5),
                                         Expanded(
                                           child: GestureDetector(
                                             onTap: () {
-                                              Clipboard.setData(const ClipboardData(text: 'ucacecyt@gmail.com'));
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(content: Text('Email copiado al portapapeles')),
+                                              Clipboard.setData(
+                                                  const ClipboardData(
+                                                      text:
+                                                          'ucacecyt@gmail.com'));
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                    content: Text(
+                                                        'Email copiado al portapapeles')),
                                               );
                                             },
                                             child: Text(
-                                              textScaler: TextScaler.linear(0.7),
+                                              textScaler:
+                                                  TextScaler.linear(0.7),
                                               '¿Necesitas soporte? Escríbenos al email',
-                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
                                                     color: Colors.green,
-                                                    decoration: TextDecoration.underline,
+                                                    decoration: TextDecoration
+                                                        .underline,
                                                   ),
-                                              overflow: TextOverflow.ellipsis, // Esto asegura que el texto no se desborde
+                                              overflow: TextOverflow
+                                                  .ellipsis, // Esto asegura que el texto no se desborde
                                             ),
                                           ),
                                         ),
@@ -268,7 +293,8 @@ class _LoginFormState extends State<LoginForm> with SingleTickerProviderStateMix
 }
 
 class AnimatedLogo extends AnimatedWidget {
-  const AnimatedLogo({required this.animation, super.key}) : super(listenable: animation);
+  const AnimatedLogo({required this.animation, super.key})
+      : super(listenable: animation);
   // Maneja los Tween estáticos debido a que estos no cambian.
   static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
   static final _sizeTween = Tween<double>(begin: 0, end: 150);

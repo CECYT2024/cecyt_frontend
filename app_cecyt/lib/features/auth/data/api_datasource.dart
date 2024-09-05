@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:app_cecyt/core/exceptions/exceptions.dart';
+import 'package:app_cecyt/features/auth/data/models/forgot_password_model.dart';
 import 'package:app_cecyt/features/auth/data/models/models.dart';
+import 'package:app_cecyt/features/auth/domain/confirm_forgot_password_params.dart';
 import 'package:app_cecyt/features/auth/domain/login_params.dart';
 import 'package:app_cecyt/features/auth/domain/register_params.dart';
 import 'package:app_cecyt/utils/constants.dart';
@@ -10,9 +12,15 @@ import 'package:http/http.dart' as http;
 
 class AuthApiDataSource {
   // static String url = baseUrl;
+  static const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+
   Future<LoginResponseModel> login(LoginParams params) async {
     final url = Uri.parse('$baseUrl/login');
-    final response = await http.post(url, body: params.toMap());
+    final response =
+        await http.post(url, body: params.toMap(), headers: headers);
     log(url.toString());
     log(response.body);
     log(response.statusCode.toString());
@@ -35,7 +43,8 @@ class AuthApiDataSource {
 
   Future<RegisterResponseModel> register(RegisterParams params) async {
     final url = Uri.parse('$baseUrl/register');
-    final response = await http.post(url, body: params.toMap());
+    final response =
+        await http.post(url, body: params.toMap(), headers: headers);
     print(url);
     print(response.body);
     print(response.statusCode);
@@ -60,6 +69,7 @@ class AuthApiDataSource {
     final url = Uri.parse('$baseUrl/refresh');
     final response = await http.post(url, headers: {
       "Authorization": "Bearer $token",
+      "Content-Type": "application/json",
     });
     if (response.statusCode == 401) {
       throw NotAuthException();
@@ -76,5 +86,48 @@ class AuthApiDataSource {
     //       message: 'Error al iniciar sesión, intente de nuevo');
     // }
     return LoginResponseModel.fromRawJson(response.body);
+  }
+
+  Future<ForgotPasswordModel> forgotSendEmail(
+      Map<String, String> params) async {
+    final url = Uri.parse('$baseUrl/forgot-password');
+    final response = await http.post(url, body: params, headers: headers);
+    print(url);
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
+    if (response.statusCode >= 500) {
+      throw BadRequestException(
+          message: 'Error en el servidor, intente de nuevo');
+    }
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      throw BadRequestException(message: json.decode(response.body)['message']);
+    }
+
+    return forgotPasswordModelFromJson(response.body);
+  }
+
+  Future<ForgotPasswordModel> confirmForgotPass(
+      ConfirmForgotPasswordParams params) async {
+    final url = Uri.parse('$baseUrl/forgot-password/recover');
+    final response =
+        await http.post(url, body: params.toMap(), headers: headers);
+    print(url);
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 401) {
+      throw NotAuthException();
+    }
+    if (response.statusCode >= 500) {
+      throw BadRequestException(
+          message: 'Error en el servidor, intente de nuevo');
+    }
+    if (response.statusCode >= 400 && response.statusCode < 500) {
+      throw BadRequestException(message: json.decode(response.body)['message']);
+    }
+
+    return forgotPasswordModelFromJson(response.body);
   }
 }
