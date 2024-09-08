@@ -48,6 +48,7 @@ class AuthApiDataSource {
       url,
       headers: {
         'Accept': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: json.encode(params.toMap()),
     );

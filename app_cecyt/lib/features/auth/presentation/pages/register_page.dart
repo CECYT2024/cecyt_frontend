@@ -72,24 +72,14 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
 
   String _contrasena = '';
 
-  String mensaje = '';
-
-  bool tiempo = false;
-
   final matriculaCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final namesCtrl = TextEditingController();
   final lastNamesCtrl = TextEditingController();
-
   final passCrl = TextEditingController();
-  final _noScreenshot = NoScreenshot.instance;
+
   @override
   void initState() {
-    if (Platform.isAndroid) {
-      _unsecureScreen();
-    } else {
-      _noScreenshot.screenshotOn();
-    }
     controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
@@ -98,22 +88,16 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
 
     controller.forward();
 
-    if (kDebugMode) {
-      matriculaCtrl.text = 'C06619';
-      passCrl.text = 'Postman69!';
-    }
-
     super.initState();
-  }
-
-  Future<void> _unsecureScreen() async {
-    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
   @override
   void dispose() {
     controller.dispose();
     matriculaCtrl.dispose();
+    emailCtrl.dispose();
+    namesCtrl.dispose();
+    lastNamesCtrl.dispose();
     passCrl.dispose();
     super.dispose();
   }
@@ -143,23 +127,15 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                   child: Text(
                     'Inserte los siguientes datos para crear su cuenta',
                     textAlign: TextAlign.center,
-                    // style: SafeGoogleFont(
-                    //   'Oswald',
-                    //   fontSize: 30 * ffem,
-                    //   fontWeight: FontWeight.w400,
-                    //   height: 1.4825 * ffem / fem,
-                    //   color: const Color(0xffffffff),
-                    // ),
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      // height: 20,
                       fontSize: 20,
                     ),
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * .8, // 300.0, //size.width * .6,
+                  width: MediaQuery.of(context).size.width * .8,
                   child: BlocConsumer<RegisterCubit, RegisterState>(
                     listener: (context, state) {
                       if (state is RegisterErrorState) {
@@ -173,14 +149,13 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                         lastNamesCtrl.clear();
                         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Cuenta creada correctamente'),
+                          backgroundColor: Colors.green,
                         ));
                         context.read<GlobalCubit>().setToken(state.userData.token);
-                        // Navigator.of(context).pushReplacementNamed(QrPage.path);
+                        Navigator.of(context).pop(LoginPage.path);
                       }
                     },
-                    builder: (context, state) =>
-                        // print(state);
-                        Form(
+                    builder: (context, state) => Form(
                       key: _key,
                       child: Column(
                         children: <Widget>[
@@ -208,6 +183,8 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Introduzca un correo valido';
+                              } else if (!value.contains('@')) {
+                                return 'El correo debe contener un @';
                               }
                               return null;
                             },
@@ -221,13 +198,11 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                             label: 'Nombres',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Introduzca un correo valido';
-                              } else if (!value.contains('@')) {
-                                return 'El correo debe contener un @';
+                                return 'Introduzca un nombre valido';
                               }
                               return null;
                             },
-                            maxLength: 50,
+                            maxLength: 40,
                             onSave: (text) => _name = text ?? '',
                           ),
                           CustomTextField(
@@ -273,12 +248,9 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                               titulo: 'Crear usuario',
                               color: Colors.black,
                               callback: () {
-                                // FocusScope.of(context).unfocus();
-
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 if (_key.currentState!.validate()) {
                                   _key.currentState!.save();
-
                                   context.read<RegisterCubit>().register(
                                         RegisterParams(
                                           studentID: convertToUpperCase(_matricula),
