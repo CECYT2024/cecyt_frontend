@@ -49,8 +49,7 @@ class RegisterView extends StatefulWidget {
   State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView>
-    with SingleTickerProviderStateMixin {
+class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -160,8 +159,7 @@ class _RegisterViewState extends State<RegisterView>
                   ),
                 ),
                 SizedBox(
-                  width: MediaQuery.of(context).size.width *
-                      .8, // 300.0, //size.width * .6,
+                  width: MediaQuery.of(context).size.width * .8, // 300.0, //size.width * .6,
                   child: BlocConsumer<RegisterCubit, RegisterState>(
                     listener: (context, state) {
                       if (state is RegisterErrorState) {
@@ -173,13 +171,10 @@ class _RegisterViewState extends State<RegisterView>
                         emailCtrl.clear();
                         namesCtrl.clear();
                         lastNamesCtrl.clear();
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text('Cuenta creada correctamente'),
                         ));
-                        context
-                            .read<GlobalCubit>()
-                            .setToken(state.userData.token);
+                        context.read<GlobalCubit>().setToken(state.userData.token);
                         // Navigator.of(context).pushReplacementNamed(QrPage.path);
                       }
                     },
@@ -226,11 +221,13 @@ class _RegisterViewState extends State<RegisterView>
                             label: 'Nombres',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Introduzca un nombre';
+                                return 'Introduzca un correo valido';
+                              } else if (!value.contains('@')) {
+                                return 'El correo debe contener un @';
                               }
                               return null;
                             },
-                            maxLength: 20,
+                            maxLength: 50,
                             onSave: (text) => _name = text ?? '',
                           ),
                           CustomTextField(
@@ -244,7 +241,7 @@ class _RegisterViewState extends State<RegisterView>
                               }
                               return null;
                             },
-                            maxLength: 20,
+                            maxLength: 50,
                             onSave: (text) => _lastName = text ?? '',
                           ),
                           CustomPasswordTextField(
@@ -284,8 +281,7 @@ class _RegisterViewState extends State<RegisterView>
 
                                   context.read<RegisterCubit>().register(
                                         RegisterParams(
-                                          studentID:
-                                              convertToUpperCase(_matricula),
+                                          studentID: convertToUpperCase(_matricula),
                                           email: _email,
                                           name: _name,
                                           lastname: _lastName,
