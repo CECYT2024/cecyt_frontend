@@ -51,7 +51,7 @@ class NewsCardsFour extends StatelessWidget {
                   const SizedBox(height: 10),
                   Image.asset('assets/Innotec_Charla2.jpg'),
                   const Text(
-                    'El anteriores ediciones, el congreso contó con la participación de destacados conferencistas nacionales e internacionales que abordaron temas como energías renovables, inteligencia artificial, construcciones sustentables, transformación digital, economía circular y el uso del hidrógeno verde. Estas presentaciones y discusiones buscaron contribuir al crecimiento y la formación profesional de los asistentes.',
+                    'En anteriores ediciones, el congreso contó con la participación de destacados conferencistas nacionales e internacionales que abordaron temas como energías renovables, inteligencia artificial, construcciones sustentables, transformación digital, economía circular y el uso del hidrógeno verde. Estas presentaciones y discusiones buscaron contribuir al crecimiento y la formación profesional de los asistentes.',
                     style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 20),

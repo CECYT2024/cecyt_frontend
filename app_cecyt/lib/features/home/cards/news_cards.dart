@@ -99,7 +99,7 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
         _showErrorDialog('Error al obtener las preguntas');
       }
     } catch (e) {
-      _showErrorDialog(e.toString());
+      _showErrorDialog("Error al obtener las preguntas");
     }
   }
 
@@ -262,6 +262,10 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                       const SnackBar(content: Text('Error al dar like a la pregunta')),
                                     );
                                   }
+                                } else if (response.statusCode == 403) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Compra una entrada para dar like')),
+                                  );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(content: Text('Error al dar like a la pregunta')),

@@ -52,6 +52,7 @@ class NewsCardsThree extends StatelessWidget {
                   Column(
                     children: [
                       NombresLista('Giovanna Vallena', 'PRESIDENTE CECYT'),
+                      NombresLista('Iván Del Pozo', 'VICEPRESIDENTE CECYT'),
                       NombresLista('Santiago J. Céspedes', 'DIRECTOR GENERAL'),
                       NombresLista('Laura Wenz', 'DIRECTORA DE FINANZAS'),
                       NombresLista('Agustin Spinzi', 'DIRECTOR DE FINANZAS'),
