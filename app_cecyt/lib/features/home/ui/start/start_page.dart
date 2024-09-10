@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:app_cecyt/core/cubit/session_cubit.dart';
 import 'package:app_cecyt/core/exceptions/exceptions.dart';
+import 'package:app_cecyt/features/auth/presentation/bloc/login_bloc.dart';
 import 'package:app_cecyt/utils/helpers/pref_manager.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:app_cecyt/utils/widgets/card_image.dart';
@@ -54,26 +55,23 @@ class _StartPageState extends State<StartPage> {
           isLoading = true;
         });
 
-        try {
-          final adminStatus = await apiService.isAdmin(token);
-          final responseBody = jsonDecode(adminStatus.body);
-          if (responseBody['isAdmin']) {
-            context.read<SessionCubit>().setSession(token, true);
-          } else {
-            context.read<SessionCubit>().setSession(token, false);
-          }
-        } catch (e) {
-          // Handle error
-        } finally {
-          setState(() {
-            isLoading = false;
-          });
+        final adminStatus = await apiService.isAdmin(token);
+        final responseBody = jsonDecode(adminStatus.body);
+        if (responseBody['isAdmin']) {
+          context.read<SessionCubit>().setSession(token, true);
+        } else {
+          context.read<SessionCubit>().setSession(token, false);
         }
       }
     } on NotAuthException catch (e) {
-      context.read<SessionCubit>().logout();
+      context.read<LoginBloc>().refreshToken();
     } catch (e) {
+      context.read<SessionCubit>().logout();
       // Handle error
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -148,7 +146,8 @@ class _StartPageState extends State<StartPage> {
                         onPressed: () {
                           Navigator.of(context).pushNamed('/news3');
                         },
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
@@ -158,7 +157,8 @@ class _StartPageState extends State<StartPage> {
                               ),
                             ),
                             const SizedBox(height: 1),
-                            const Text(textAlign: TextAlign.center,
+                            const Text(
+                              textAlign: TextAlign.center,
                               "ORGANIZADORES INNOTEC 2024",
                               style: TextStyle(fontSize: 18),
                             ),

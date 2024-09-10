@@ -17,6 +17,7 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final ApiRepository repository;
+  Timer? _timer;
   LoginBloc(this.repository) : super(LoginInitial()) {
     on<LoginEvent>((event, emit) async {
       emit(LoginProgressState());
@@ -62,6 +63,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final newToken = await _postRefreshToken();
       PrefManager(null).setToken(newToken.accessToken);
       tokenCambiable = newToken.accessToken;
+      _startTokenRefreshTimer(newToken.expiresIn);
       print("Token refreshed successfully");
     } catch (e) {
       print("Error refreshing token: $e");
@@ -70,9 +72,17 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   // Función para iniciar el temporizador de refresco de token
   void _startTokenRefreshTimer(int durationInMinutes) {
-    Timer.periodic(Duration(minutes: durationInMinutes), (timer) async {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    _timer =
+        Timer.periodic(Duration(minutes: durationInMinutes), (timer) async {
       await _refreshToken();
     });
+  }
+
+  void refreshToken() {
+    _refreshToken();
   }
 
   Future<void> login(LoginParams params, Emitter<LoginState> emit) async {
