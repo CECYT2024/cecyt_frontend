@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_cecyt/utils/constants.dart';
+import 'package:app_cecyt/utils/helpers/pref_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'event.dart';
@@ -56,7 +57,8 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
       FetchEvents event, Emitter<EventState> emit) async {
     emit(EventsLoading());
     try {
-      final response = await apiService.getAllTalks(tokenCambiable);
+      final response =
+          await apiService.getAllTalks(PrefManager(null).token ?? '');
       if (response.statusCode == 200) {
         List<Event> events = Event.fromJson(response.body);
         emit(EventsLoaded(events: events));
@@ -78,8 +80,8 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
   Future<void> _onDeleteEvent(
       DeleteEvent event, Emitter<EventState> emit) async {
     try {
-      final response =
-          await apiService.deleteTalk(event.event.id, tokenCambiable);
+      final response = await apiService.deleteTalk(
+          event.event.id, PrefManager(null).token ?? '');
       final responseBody = jsonDecode(response.body);
       if (response.statusCode == 200 && responseBody['status'] == 'ok') {
         // Eliminar el evento de la lista de eventos

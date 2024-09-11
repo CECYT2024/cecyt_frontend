@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app_cecyt/utils/constants.dart';
 import 'package:app_cecyt/utils/helpers/api_service.dart';
 import 'package:app_cecyt/utils/helpers/events_bloc.dart';
+import 'package:app_cecyt/utils/helpers/pref_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
@@ -58,7 +59,8 @@ class _QrPageState extends State<QrPage> {
   Future<Map<String, dynamic>> _fetchUserData() async {
     final apiService = ApiService();
     try {
-      final userData = await apiService.getUserData(tokenCambiable);
+      final userData =
+          await apiService.getUserData(PrefManager(null).token ?? '');
       setState(() {
         qrUrl = userData['qr_link'];
         name = userData['name'];

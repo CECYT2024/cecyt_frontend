@@ -57,6 +57,7 @@ class ApiService {
       },
     );
     print(response.body);
+    print(response.statusCode);
     if (response.statusCode == 401) {
       throw NotAuthException();
     }

@@ -30,7 +30,8 @@ class AuthApiDataSource {
       throw NotAuthException();
     }
     if (response.statusCode == 500) {
-      throw BadRequestException(message: 'Error en el servidor, intente de nuevo');
+      throw BadRequestException(
+          message: 'Error en el servidor, intente de nuevo');
     }
     if (response.statusCode >= 400 && response.statusCode < 500) {
       throw BadRequestException(message: json.decode(response.body)['error']);
@@ -59,13 +60,15 @@ class AuthApiDataSource {
       throw NotAuthException();
     }
     if (response.statusCode == 500) {
-      throw BadRequestException(message: 'Error en el servidor, intente de nuevo');
+      throw BadRequestException(
+          message: 'Error en el servidor, intente de nuevo');
     }
     if (response.statusCode >= 400 && response.statusCode < 500) {
       throw BadRequestException(message: json.decode(response.body)['message']);
     }
     if (response.statusCode == 409) {
-      throw BadRequestException(message: 'Usuario ya registrado, intente de nuevo');
+      throw BadRequestException(
+          message: 'Usuario ya registrado, intente de nuevo');
     }
     return RegisterResponseModel.fromRawJson(response.body);
   }
@@ -76,11 +79,16 @@ class AuthApiDataSource {
       "Authorization": "Bearer $token",
       // "Content-Type": "application/json",
     });
+    log(url.toString());
+    log(response.body);
+    log(response.statusCode.toString());
+
     if (response.statusCode == 401) {
       throw NotAuthException();
     }
     if (response.statusCode == 500) {
-      throw BadRequestException(message: 'Error en el servidor, intente de nuevo');
+      throw BadRequestException(
+          message: 'Error en el servidor, intente de nuevo');
     }
     if (response.statusCode >= 400 && response.statusCode < 500) {
       throw BadRequestException(message: json.decode(response.body)['error']);
@@ -92,7 +100,8 @@ class AuthApiDataSource {
     return LoginResponseModel.fromRawJson(response.body);
   }
 
-  Future<ForgotPasswordModel> forgotSendEmail(Map<String, String> params) async {
+  Future<ForgotPasswordModel> forgotSendEmail(
+      Map<String, String> params) async {
     final url = Uri.parse('$baseUrl/forgot-password');
     final response = await http.post(
       url,
@@ -105,7 +114,8 @@ class AuthApiDataSource {
       throw NotAuthException();
     }
     if (response.statusCode >= 500) {
-      throw BadRequestException(message: 'Error en el servidor, intente de nuevo');
+      throw BadRequestException(
+          message: 'Error en el servidor, intente de nuevo');
     }
     if (response.statusCode >= 400 && response.statusCode < 500) {
       throw BadRequestException(message: json.decode(response.body)['message']);
@@ -114,7 +124,8 @@ class AuthApiDataSource {
     return forgotPasswordModelFromJson(response.body);
   }
 
-  Future<ForgotPasswordModel> confirmForgotPass(ConfirmForgotPasswordParams params) async {
+  Future<ForgotPasswordModel> confirmForgotPass(
+      ConfirmForgotPasswordParams params) async {
     final url = Uri.parse('$baseUrl/forgot-password/recover');
     final response = await http.post(
       url,
@@ -127,7 +138,8 @@ class AuthApiDataSource {
       throw NotAuthException();
     }
     if (response.statusCode >= 500) {
-      throw BadRequestException(message: 'Error en el servidor, intente de nuevo');
+      throw BadRequestException(
+          message: 'Error en el servidor, intente de nuevo');
     }
     if (response.statusCode >= 400 && response.statusCode < 500) {
       throw BadRequestException(message: json.decode(response.body)['message']);

@@ -46,7 +46,7 @@ class _StartPageState extends State<StartPage> {
     await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
-  Future<void> _checkAdminStatus() async {
+  Future<void> _checkAdminStatus({bool isReIntento = false}) async {
     final apiService = ApiService();
     try {
       final token = PrefManager(null).token;
@@ -55,18 +55,23 @@ class _StartPageState extends State<StartPage> {
           isLoading = true;
         });
 
-        final adminStatus = await apiService.isAdmin(token);
-        final responseBody = jsonDecode(adminStatus.body);
-        if (responseBody['isAdmin']) {
-          context.read<SessionCubit>().setSession(token, true);
-        } else {
-          context.read<SessionCubit>().setSession(token, false);
-        }
+        // final adminStatus = await apiService.isAdmin(token);
+        // final responseBody = jsonDecode(adminStatus.body);
+        // print(responseBody);
+        // context
+        //     .read<SessionCubit>()
+        //     .setSession(token, responseBody['isAdmin'], 3600);
+        await context.read<SessionCubit>().refreshToken();
       }
     } on NotAuthException catch (e) {
-      context.read<LoginBloc>().refreshToken();
+      // if (isReIntento)
+      //   context.read<SessionCubit>().logout();
+      // else
+      //   context.read<SessionCubit>().refreshToken().then(
+      //         (value) => _checkAdminStatus(isReIntento: true),
+      //       );
     } catch (e) {
-      context.read<SessionCubit>().logout();
+      // context.read<SessionCubit>().logout();
       // Handle error
     } finally {
       setState(() {

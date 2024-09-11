@@ -1,5 +1,7 @@
 import 'package:app_cecyt/core/cubit/global_cubit.dart';
 import 'package:app_cecyt/core/cubit/session_cubit.dart';
+import 'package:app_cecyt/features/auth/data/api_datasource.dart';
+import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/presentation/pages/forgot_password_page.dart';
 
 import 'package:app_cecyt/features/auth/presentation/pages/register_page.dart';
@@ -46,7 +48,8 @@ class MyApp extends StatelessWidget {
           create: (context) => GlobalCubit(),
         ),
         BlocProvider(
-          create: (context) => SessionCubit(),
+          create: (context) =>
+              SessionCubit(ApiRepository(apiProvider: AuthApiDataSource())),
         ),
         // BlocProvider(
         //   create: (context) => NavigationBloc(),

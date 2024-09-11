@@ -23,7 +23,7 @@ class LoginResponseModel {
         accessToken: json["access_token"],
         tokenType: json["token_type"],
         expiresIn: json["expires_in"],
-        isAdmin: json["isAdmin"],
+        isAdmin: json["isAdmin"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
