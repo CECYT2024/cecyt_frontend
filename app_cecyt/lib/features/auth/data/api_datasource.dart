@@ -21,6 +21,9 @@ class AuthApiDataSource {
     final url = Uri.parse('$baseUrl/login');
     final response = await http.post(
       url,
+      headers: {
+        'Accept': 'application/json',
+      },
       body: params.toMap(),
     );
     log(url.toString());
@@ -76,6 +79,7 @@ class AuthApiDataSource {
   Future<LoginResponseModel> refreshToken(String token) async {
     final url = Uri.parse('$baseUrl/refresh');
     final response = await http.post(url, headers: {
+      "Accept": "application/json",
       "Authorization": "Bearer $token",
       // "Content-Type": "application/json",
     });
@@ -104,6 +108,10 @@ class AuthApiDataSource {
       Map<String, String> params) async {
     final url = Uri.parse('$baseUrl/forgot-password');
     final response = await http.post(
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
       url,
       body: params,
     );

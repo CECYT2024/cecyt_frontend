@@ -28,7 +28,7 @@ class RegisterCubit extends Cubit<RegisterState> {
       // Formatear el error de manera similar al EventsBloc
       print(e);
       final errorMessage = _formatError(e);
-      emit(RegisterErrorState(errorMessage));
+      emit(const RegisterErrorState("No existe conexión a internet"));
     }
   }
 

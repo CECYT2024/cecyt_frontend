@@ -65,7 +65,8 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
       setState(() {
         isLoading = false;
       });
-      _showErrorDialog(e.toString());
+      _showErrorDialog(
+          "Error, no estas conectado a internet"); // Ajusta el mensaje
     }
   }
 
