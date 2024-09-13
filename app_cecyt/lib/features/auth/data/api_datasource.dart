@@ -110,7 +110,6 @@ class AuthApiDataSource {
     final response = await http.post(
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
       },
       url,
       body: params,

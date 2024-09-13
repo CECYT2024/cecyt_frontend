@@ -370,6 +370,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
             ),
             TextButton(
               onPressed: () async {
+                Navigator.of(context).pop();
                 final questionText = questionController.text;
                 if (questionText.isNotEmpty) {
                   final uuid = Uuid().v4();
@@ -381,7 +382,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
                   final response = await apiService.saveQuestion(
                       PrefManager(null).token ?? '', formData);
                   if (response.statusCode == 200) {
-                    Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('Pregunta agregada exitosamente')),
