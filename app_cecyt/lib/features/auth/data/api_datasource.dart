@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:app_cecyt/core/exceptions/exceptions.dart';
 import 'package:app_cecyt/features/auth/data/models/forgot_password_model.dart';
 import 'package:app_cecyt/features/auth/data/models/models.dart';
@@ -134,27 +134,42 @@ class AuthApiDataSource {
     return forgotPasswordModelFromJson(response.body);
   }
 
+  // Importar la biblioteca para manejar excepciones de socket
+
   Future<ForgotPasswordModel> confirmForgotPass(
       ConfirmForgotPasswordParams params) async {
     final url = Uri.parse('$baseUrl/forgot-password/recover');
-    final response = await http.post(
-      url,
-      body: params.toMap(),
-    );
-    print(url);
-    print(response.body);
-    print(response.statusCode);
-    if (response.statusCode == 401) {
-      throw NotAuthException();
-    }
-    if (response.statusCode >= 500) {
-      throw BadRequestException(
-          message: 'Error en el servidor, intente de nuevo');
-    }
-    if (response.statusCode >= 400 && response.statusCode < 500) {
-      throw BadRequestException(message: json.decode(response.body)['message']);
-    }
+    try {
+      final response = await http.post(
+        headers: {
+          'Accept': 'application/json',
+        },
+        url,
+        body: params.toMap(),
+      );
+      print(url);
+      print(response.body);
+      print(response.statusCode);
 
-    return forgotPasswordModelFromJson(response.body);
+      if (response.statusCode == 302) {
+        throw BadRequestException(
+            message:
+                'Redirección detectada. Verifique la URL o el código de recuperación.');
+      }
+      if (response.statusCode == 401) {
+        throw NotAuthException();
+      }
+      if (response.statusCode >= 500) {
+        throw BadRequestException(
+            message: 'Error en el servidor, intente de nuevo');
+      }
+      if (response.statusCode >= 400 && response.statusCode < 500) {
+        throw BadRequestException(message: json.decode(response.body)['error']);
+      }
+
+      return forgotPasswordModelFromJson(response.body);
+    } on SocketException {
+      throw BadRequestException(message: 'No hay conexión a Internet');
+    }
   }
 }

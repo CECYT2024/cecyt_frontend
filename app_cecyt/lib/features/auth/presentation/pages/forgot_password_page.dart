@@ -57,10 +57,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
 
   final GlobalKey<FormState> _key = GlobalKey();
 
-  // String _matricula = '';
-
-  // String _contrasena = '';
-
   String mensaje = '';
 
   bool tiempo = false;
@@ -110,7 +106,6 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
           return null;
         },
         maxLength: 9,
-        // onSave: (text) => _matricula = text ?? '',
         onSave: (text) {},
       ),
       const SizedBox(
@@ -172,13 +167,31 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
         label: 'Contraseña',
         maxLength: 100,
         onSave: (text) => {},
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Introduzca una contraseña';
+          } else if (value.length < 8) {
+            return 'Mínimo 8 caracteres';
+          }
+          return null;
+        },
       ),
       CustomPasswordTextField(
         controller: confirmPassCrl,
         hint: '',
-        label: 'Contraseña',
+        label: 'Confirmar contraseña',
         maxLength: 100,
         onSave: (text) {},
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Introduzca una contraseña';
+          } else if (value.length < 8) {
+            return 'Mínimo 8 caracteres';
+          } else if (value != passCrl.text) {
+            return 'Las contraseñas no coinciden';
+          }
+          return null;
+        },
       ),
     ];
   }
@@ -206,39 +219,31 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.bold,
-                    // height: 20,
                     fontSize: 20,
                   ),
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width *
-                    .8, // 300.0, //size.width * .6,
+                width: MediaQuery.of(context).size.width * .8,
                 child: BlocConsumer<ForgotPasswordCubit, ForgotPasswordState>(
                   listener: (context, state) {
                     if (state is ForgotPasswordErrorState) {
-                      context.showPopup(
-                        closeOnPressed: () => Navigator.of(context).pop(),
-                        type: DialogTypeEnum.error,
-                        message: state.message,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.red,
+                        ),
                       );
                     }
                     if (state is ForgotPasswordSuccessState) {
                       matriculaCtrl.clear();
                       passCrl.clear();
-                      // context.showPopup(
-                      //   closeOnPressed: () => Navigator.of(context).pop(),
-                      //   type: DialogTypeEnum.information,
-                      //   message: state.message,
-                      // );
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(state.message),
                           duration: const Duration(seconds: 3),
                         ),
                       );
-
-                      // Navigator.of(context).popUntil((route) => route.isFirst);
                       Navigator.of(context).pop();
                     }
                   },

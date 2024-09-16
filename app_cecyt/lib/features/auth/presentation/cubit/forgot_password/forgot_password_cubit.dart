@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_cecyt/core/exceptions/exceptions.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/domain/confirm_forgot_password_params.dart';
@@ -20,8 +22,13 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
       emit(ForgotPasswordConfirmPageState());
     } on BadRequestException catch (e) {
       emit(ForgotPasswordErrorState(e.message));
+    } on NotAuthException {
+      emit(
+          ForgotPasswordErrorState('No autorizado. Por favor, inicie sesión.'));
+    } on SocketException {
+      emit(ForgotPasswordErrorState('No hay conexión a Internet.'));
     } catch (e) {
-      emit(ForgotPasswordErrorState(e.toString()));
+      emit(ForgotPasswordErrorState('Error desconocido: ${e.toString()}'));
     }
   }
 
@@ -30,8 +37,15 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     try {
       await repository.confimrForgotPassword(params);
       emit(ForgotPasswordSuccessState("Contraseña cambiada con éxito"));
+    } on BadRequestException catch (e) {
+      emit(ForgotPasswordErrorState(e.message));
+    } on NotAuthException {
+      emit(
+          ForgotPasswordErrorState('No autorizado. Por favor, inicie sesión.'));
+    } on SocketException {
+      emit(ForgotPasswordErrorState('No hay conexión a Internet.'));
     } catch (e) {
-      emit(ForgotPasswordErrorState(e.toString()));
+      emit(ForgotPasswordErrorState('Error desconocido: ${e.toString()}'));
     }
   }
 }
