@@ -1,5 +1,5 @@
+// news_cards.dart
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_cecyt/utils/constants.dart';
@@ -9,9 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:intl/intl.dart';
 import 'package:app_cecyt/utils/helpers/event.dart';
-import 'package:app_cecyt/utils/helpers/api_service.dart'; // Importa ApiService
+import 'package:app_cecyt/utils/helpers/api_service.dart';
 import 'package:no_screenshot/no_screenshot.dart';
 import 'package:uuid/uuid.dart';
+import 'news_cards_service.dart'; // Importa NewsCardsService
 
 class NewsCardsOne extends StatefulWidget {
   const NewsCardsOne({super.key});
@@ -22,10 +23,11 @@ class NewsCardsOne extends StatefulWidget {
 }
 
 class _NewsCardsOneState extends State<NewsCardsOne> {
-  final ApiService apiService = ApiService(); // Ajusta la URL base
+  final NewsCardsService newsCardsService = NewsCardsService();
   List<Event> events = [];
   bool isLoading = true;
   final _noScreenshot = NoScreenshot.instance;
+
   @override
   void initState() {
     if (Platform.isAndroid) {
@@ -43,72 +45,34 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
 
   Future<void> _loadTalks() async {
     try {
-      final response =
-          await apiService.getAllTalks(PrefManager(null).token ?? '');
-      if (response.statusCode == 200) {
-        List<Event> loadedEvents = Event.fromJson(response.body);
-        setState(() {
-          events = loadedEvents.where((event) {
-            final now = DateTime.now();
-            return event.startTime.isAfter(now.subtract(Duration(hours: 2)));
-          }).toList()
-            ..sort((a, b) => a.startTime.compareTo(b.startTime));
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-        _showErrorDialog('Iniciar sesión o registrate para ver las preguntas');
-      }
+      final token = PrefManager(null).token ?? '';
+      final loadedEvents = await newsCardsService.loadTalks(token);
+      setState(() {
+        events = loadedEvents;
+        isLoading = false;
+      });
     } catch (e) {
       setState(() {
         isLoading = false;
       });
-      _showErrorDialog(
-          "Error, no estas conectado a internet"); // Ajusta el mensaje
+      _showErrorDialog(e.toString());
     }
   }
 
   void _showQuestions(Event event) async {
     try {
-      final response = await apiService.getQuestionByTalk(
-          PrefManager(null).token ?? '', event.id);
-      if (response.statusCode == 200) {
-        if (response.body.isNotEmpty) {
-          final Map<String, dynamic> responseBody = json.decode(response.body);
-          if (responseBody['status'] == 'ok' && responseBody['data'] != null) {
-            List<Question> questions = (responseBody['data'] as List)
-                .map((questionJson) => Question.fromJson(questionJson))
-                .toList();
-            questions.sort((a, b) => b.likes.compareTo(a.likes));
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    QuestionsPage(event: event, questions: questions),
-              ),
-            );
-          } else {
-            _showErrorDialog(
-                'Unexpected response format. ${response.statusCode},${response.body}');
-          }
-        } else {
-          _showErrorDialog('No questions found.');
-        }
-      } else if (response.statusCode == 404) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                QuestionsPage(event: event, questions: const []),
-          ),
-        );
-      } else {
-        _showErrorDialog('Error al obtener las preguntas');
-      }
+      final token = PrefManager(null).token ?? '';
+      final questions =
+          await newsCardsService.getQuestionsByTalk(token, event.id);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              QuestionsPage(event: event, questions: questions),
+        ),
+      );
     } catch (e) {
-      _showErrorDialog("Error al obtener las preguntas");
+      _showErrorDialog(e.toString());
     }
   }
 
@@ -123,7 +87,7 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
             TextButton(
               child: const Text('OK'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).popUntil((route) => route.isFirst);
               },
             ),
           ],
@@ -181,7 +145,7 @@ class QuestionsPage extends StatefulWidget {
 
 class _QuestionsPageState extends State<QuestionsPage> {
   late List<Question> questions;
-  final ApiService apiService = ApiService();
+  final NewsCardsService newsCardsService = NewsCardsService();
   Timer? _timer;
 
   @override
@@ -205,7 +169,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
 
   Future<void> _refreshQuestions() async {
     try {
-      final updatedQuestions = await _showQuestions(widget.event);
+      final token = PrefManager(null).token ?? '';
+      final updatedQuestions =
+          await newsCardsService.getQuestionsByTalk(token, widget.event.id);
       if (mounted) {
         setState(() {
           questions = updatedQuestions;
@@ -213,22 +179,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
       }
     } catch (e) {
       // Manejar el error si es necesario
-    }
-  }
-
-  Future<List<Question>> _showQuestions(Event event) async {
-    final response = await apiService.getQuestionByTalk(
-        PrefManager(null).token ?? '', event.id);
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-      if (responseBody['status'] == 'ok' && responseBody['data'] != null) {
-        final List<dynamic> questionsData = responseBody['data'];
-        return questionsData.map((data) => Question.fromJson(data)).toList();
-      } else {
-        throw Exception('Error en la respuesta de la API');
-      }
-    } else {
-      throw Exception('Error al obtener las preguntas');
     }
   }
 
@@ -263,28 +213,12 @@ class _QuestionsPageState extends State<QuestionsPage> {
                             IconButton(
                               icon: Icon(Icons.thumb_up, color: Colors.blue),
                               onPressed: () async {
-                                final response = await apiService.likeQuestion(
-                                    PrefManager(null).token ?? '',
-                                    question.questionUuid);
-                                if (response.statusCode == 200) {
-                                  final Map<String, dynamic> responseBody =
-                                      json.decode(response.body);
-                                  if (responseBody['status'] == 'ok') {
-                                    _refreshQuestions();
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Error al dar like a la pregunta')),
-                                    );
-                                  }
-                                } else if (response.statusCode == 403) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Compra una entrada para dar like')),
-                                  );
-                                } else {
+                                try {
+                                  final token = PrefManager(null).token ?? '';
+                                  await newsCardsService.likeQuestion(
+                                      token, question.questionUuid);
+                                  _refreshQuestions();
+                                } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content: Text(
@@ -310,43 +244,21 @@ class _QuestionsPageState extends State<QuestionsPage> {
   }
 
   void _addQuestion(BuildContext context) async {
-    final response = await apiService.checkNumberOfQuestionsByUser(
-        PrefManager(null).token ?? '', widget.event.id);
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-      if (responseBody['status'] == 'ok' && responseBody['data'] != null) {
-        int questionCount = responseBody['data'];
-        if (questionCount < 3) {
-          _showAddQuestionDialog(context);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Solo se permiten 3 preguntas por usuario')),
-          );
-        }
-      }
-    } else if (response.statusCode == 403) {
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-      if (responseBody['status'] == 'error' &&
-          responseBody['message'] ==
-              'User does not have qr_code. You need to purchase a ticket to like or dislike a question') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content:
-                  Text('Necesitas comprar un ticket para hacer una pregunta')),
-        );
+    try {
+      final token = PrefManager(null).token ?? '';
+      final questionCount = await newsCardsService.checkNumberOfQuestionsByUser(
+          token, widget.event.id);
+      if (questionCount < 3) {
+        _showAddQuestionDialog(context);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Error al verificar el número de preguntas ${response.statusCode}')),
+          const SnackBar(
+              content: Text('Solo se permiten 3 preguntas por usuario')),
         );
       }
-    } else {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                'Error al verificar el número de preguntas ${response.statusCode}')),
+        SnackBar(content: Text(e.toString())),
       );
     }
   }
@@ -370,7 +282,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.of(context).pop();
                 final questionText = questionController.text;
                 if (questionText.isNotEmpty) {
                   final uuid = Uuid().v4();
@@ -379,24 +290,22 @@ class _QuestionsPageState extends State<QuestionsPage> {
                     'talk_id': widget.event.id.toString(),
                     'uuid': uuid,
                   };
-                  final response = await apiService.saveQuestion(
-                      PrefManager(null).token ?? '', formData);
-                  if (response.statusCode == 200) {
+                  try {
+                    final token = PrefManager(null).token ?? '';
+                    await newsCardsService.saveQuestion(token, formData);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                          content: Text('Pregunta agregada exitosamente')),
+                        content: Text('Pregunta agregada exitosamente'),
+                        backgroundColor: Color.fromARGB(255, 48, 112, 50),
+                      ),
                     );
                     _refreshQuestions();
-                  } else {
                     Navigator.of(context).pop();
+                  } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: response.statusCode != 403
-                              ? Text(
-                                  'Error al agregar la pregunta, ${response.statusCode},${response.body}')
-                              : const Text(
-                                  'Se requiere de comprar la entrada para hacer preguntas')),
+                      SnackBar(content: Text(e.toString())),
                     );
+                    Navigator.of(context).pop();
                   }
                 }
               },

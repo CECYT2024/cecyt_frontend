@@ -264,7 +264,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
                             ...confirmForm(),
                           PrincipalButton(
                             titulo: state is ForgotPasswordInitialState
-                                ? 'Solictar'
+                                ? 'Solicitar'
                                 : 'Enviar',
                             color: Colors.black,
                             callback: () {

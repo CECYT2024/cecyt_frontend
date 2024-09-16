@@ -1,3 +1,4 @@
+import 'package:app_cecyt/core/exceptions/exceptions.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/domain/confirm_forgot_password_params.dart';
 import 'package:bloc/bloc.dart';
@@ -17,6 +18,8 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
         'student_id': matricula,
       });
       emit(ForgotPasswordConfirmPageState());
+    } on BadRequestException catch (e) {
+      emit(ForgotPasswordErrorState(e.message));
     } catch (e) {
       emit(ForgotPasswordErrorState(e.toString()));
     }
@@ -26,7 +29,7 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
     emit(ForgotPasswordLoadingState());
     try {
       await repository.confimrForgotPassword(params);
-      emit(ForgotPasswordSuccessState("contrasena cambiado"));
+      emit(ForgotPasswordSuccessState("Contraseña cambiada con éxito"));
     } catch (e) {
       emit(ForgotPasswordErrorState(e.toString()));
     }

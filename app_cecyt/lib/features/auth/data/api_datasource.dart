@@ -108,15 +108,16 @@ class AuthApiDataSource {
       Map<String, String> params) async {
     final url = Uri.parse('$baseUrl/forgot-password');
     final response = await http.post(
+      url,
       headers: {
         'Accept': 'application/json',
       },
-      url,
       body: params,
     );
     print(url);
     print(response.body);
     print(response.statusCode);
+
     if (response.statusCode == 401) {
       throw NotAuthException();
     }
@@ -125,7 +126,9 @@ class AuthApiDataSource {
           message: 'Error en el servidor, intente de nuevo');
     }
     if (response.statusCode >= 400 && response.statusCode < 500) {
-      throw BadRequestException(message: json.decode(response.body)['message']);
+      final responseBody = json.decode(response.body);
+      final errorMessage = responseBody['error'] ?? 'Error desconocido';
+      throw BadRequestException(message: errorMessage);
     }
 
     return forgotPasswordModelFromJson(response.body);

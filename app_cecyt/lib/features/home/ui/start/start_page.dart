@@ -54,7 +54,7 @@ class _StartPageState extends State<StartPage> {
         setState(() {
           isLoading = true;
         });
-
+        print('Token Refrescado');
         // final adminStatus = await apiService.isAdmin(token);
         // final responseBody = jsonDecode(adminStatus.body);
         // print(responseBody);
