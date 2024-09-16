@@ -82,15 +82,13 @@ class Event {
   }
 }
 
-class DeleteEvent extends EventEvent {
+class DeleteEventFromList extends EventEvent {
   final Event event;
 
-  DeleteEvent(this.event);
+  DeleteEventFromList(this.event);
 
   @override
-  List<Object?> get props => [
-        event
-      ];
+  List<Object?> get props => [event];
 }
 
 List<Event> events = [];

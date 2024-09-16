@@ -1,4 +1,3 @@
-// news_cards.dart
 import 'dart:async';
 import 'dart:io';
 
@@ -51,6 +50,11 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
         events = loadedEvents;
         isLoading = false;
       });
+    } on SocketException {
+      setState(() {
+        isLoading = false;
+      });
+      _showErrorDialog('No se tiene conexión a Internet.');
     } catch (e) {
       setState(() {
         isLoading = false;
@@ -71,6 +75,8 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
               QuestionsPage(event: event, questions: questions),
         ),
       );
+    } on SocketException {
+      _showErrorDialog('No se tiene conexión a Internet.');
     } catch (e) {
       _showErrorDialog(e.toString());
     }
@@ -177,6 +183,10 @@ class _QuestionsPageState extends State<QuestionsPage> {
           questions = updatedQuestions;
         });
       }
+    } on SocketException {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se tiene conexión a Internet.')),
+      );
     } catch (e) {
       // Manejar el error si es necesario
     }
@@ -218,6 +228,12 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                   await newsCardsService.likeQuestion(
                                       token, question.questionUuid);
                                   _refreshQuestions();
+                                } on SocketException {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'No se tiene conexión a Internet.')),
+                                  );
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -256,6 +272,10 @@ class _QuestionsPageState extends State<QuestionsPage> {
               content: Text('Solo se permiten 3 preguntas por usuario')),
         );
       }
+    } on SocketException {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se tiene conexión a Internet.')),
+      );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),
@@ -270,50 +290,107 @@ class _QuestionsPageState extends State<QuestionsPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Agregar Pregunta'),
-          content: TextField(
-            controller: questionController,
-            decoration:
-                const InputDecoration(hintText: 'Escribe tu pregunta aquí'),
+          content: AddQuestionForm(
+            event: widget.event,
+            refreshQuestions: _refreshQuestions,
           ),
-          actions: [
+        );
+      },
+    );
+  }
+}
+
+class AddQuestionForm extends StatefulWidget {
+  final Event event;
+  final Function refreshQuestions;
+
+  const AddQuestionForm({
+    Key? key,
+    required this.event,
+    required this.refreshQuestions,
+  }) : super(key: key);
+
+  @override
+  _AddQuestionFormState createState() => _AddQuestionFormState();
+}
+
+class _AddQuestionFormState extends State<AddQuestionForm> {
+  final TextEditingController questionController = TextEditingController();
+  bool isSubmitting = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextField(
+          controller: questionController,
+          decoration:
+              const InputDecoration(hintText: 'Escribe tu pregunta aquí'),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
               child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () async {
-                final questionText = questionController.text;
-                if (questionText.isNotEmpty) {
-                  final uuid = Uuid().v4();
-                  final formData = {
-                    'question': questionText,
-                    'talk_id': widget.event.id.toString(),
-                    'uuid': uuid,
-                  };
-                  try {
-                    final token = PrefManager(null).token ?? '';
-                    await newsCardsService.saveQuestion(token, formData);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Pregunta agregada exitosamente'),
-                        backgroundColor: Color.fromARGB(255, 48, 112, 50),
-                      ),
-                    );
-                    _refreshQuestions();
-                    Navigator.of(context).pop();
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(e.toString())),
-                    );
-                    Navigator.of(context).pop();
-                  }
-                }
-              },
+              onPressed: isSubmitting
+                  ? null
+                  : () async {
+                      setState(() {
+                        isSubmitting = true; // Deshabilitar el botón
+                      });
+                      final questionText = questionController.text;
+                      if (questionText.isNotEmpty) {
+                        final uuid = Uuid().v4();
+                        final formData = {
+                          'question': questionText,
+                          'talk_id': widget.event.id.toString(),
+                          'uuid': uuid,
+                        };
+                        try {
+                          final token = PrefManager(null).token ?? '';
+                          final newsCardsService = NewsCardsService();
+                          await newsCardsService.saveQuestion(token, formData);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Pregunta agregada exitosamente'),
+                              backgroundColor: Color.fromARGB(255, 48, 112, 50),
+                            ),
+                          );
+                          widget.refreshQuestions();
+                          Navigator.of(context).pop();
+                        } on SocketException {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('No se tiene conexión a Internet.')),
+                          );
+                          Navigator.of(context).pop();
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())),
+                          );
+                          Navigator.of(context).pop();
+                        } finally {
+                          setState(() {
+                            isSubmitting = false; // Habilitar el botón
+                          });
+                        }
+                      } else {
+                        setState(() {
+                          isSubmitting =
+                              false; // Habilitar el botón si no hay texto
+                        });
+                      }
+                    },
               child: const Text('Agregar'),
             ),
           ],
-        );
-      },
+        ),
+      ],
     );
   }
 }

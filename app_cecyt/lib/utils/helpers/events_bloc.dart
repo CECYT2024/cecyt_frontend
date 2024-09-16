@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'event.dart';
 import 'api_service.dart'; // Importa ApiService
+import 'dart:convert';
+import 'dart:io';
 
 // Definición de eventos
 abstract class EventEvent extends Equatable {
@@ -14,6 +16,15 @@ abstract class EventEvent extends Equatable {
 }
 
 class FetchEvents extends EventEvent {}
+
+class DeleteEvent extends EventEvent {
+  final Event event;
+
+  DeleteEvent({required this.event});
+
+  @override
+  List<Object?> get props => [event];
+}
 
 // Definición de estados
 abstract class EventState extends Equatable {
@@ -65,15 +76,18 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
       } else if (response.statusCode == 401) {
         emit(EventsError(message: 'Iniciar sesión para ver los eventos'));
       } else if (response.statusCode == 503) {
-        emit(EventsError(message: 'El servidor esta en mantenimiento'));
+        emit(EventsError(message: 'El servidor está en mantenimiento'));
       } else {
-        emit(EventsError(message: 'Error desconocido${response.body}'));
+        emit(EventsError(message: 'Error desconocido: ${response.body}'));
       }
+    } on SocketException {
+      emit(EventsError(message: 'No se tiene conexión a Internet.'));
     } catch (e) {
       if (e.toString() == 'Instance of \'NotAuthException\'') {
         emit(EventsError(message: 'Iniciar sesión para ver los eventos'));
+      } else {
+        emit(EventsError(message: 'Error: ${e.toString()}'));
       }
-      emit(EventsError(message: 'Iniciar sesión para ver los eventos'));
     }
   }
 
@@ -94,8 +108,10 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
       } else {
         emit(EventsError(message: 'Error al eliminar el evento'));
       }
+    } on SocketException {
+      emit(EventsError(message: 'No se tiene conexión a Internet.'));
     } catch (e) {
-      emit(EventsError(message: e.toString()));
+      emit(EventsError(message: 'Error: ${e.toString()}'));
     }
   }
 }

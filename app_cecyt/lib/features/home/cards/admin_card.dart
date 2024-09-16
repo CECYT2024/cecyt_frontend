@@ -51,24 +51,24 @@ class _AdminCardState extends State<AdminCard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirm Delete'),
-          content: const Text('Are you sure you want to delete this event?'),
+          title: const Text('Confirmar Borrar'),
+          content: const Text('Estas seguro que quieres eliminar este evento?'),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Delete'),
+              child: const Text('Borrar'),
               onPressed: () async {
                 final response = await _eventsBloc.apiService
                     .deleteTalk(event.id, PrefManager(null).token ?? '');
                 if (response.statusCode == 200) {
                   final responseBody = jsonDecode(response.body);
                   if (responseBody['status'] == 'ok') {
-                    _eventsBloc.add(DeleteEvent(event));
+                    _eventsBloc.add(DeleteEventFromList(event));
                   } else {
                     print(
                         'Error al eliminar el evento: ${response.statusCode}');
@@ -78,7 +78,10 @@ class _AdminCardState extends State<AdminCard> {
                     _eventsBloc.add(FetchEvents());
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Charla Eliminada')),
+                      const SnackBar(
+                        content: Text('Charla Eliminada'),
+                        backgroundColor: Colors.green,
+                      ),
                     );
                   }
                 }
