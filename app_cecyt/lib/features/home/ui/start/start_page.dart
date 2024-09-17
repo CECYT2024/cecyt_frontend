@@ -46,7 +46,7 @@ class _StartPageState extends State<StartPage> {
     await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
-  Future<void> _checkAdminStatus({bool isReIntento = false}) async {
+  Future<void> _checkAdminStatus() async {
     final apiService = ApiService();
     try {
       final token = PrefManager(null).token;
@@ -63,7 +63,7 @@ class _StartPageState extends State<StartPage> {
         //     .setSession(token, responseBody['isAdmin'], 3600);
         await context.read<SessionCubit>().refreshToken();
       }
-    } on NotAuthException catch (e) {
+    } on NotAuthException {
       // if (isReIntento)
       //   context.read<SessionCubit>().logout();
       // else
@@ -131,8 +131,8 @@ class _StartPageState extends State<StartPage> {
                       ),
                     ),
                   ).animate().slideY(
-                      delay: Duration(milliseconds: 50),
-                      duration: Duration(
+                      delay: const Duration(milliseconds: 50),
+                      duration: const Duration(
                           milliseconds:
                               300)), //CardImage(title: 'ORGANIZADORES INNOTEC 2024', imageassetpath:'assets/Organizadores.png' , onTap: '/news3'),
                   Expanded(
@@ -172,8 +172,8 @@ class _StartPageState extends State<StartPage> {
                       ),
                     ),
                   ).animate().slideY(
-                      delay: Duration(milliseconds: 50),
-                      duration: Duration(milliseconds: 300)),
+                      delay: const Duration(milliseconds: 50),
+                      duration: const Duration(milliseconds: 300)),
                   const Expanded(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),
@@ -194,8 +194,8 @@ class _StartPageState extends State<StartPage> {
                       ),
                     ),
                   ).animate().slideY(
-                      delay: Duration(milliseconds: 1),
-                      duration: Duration(milliseconds: 300)),
+                      delay: const Duration(milliseconds: 1),
+                      duration: const Duration(milliseconds: 300)),
                 ],
               ),
             ),

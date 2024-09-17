@@ -25,6 +25,7 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
   final NewsCardsService newsCardsService = NewsCardsService();
   List<Event> events = [];
   bool isLoading = true;
+  bool isButtonLoading = false; // Estado para controlar el botón de carga
   final _noScreenshot = NoScreenshot.instance;
 
   @override
@@ -64,6 +65,9 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
   }
 
   void _showQuestions(Event event) async {
+    setState(() {
+      isButtonLoading = true; // Mostrar el indicador de carga
+    });
     try {
       final token = PrefManager(null).token ?? '';
       final questions =
@@ -79,6 +83,10 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
       _showErrorDialog('No se tiene conexión a Internet.');
     } catch (e) {
       _showErrorDialog(e.toString());
+    } finally {
+      setState(() {
+        isButtonLoading = false; // Ocultar el indicador de carga
+      });
     }
   }
 
@@ -126,12 +134,16 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
                         speaker: event.speaker,
                         title: event.name,
                         onTap: () {
-                          _showQuestions(event);
+                          if (!isButtonLoading) {
+                            _showQuestions(event);
+                          }
                         },
                       );
                     },
                   ),
                 ),
+                if (isButtonLoading)
+                  const Center(child: CircularProgressIndicator()),
               ],
             ),
     );

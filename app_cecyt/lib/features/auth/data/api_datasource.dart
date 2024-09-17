@@ -30,7 +30,7 @@ class AuthApiDataSource {
     log(response.body);
     log(response.statusCode.toString());
     if (response.statusCode == 401) {
-      throw NotAuthException();
+      throw const NotAuthException();
     }
     if (response.statusCode == 500) {
       throw BadRequestException(
@@ -60,7 +60,7 @@ class AuthApiDataSource {
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 401) {
-      throw NotAuthException();
+      throw const NotAuthException();
     }
     if (response.statusCode == 500) {
       throw BadRequestException(
@@ -88,7 +88,7 @@ class AuthApiDataSource {
     log(response.statusCode.toString());
 
     if (response.statusCode == 401) {
-      throw NotAuthException();
+      throw const NotAuthException();
     }
     if (response.statusCode == 500) {
       throw BadRequestException(
@@ -119,7 +119,7 @@ class AuthApiDataSource {
     print(response.statusCode);
 
     if (response.statusCode == 401) {
-      throw NotAuthException();
+      throw const NotAuthException();
     }
     if (response.statusCode >= 500) {
       throw BadRequestException(
@@ -157,7 +157,7 @@ class AuthApiDataSource {
                 'Redirección detectada. Verifique la URL o el código de recuperación.');
       }
       if (response.statusCode == 401) {
-        throw NotAuthException();
+        throw const NotAuthException();
       }
       if (response.statusCode >= 500) {
         throw BadRequestException(

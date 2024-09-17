@@ -21,7 +21,7 @@ class ForgotPasswordPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           ForgotPasswordCubit(ApiRepository(apiProvider: AuthApiDataSource())),
-      child: ForgotPasswordView(),
+      child: const ForgotPasswordView(),
     );
   }
 }
@@ -37,7 +37,7 @@ class ForgotPasswordView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
-      body: ForgotPasswordForm(),
+      body: const ForgotPasswordForm(),
     );
   }
 }
@@ -248,12 +248,13 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
                     }
                   },
                   builder: (context, state) {
-                    if (state is ForgotPasswordLoadingState)
+                    if (state is ForgotPasswordLoadingState) {
                       return const Center(
                         child: CircularProgressIndicator(
                           color: Colors.black,
                         ),
                       );
+                    }
                     if (state is ForgotPasswordErrorState) {
                       return Center(
                         child: Text(state.message),

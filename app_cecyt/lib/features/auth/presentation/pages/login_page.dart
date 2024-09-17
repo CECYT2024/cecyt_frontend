@@ -27,7 +27,7 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
-      body: LoginView(),
+      body: const LoginView(),
     );
   }
 }
@@ -200,7 +200,7 @@ class _LoginFormState extends State<LoginForm>
                                     onPressed: () => Navigator.of(context)
                                         .pushNamed(RegisterPage.path),
                                     child: Text(
-                                      textScaler: TextScaler.linear(0.7),
+                                      textScaler: const TextScaler.linear(0.7),
                                       'Nueva cuenta',
                                       style: Theme.of(context)
                                           .textTheme
@@ -216,7 +216,7 @@ class _LoginFormState extends State<LoginForm>
                                     onPressed: () => Navigator.of(context)
                                         .pushNamed(ForgotPasswordPage.path),
                                     child: Text(
-                                      textScaler: TextScaler.linear(0.7),
+                                      textScaler: const TextScaler.linear(0.7),
                                       'Olvide mi contraseña',
                                       style: Theme.of(context)
                                           .textTheme
@@ -257,14 +257,14 @@ class _LoginFormState extends State<LoginForm>
                                   }
                                 },
                               ),
-                            SizedBox(
+                            const SizedBox(
                               height: 20,
                             ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.support_agent,
+                                const Icon(Icons.support_agent,
                                     size: 15, color: Colors.green),
                                 const SizedBox(width: 5),
                                 Expanded(
@@ -280,7 +280,7 @@ class _LoginFormState extends State<LoginForm>
                                       );
                                     },
                                     child: Text(
-                                      textScaler: TextScaler.linear(0.7),
+                                      textScaler: const TextScaler.linear(0.7),
                                       '¿Necesitas soporte? Escríbenos al email',
                                       style: Theme.of(context)
                                           .textTheme
