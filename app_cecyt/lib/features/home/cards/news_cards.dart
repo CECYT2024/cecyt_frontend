@@ -249,9 +249,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
                                   );
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
+                                    SnackBar(
                                         content: Text(
-                                            'Error al dar like a la pregunta')),
+                                            e.toString())), // Mostrar el error
                                   );
                                 }
                               },

@@ -43,6 +43,19 @@ class NewsCardsService {
 
   Future<void> likeQuestion(String token, String questionUuid) async {
     final response = await apiService.likeQuestion(token, questionUuid);
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 403) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      if (responseBody['status'] == 'error' &&
+          responseBody['message'] ==
+              'User does not have qr_code. You need to purchase a ticket to like or dislike a question') {
+        throw Exception(
+            'Necesitas comprar un ticket para dar like a una pregunta');
+      } else {
+        throw Exception('Error al dar like a la pregunta');
+      }
+    }
     if (response.statusCode != 200) {
       throw Exception('Error al dar like a la pregunta');
     }
@@ -74,6 +87,18 @@ class NewsCardsService {
 
   Future<void> saveQuestion(String token, Map<String, String> formData) async {
     final response = await apiService.saveQuestion(token, formData);
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 403) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      if (responseBody['status'] == 'error' &&
+          responseBody['message'] ==
+              'User does not have qr_code. You need to purchase a ticket to ask questions') {
+        throw Exception('Necesitas comprar un ticket para hacer una pregunta');
+      } else {
+        throw Exception('Error al agregar la pregunta');
+      }
+    }
     if (response.statusCode != 200) {
       throw Exception('Error al agregar la pregunta');
     }
