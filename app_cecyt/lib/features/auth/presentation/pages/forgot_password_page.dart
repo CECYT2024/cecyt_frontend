@@ -1,3 +1,5 @@
+import 'dart:io'; // Importar para manejar SocketException
+
 import 'package:app_cecyt/core/extensions/build_context_extension.dart';
 import 'package:app_cecyt/features/auth/data/api_datasource.dart';
 import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
@@ -33,7 +35,6 @@ class ForgotPasswordView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // bottomNavigationBar: BottomNavCentro(),
       appBar: AppBar(
         backgroundColor: Colors.white,
       ),
@@ -117,8 +118,11 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
         hint: '',
         label: 'Correo',
         validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Introduzca un correo';
+          if (value == null ||
+              value.isEmpty ||
+              !value.contains('@') ||
+              !value.contains('.')) {
+            return 'Introduzca un correo valido';
           }
           return null;
         },
@@ -137,7 +141,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
         label: 'Código enviado al correo',
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Introduzca un cdigo';
+            return 'Introduzca un código';
           } else if (value.length < 6) {
             return 'Mínimo 6 caracteres';
           }
@@ -155,8 +159,11 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
         hint: '',
         label: 'Correo',
         validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Introduzca un correo';
+          if (value == null ||
+              value.isEmpty ||
+              !value.contains('@') ||
+              !value.contains('.')) {
+            return 'Introduzca un correo valido';
           }
           return null;
         },
@@ -210,7 +217,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  AnimatedLogo(animation: animation),
+                  AnimatedLogo2(animation: animation),
                 ],
               ),
               const Padding(
@@ -244,6 +251,8 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
                         SnackBar(
                           content: Text(state.message),
                           duration: const Duration(seconds: 3),
+                          backgroundColor:
+                              const Color.fromARGB(255, 52, 120, 55),
                         ),
                       );
                       Navigator.of(context).pop();
@@ -257,18 +266,14 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
                         ),
                       );
                     }
-                    if (state is ForgotPasswordErrorState) {
-                      return Center(
-                        child: Text(state.message),
-                      );
-                    }
                     return Form(
                       key: _key,
                       child: Column(
                         children: <Widget>[
                           if (state is ForgotPasswordInitialState)
                             ...initialForm(),
-                          if (state is ForgotPasswordConfirmPageState)
+                          if (state is ForgotPasswordConfirmPageState ||
+                              state is ForgotPasswordErrorState)
                             ...confirmForm(),
                           PrincipalButton(
                             titulo: state is ForgotPasswordInitialState
@@ -279,21 +284,40 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
                               FocusManager.instance.primaryFocus?.unfocus();
                               if (_key.currentState!.validate()) {
                                 _key.currentState!.save();
-                                if (state is ForgotPasswordInitialState) {
-                                  context.read<ForgotPasswordCubit>().sendEmail(
-                                        correoCrl.text,
-                                        matriculaCtrl.text,
-                                      );
-                                } else {
-                                  context
-                                      .read<ForgotPasswordCubit>()
-                                      .confirmForgotPassword(
-                                          ConfirmForgotPasswordParams(
-                                        email: correoCrl.text,
-                                        code: codeCrl.text,
-                                        confirmPassword: confirmPassCrl.text,
-                                        password: passCrl.text,
-                                      ));
+                                try {
+                                  if (state is ForgotPasswordInitialState) {
+                                    context
+                                        .read<ForgotPasswordCubit>()
+                                        .sendEmail(
+                                          correoCrl.text,
+                                          matriculaCtrl.text,
+                                        );
+                                  } else {
+                                    context
+                                        .read<ForgotPasswordCubit>()
+                                        .confirmForgotPassword(
+                                            ConfirmForgotPasswordParams(
+                                          email: correoCrl.text,
+                                          code: codeCrl.text,
+                                          confirmPassword: confirmPassCrl.text,
+                                          password: passCrl.text,
+                                        ));
+                                  }
+                                } on SocketException {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'No se tiene conexión a Internet.'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(e.toString()),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
                                 }
                               }
                             },
@@ -308,6 +332,22 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
           ),
         ),
       ),
+    );
+  }
+}
+
+class AnimatedLogo2 extends AnimatedWidget {
+  const AnimatedLogo2({super.key, required Animation<double> animation})
+      : super(listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      height: animation.value * 100,
+      width: animation.value * 100,
+      child: const CECYTLogo(imagePath: 'assets/cecytlogo.png'),
     );
   }
 }

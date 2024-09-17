@@ -49,7 +49,8 @@ class RegisterView extends StatefulWidget {
   State<RegisterView> createState() => _RegisterViewState();
 }
 
-class _RegisterViewState extends State<RegisterView> with SingleTickerProviderStateMixin {
+class _RegisterViewState extends State<RegisterView>
+    with SingleTickerProviderStateMixin {
   void _showError(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -147,11 +148,14 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                         emailCtrl.clear();
                         namesCtrl.clear();
                         lastNamesCtrl.clear();
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
                           content: Text('Cuenta creada correctamente'),
                           backgroundColor: Colors.green,
                         ));
-                        context.read<GlobalCubit>().setToken(state.userData.token);
+                        context
+                            .read<GlobalCubit>()
+                            .setToken(state.userData.token);
                         Navigator.of(context).pop(LoginPage.path);
                       }
                     },
@@ -181,10 +185,11 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                             hint: '',
                             label: 'Email',
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  !value.contains('@') ||
+                                  !value.contains('.')) {
                                 return 'Introduzca un correo valido';
-                              } else if (!value.contains('@')) {
-                                return 'El correo debe contener un @';
                               }
                               return null;
                             },
@@ -253,7 +258,8 @@ class _RegisterViewState extends State<RegisterView> with SingleTickerProviderSt
                                   _key.currentState!.save();
                                   context.read<RegisterCubit>().register(
                                         RegisterParams(
-                                          studentID: convertToUpperCase(_matricula),
+                                          studentID:
+                                              convertToUpperCase(_matricula),
                                           email: _email,
                                           name: _name,
                                           lastname: _lastName,

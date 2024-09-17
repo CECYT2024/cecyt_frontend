@@ -165,6 +165,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
   late List<Question> questions;
   final NewsCardsService newsCardsService = NewsCardsService();
   Timer? _timer;
+  bool isButtonLoading = false; // Estado para controlar el botón de carga
 
   @override
   void initState() {
@@ -265,13 +266,27 @@ class _QuestionsPageState extends State<QuestionsPage> {
               ],
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _addQuestion(context),
-        child: const Icon(Icons.add),
+        onPressed: isButtonLoading
+            ? null
+            : () async {
+                setState(() {
+                  isButtonLoading = true; // Mostrar el indicador de carga
+                });
+                await _addQuestion(context);
+                setState(() {
+                  isButtonLoading = false; // Ocultar el indicador de carga
+                });
+              },
+        child: isButtonLoading
+            ? const CircularProgressIndicator(
+                color: Colors.white,
+              )
+            : const Icon(Icons.add),
       ),
     );
   }
 
-  void _addQuestion(BuildContext context) async {
+  Future<void> _addQuestion(BuildContext context) async {
     try {
       final token = PrefManager(null).token ?? '';
       final questionCount = await newsCardsService.checkNumberOfQuestionsByUser(
