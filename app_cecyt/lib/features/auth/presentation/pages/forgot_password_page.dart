@@ -134,10 +134,12 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
         controller: codeCrl,
         keyboard: TextInputType.number,
         hint: '',
-        label: 'codigo enviado al correo',
+        label: 'Código enviado al correo',
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Introduzca un codigo';
+            return 'Introduzca un cdigo';
+          } else if (value.length < 6) {
+            return 'Mínimo 6 caracteres';
           }
           return null;
         },
