@@ -77,7 +77,7 @@ class ApiService {
     });
     print(response.statusCode);
     if (response.statusCode == 401) {
-      throw Exception('Inicie sesion para ver preguntas');
+      throw Exception('Inicie sesion para ver las charlas');
     }
     return response;
   }

@@ -86,7 +86,7 @@ class EventsBloc extends Bloc<EventEvent, EventState> {
       if (e.toString() == 'Instance of \'NotAuthException\'') {
         emit(EventsError(message: 'Iniciar sesión para ver los eventos'));
       } else {
-        emit(EventsError(message: 'Error: ${e.toString()}'));
+        emit(EventsError(message: e.toString()));
       }
     }
   }

@@ -44,9 +44,13 @@ class CardImage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Expanded(
-                child: Image.asset(
-                  imageassetpath,
-                  fit: BoxFit.contain,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                      20), // Ajustar el borde de la imagen
+                  child: Image.asset(
+                    imageassetpath,
+                    // Ajustar la imagen para cubrir el área
+                  ),
                 ),
               ),
               const SizedBox(height: 1),
