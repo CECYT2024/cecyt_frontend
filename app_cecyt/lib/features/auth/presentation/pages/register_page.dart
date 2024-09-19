@@ -25,6 +25,8 @@ String convertToUpperCase(String input) {
   }).join('');
 }
 
+bool isUCAStudent = true; // Estado para controlar el toggle
+
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
   static const path = '/register';
@@ -135,6 +137,17 @@ class _RegisterViewState extends State<RegisterView>
                     ),
                   ),
                 ),
+                SwitchListTile(
+                  title: const Text('¿Es estudiante de la UCA?'),
+                  value: isUCAStudent,
+                  activeColor: Colors.blue,
+                  onChanged: (bool value) {
+                    setState(() {
+                      isUCAStudent = value;
+                    });
+                  },
+                  secondary: const Icon(Icons.school),
+                ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * .8,
                   child: BlocConsumer<RegisterCubit, RegisterState>(
@@ -167,10 +180,14 @@ class _RegisterViewState extends State<RegisterView>
                             controller: matriculaCtrl,
                             keyboard: TextInputType.text,
                             hint: '',
-                            label: 'Matricula o C.I',
+                            label: isUCAStudent
+                                ? 'Inserte matrícula'
+                                : 'Inserte C.I',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Introduzca una matricula o C.I';
+                                return isUCAStudent
+                                    ? 'Introduzca una matrícula'
+                                    : 'Introduzca un CI';
                               } else if (value.length < 6) {
                                 return 'Debe tener al menos 6 caracteres';
                               }
