@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NewsCardsFour extends StatelessWidget {
   const NewsCardsFour({super.key});
-  static const String path = '/news4';
+  static const String path = '/news4'; //Pantalla de 'Qué es el Innotec?'
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +63,15 @@ class NewsCardsFour extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
-                    height: 200,
+                    height: 370,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
-                        Image.asset('assets/hackatonimage4.jpg'),
+                        Image.asset('assets/hackatonimage5.png',),
                         const SizedBox(width: 15),
-                        Image.asset('assets/hackatonimage3.jpg'),
+                        Image.asset('assets/hackatonimage3.jpg',/*width:200,height:200*/),
                         const SizedBox(width: 15),
-                        Image.asset('assets/hackatonImage2.jpg'),
+                        Image.asset('assets/hackatonImage2.jpg',/*width:150,height:150*/),
                       ],
                     ),
                   ),
