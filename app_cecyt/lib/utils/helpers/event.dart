@@ -72,7 +72,6 @@ class Event {
   }
 
   Map<String, dynamic> toJson() {
-    print('Numero tembo ${startTime}');
     return {
       'place': place,
       'time': startTime.toString(),

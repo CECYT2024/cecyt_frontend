@@ -45,9 +45,12 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   List<Event> getEventsForSelectedDay(List<Event> events) {
-    final selectedDate = selectedDay == 1 ? DateTime(2024, 10, 7) : DateTime(2024, 10, 8);
+    final selectedDate =
+        selectedDay == 1 ? DateTime(2024, 10, 7) : DateTime(2024, 10, 8);
     return events.where((event) {
-      return event.startTime.year == selectedDate.year && event.startTime.month == selectedDate.month && event.startTime.day == selectedDate.day;
+      return event.startTime.year == selectedDate.year &&
+          event.startTime.month == selectedDate.month &&
+          event.startTime.day == selectedDate.day;
     }).toList();
   }
 
@@ -96,7 +99,9 @@ class _CalendarPageState extends State<CalendarPage> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selectedDay == 1 ? const Color.fromARGB(255, 102, 178, 236) : Colors.grey,
+                  backgroundColor: selectedDay == 1
+                      ? const Color.fromARGB(255, 102, 178, 236)
+                      : Colors.grey,
                 ),
                 child: const Text(
                   'Día 1',
@@ -114,7 +119,9 @@ class _CalendarPageState extends State<CalendarPage> {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selectedDay == 2 ? const Color.fromARGB(255, 102, 178, 236) : Colors.grey,
+                  backgroundColor: selectedDay == 2
+                      ? const Color.fromARGB(255, 102, 178, 236)
+                      : Colors.grey,
                 ),
                 child: const Text(
                   'Día 2',
@@ -147,7 +154,8 @@ class _CalendarPageState extends State<CalendarPage> {
                 } else if (state is EventsError) {
                   return Center(child: Text(state.message));
                 } else {
-                  return const Center(child: Text('No hay eventos disponibles'));
+                  return const Center(
+                      child: Text('No hay eventos disponibles'));
                 }
               },
             ),

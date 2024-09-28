@@ -19,6 +19,10 @@ class ApiRepository {
     return apiProvider.refreshToken(token);
   }
 
+  Future<DeleteResponseModel> deleteUser(String token, String pass) async {
+    return apiProvider.deleteUser(token, pass);
+  }
+
   Future<RegisterResponseModel> register(RegisterParams params) async {
     return apiProvider.register(params);
   }

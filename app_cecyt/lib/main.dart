@@ -5,6 +5,7 @@ import 'package:app_cecyt/features/auth/data/repositories/api_repository.dart';
 import 'package:app_cecyt/features/auth/presentation/pages/forgot_password_page.dart';
 
 import 'package:app_cecyt/features/auth/presentation/pages/register_page.dart';
+import 'package:app_cecyt/features/home/cards/account_card.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/cards/news_cards.dart';
 // import 'package:app_cecyt/utils/constants.dart';
@@ -79,6 +80,7 @@ class MyApp extends StatelessWidget {
           NewsCardsFour.path: (_) => const NewsCardsFour(),
           RegisterPage.path: (_) => const RegisterPage(),
           ForgotPasswordPage.path: (_) => const ForgotPasswordPage(),
+          AccountCard.path: (_) => const AccountCard(),
         },
       ),
     );

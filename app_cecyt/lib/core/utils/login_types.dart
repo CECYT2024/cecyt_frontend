@@ -1,4 +1,5 @@
 import 'package:app_cecyt/features/auth/presentation/pages/login_page.dart';
+import 'package:app_cecyt/features/home/cards/account_card.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
 
 enum LoginTypes { logged, notLogged, admin }
@@ -8,7 +9,7 @@ extension LoginTypesExtension on LoginTypes {
   String get title {
     switch (this) {
       case LoginTypes.logged:
-        return 'Cerrar Sesión';
+        return 'Cuenta';
       case LoginTypes.notLogged:
         return 'Iniciar Sesión';
       case LoginTypes.admin:
@@ -20,7 +21,7 @@ extension LoginTypesExtension on LoginTypes {
     switch (this) {
       case LoginTypes.logged:
         // return LogoutPage.path;
-        return null;
+        return AccountCard.path;
       case LoginTypes.notLogged:
         return LoginPage.path;
       case LoginTypes.admin:

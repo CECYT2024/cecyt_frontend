@@ -4,6 +4,7 @@ import 'package:app_cecyt/core/cubit/session_cubit.dart';
 import 'package:app_cecyt/core/utils/login_types.dart';
 
 import 'package:app_cecyt/features/auth/presentation/pages/pages.dart';
+import 'package:app_cecyt/features/home/cards/account_card.dart';
 import 'package:app_cecyt/features/home/cards/admin_card.dart';
 import 'package:app_cecyt/features/home/ui/pages/qr_page.dart';
 import 'package:app_cecyt/features/home/ui/start/start_page.dart';
@@ -55,7 +56,8 @@ String pageActual(int num) {
     StartPage.path,
     CalendarPage.path,
     QrPage.path,
-    LoginPage.path
+    LoginPage.path,
+    AccountCard.path,
   ];
   return paths[num];
 }
@@ -106,10 +108,22 @@ class BottomNavCentro extends StatelessWidget {
                     LoginTypes.admin) {
                   Navigator.pushNamed(context, AdminCard.path);
                   return;
+                } else if (BlocProvider.of<SessionCubit>(context)
+                        .state
+                        .loginType ==
+                    LoginTypes.logged) {
+                  Navigator.pushNamed(context, AccountCard.path);
+                  return;
+                } else if (BlocProvider.of<SessionCubit>(context)
+                        .state
+                        .loginType ==
+                    LoginTypes.notLogged) {
+                  Navigator.pushNamed(context, LoginPage.path);
+                  return;
                 }
-                BlocProvider.of<SessionCubit>(context).logout();
+                // BlocProvider.of<SessionCubit>(context).logout();
 
-                return;
+                // return;
               }
               if (newIndex == 0) {
                 Navigator.of(context).popUntil((route) => route.isFirst);
