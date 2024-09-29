@@ -2,7 +2,9 @@
 
 import 'dart:convert';
 
+import 'package:app_cecyt/features/home/cards/account_card.dart';
 import 'package:app_cecyt/utils/helpers/pref_manager.dart';
+import 'package:app_cecyt/utils/widgets/principal_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:app_cecyt/utils/helpers/events_bloc.dart';
@@ -394,6 +396,12 @@ class _AdminCardState extends State<AdminCard> {
             icon: const Icon(Icons.add),
             onPressed: _showAddTalkDialog,
           ),
+          PrincipalButton(
+              titulo: "Cuenta",
+              color: const Color.fromARGB(255, 0, 0, 0),
+              callback: () {
+                Navigator.pushNamed(context, AccountCard.path);
+              }),
         ],
       ),
       body: BlocBuilder<EventsBloc, EventState>(

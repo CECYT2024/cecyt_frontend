@@ -177,7 +177,7 @@ class _LoginFormState extends State<LoginForm>
                                 }
                                 return null;
                               },
-                              maxLength: 9,
+                              maxLength: 10,
                               onSave: (text) => _matricula = text ?? '',
                             ),
                             CustomPasswordTextField(

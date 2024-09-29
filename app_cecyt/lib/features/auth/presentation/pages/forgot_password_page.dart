@@ -250,7 +250,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(state.message),
-                          duration: const Duration(seconds: 3),
+                          duration: const Duration(seconds: 5),
                           backgroundColor:
                               const Color.fromARGB(255, 52, 120, 55),
                         ),
@@ -272,8 +272,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm>
                         children: <Widget>[
                           if (state is ForgotPasswordInitialState)
                             ...initialForm(),
-                          if (state is ForgotPasswordConfirmPageState ||
-                              state is ForgotPasswordErrorState)
+                          if (state is ForgotPasswordConfirmPageState)
                             ...confirmForm(),
                           PrincipalButton(
                             titulo: state is ForgotPasswordInitialState

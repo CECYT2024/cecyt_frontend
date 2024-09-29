@@ -76,6 +76,30 @@ class AuthApiDataSource {
     return RegisterResponseModel.fromRawJson(response.body);
   }
 
+  Future<DeleteResponseModel> deleteUser(String token, String pass) async {
+    final url = Uri.parse('$baseUrl/user/delete');
+    final response = await http.post(url, headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'password': pass,
+    });
+    print(pass);
+    print(response.body);
+    if (response.statusCode == 401) {
+      throw const NotAuthException();
+    } else if (response.statusCode == 200) {
+      return DeleteResponseModel.fromJson(
+          json.decode(response.body) as Map<String, dynamic>);
+    } else {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      if (responseBody['error'] == 'La contraseña es incorrecta') {
+        throw Exception('La contraseña es incorrecta');
+      }
+      throw Exception('Failed to delete user');
+    }
+  }
+
   Future<LoginResponseModel> refreshToken(String token) async {
     final url = Uri.parse('$baseUrl/refresh');
     final response = await http.post(url, headers: {
@@ -121,9 +145,16 @@ class AuthApiDataSource {
     if (response.statusCode == 401) {
       throw const NotAuthException();
     }
+    if (response.statusCode == 429) {
+      throw BadRequestException(
+          message: 'Se han enviado demasiados codigos, espere una hora');
+    }
     if (response.statusCode >= 500) {
       throw BadRequestException(
           message: 'Error en el servidor, intente de nuevo');
+    }
+    if (response.statusCode == 404) {
+      return forgotPasswordModelFromJson(response.body);
     }
     if (response.statusCode >= 400 && response.statusCode < 500) {
       final responseBody = json.decode(response.body);

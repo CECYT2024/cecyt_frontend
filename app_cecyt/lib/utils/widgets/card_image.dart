@@ -29,10 +29,12 @@ class CardImage extends StatelessWidget {
           ],
         ),
         child: ElevatedButton(
+          onLongPress: () {},
           style: ElevatedButton.styleFrom(
             foregroundColor: const Color.fromARGB(255, 21, 98, 160),
             backgroundColor: Colors.white,
             elevation: 0,
+            overlayColor: Colors.transparent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),

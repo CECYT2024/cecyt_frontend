@@ -1,5 +1,4 @@
 import 'package:app_cecyt/core/cubit/session_cubit.dart';
-import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
