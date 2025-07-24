@@ -45,7 +45,7 @@ class Event {
 
   static DateTime parseDayAndTime(String day, String time) {
     int dayInt = int.parse(day);
-    String date = dayInt == 1 ? '2024-10-07' : '2024-10-08';
+    String date = dayInt == 1 ? '2025-06-05' : '2025-06-06';
     return DateFormat('yyyy-MM-dd HH:mm:ss').parse('$date $time:00');
   }
 

@@ -31,7 +31,7 @@ class NewsCardsFour extends StatelessWidget {
                 ],
               ),
               child: const Text(
-                '¿Qué es Innotec?',
+                '¿Qué es Dot?',
                 style: TextStyle(
                   fontSize: 32,
                   color: Colors.black,
@@ -45,37 +45,19 @@ class NewsCardsFour extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Innotec es un congreso organizado por los estudiantes de la Facultad de Ciencias y Tecnología de la Universidad Católica de Asunción, donde los participantes disfrutan de charlas interesantes, talleres y otras actividades centradas en la innovación, la ciencia, la tecnología y el medio ambiente. El congreso permite visibilizar diversas problemáticas y explorar cómo los futuros profesionales pueden aportar soluciones.',
+                    'DOT es el congreso de diseño y arquitectura organizado por estudiantes de la FCyT – Universidad Católica. Un espacio para pensar, crear y transformar el mundo desde el diseño. Charlas, talleres y experiencias que cruzan disciplinas e inspiran nuevas formas de proyectar el futuro.',
                     style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 10),
-                  Image.asset('assets/Innotec_Charla2.jpg'),
+                  Image.asset('assets/dotinfoFoto.jpeg'),
+                  const SizedBox(height: 10),
                   const Text(
-                    'En anteriores ediciones, el congreso contó con la participación de destacados conferencistas nacionales e internacionales que abordaron temas como energías renovables, inteligencia artificial, construcciones sustentables, transformación digital, economía circular y el uso del hidrógeno verde. Estas presentaciones y discusiones buscaron contribuir al crecimiento y la formación profesional de los asistentes.',
+                    'El tema central de esta edición es “Mente, espacio y forma”. Un llamado a pensar el diseño como un puente entre lo interno y lo externo, entre lo que somos, lo que imaginamos y lo que proyectamos.',
                     style: TextStyle(fontSize: 16),
                   ),
+                  const SizedBox(height: 15),
+                  Image.asset('assets/dotinfo2.jpeg'),
                   const SizedBox(height: 20),
-                  Image.asset('assets/innotec_charla4.jpg'),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Además, el congreso incluyó un emocionante Hackathon, en el que los participantes se enfrentaron a desafíos reales con el objetivo de encontrar soluciones innovadoras a problemas actuales. Este evento estimuló la creatividad y la colaboración, permitiendo a los jóvenes talentos demostrar su capacidad para abordar y resolver cuestiones relevantes del mundo profesional.',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 370,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        Image.asset('assets/hackatonimage5.png',),
-                        const SizedBox(width: 15),
-                        Image.asset('assets/hackatonimage3.jpg',/*width:200,height:200*/),
-                        const SizedBox(width: 15),
-                        Image.asset('assets/hackatonImage2.jpg',/*width:150,height:150*/),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 40),
                 ],
               ),
             ),

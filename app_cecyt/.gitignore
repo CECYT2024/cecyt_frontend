@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -42,10 +44,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+lib/utils/constants.dart
+
 # FVM Version Cache
 .fvm/
-.fvmrc
-
-# Ignorar el archivo constants.dart
-lib/utils/constants.dart
-/Users/fede-mac/Desktop/cecytfinal/cecyt_frontend/AndroidKey.jks

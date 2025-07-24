@@ -13,8 +13,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
-import 'package:no_screenshot/no_screenshot.dart';
 
 String convertToUpperCase(String input) {
   return input.split('').map((char) {

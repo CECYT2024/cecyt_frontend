@@ -224,4 +224,29 @@ class ApiService {
     }
     return response;
   }
+
+  Future<http.Response> getAllActivities(String token) async {
+    final url = Uri.parse('$baseUrl/activities');
+    final response = await http.get(
+      url,
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw Exception('Inicie sesión para ver las actividades');
+    }
+    return response;
+  }
+
+  Future<http.Response> getAllNews(String token) async {
+    final url = Uri.parse('$baseUrl/news');
+    final response = await http.get(
+      url,
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode == 401) {
+      throw Exception('Inicie sesión para ver las actividades');
+    }
+    return response;
+  }
+  
 }

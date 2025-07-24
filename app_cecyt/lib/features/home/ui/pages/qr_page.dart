@@ -5,10 +5,9 @@ import 'package:app_cecyt/utils/helpers/api_service.dart';
 import 'package:app_cecyt/utils/helpers/events_bloc.dart';
 import 'package:app_cecyt/utils/helpers/pref_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:app_cecyt/utils/widgets/bottom_nav_centro.dart';
 import 'package:app_cecyt/utils/widgets/appbar_centro.dart';
-import 'package:no_screenshot/no_screenshot.dart';
+
 
 class QrPage extends StatefulWidget {
   const QrPage({super.key});
@@ -25,36 +24,13 @@ class _QrPageState extends State<QrPage> {
   String? lastname;
   String? studentId;
   String? errorMessage;
-  final _noScreenshot = NoScreenshot.instance;
 
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) {
-      _secureScreen();
-    } else {
-      _noScreenshot.screenshotOff();
-    }
     userDataFuture = _fetchUserData();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    if (Platform.isAndroid) {
-      _unsecureScreen();
-    } else {
-      _noScreenshot.screenshotOn();
-    }
-  }
-
-  Future<void> _secureScreen() async {
-    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-  }
-
-  Future<void> _unsecureScreen() async {
-    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
-  }
 
   Future<Map<String, dynamic>> _fetchUserData() async {
     final apiService = ApiService();

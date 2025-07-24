@@ -12,7 +12,7 @@ class AppbarCentro extends StatelessWidget implements PreferredSizeWidget {
     return BlocBuilder<SessionCubit, SessionState>(
       builder: (context, state) {
         return AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: const Color.fromARGB(0, 255, 255, 255),
           toolbarHeight: 75,
           actions: state is SessionLoaded && isHome
               ? [
@@ -21,13 +21,7 @@ class AppbarCentro extends StatelessWidget implements PreferredSizeWidget {
                     onPressed: context.read<SessionCubit>().logout,
                   ),
                 ]
-              : null,
-          centerTitle: true,
-          title: Image.asset(
-            'assets/cecytlogo.png',
-            height: 75,
-            width: 75,
-          ),
+              : null,    
         );
       },
     );

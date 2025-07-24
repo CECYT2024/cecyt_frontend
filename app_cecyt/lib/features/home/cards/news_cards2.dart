@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class NewsCardsTwo extends StatelessWidget {
   const NewsCardsTwo({super.key});
-  static const String path = '/news2';
+  static const String path = '/news2'; //pantalla de info
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +44,11 @@ class NewsCardsTwo extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Image.asset('assets/InformacionFoto1.png'), // Asegúrate de que la ruta sea correcta
+            Image.asset('assets/dotImage.jpeg'), // Asegúrate de que la ruta sea correcta
             const SizedBox(
               height: 20,
             ),
-            Image.asset('assets/InformacionFoto2.png'), // Asegúrate de que la ruta sea correcta
+            Image.asset('assets/FechaDot.png'), // Asegúrate de que la ruta sea correcta
             const SizedBox(
               height: 20,
             ),
@@ -70,11 +70,11 @@ class NewsCardsTwo extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
-                  Text('- Federico Alonso ~ Director Frontend / Programador Fullstack'),
-                  Text('- Hugo Sebastian Miranda Areco ~ Director Backend / Programador Fullstack'),
-                  Text('- Matías José Ayala Olmedo ~ Programador Frontend'),
+                  Text('- Matías José Ayala Olmedo ~ Director Frontend'),
+                  Text('- Fernando José Elizondo Peña ~ Director Backend'),
+                  Text('- Hugo Sebastian Miranda Areco ~ Ex-Director Backend / Programador Fullstack'),
+                  Text('- Federico Alonso ~ Ex-Director Frontend / Programador Fullstack'),
                   Text('- Valdemar Ortiz ~ Programador Frontend'),
-                  Text('- Fernando José Elizondo Peña ~ Programador Backend'),
                   Text('- Damian Alejandro Ramirez Gonzalez ~ Programador Backend'),
                   Text('- Santiago Ramón Fernandez Martinez ~ Programador Backend'),
                 ],

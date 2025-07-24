@@ -5,11 +5,9 @@ import 'package:app_cecyt/utils/constants.dart';
 import 'package:app_cecyt/utils/helpers/pref_manager.dart';
 import 'package:app_cecyt/utils/helpers/talks_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:intl/intl.dart';
 import 'package:app_cecyt/utils/helpers/event.dart';
 import 'package:app_cecyt/utils/helpers/api_service.dart';
-import 'package:no_screenshot/no_screenshot.dart';
 import 'package:uuid/uuid.dart';
 import 'news_cards_service.dart'; // Importa NewsCardsService
 
@@ -26,22 +24,14 @@ class _NewsCardsOneState extends State<NewsCardsOne> {
   List<Event> events = [];
   bool isLoading = true;
   bool isButtonLoading = false; // Estado para controlar el botón de carga
-  final _noScreenshot = NoScreenshot.instance;
 
   @override
   void initState() {
-    if (Platform.isAndroid) {
-      _unsecureScreen();
-    } else {
-      _noScreenshot.screenshotOn();
-    }
     super.initState();
     _loadTalks();
   }
 
-  Future<void> _unsecureScreen() async {
-    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
-  }
+
 
   Future<void> _loadTalks() async {
     try {
@@ -206,6 +196,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
   }
 
   @override
+  bool isLiked = false;
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -233,28 +224,35 @@ class _QuestionsPageState extends State<QuestionsPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text('Likes: ${question.likes}'),
+
                             IconButton(
-                              icon: Icon(Icons.thumb_up, color: Colors.blue),
+                              icon: Icon(Icons.thumb_up, color: isLiked ? Colors.blue : Colors.grey),
                               onPressed: () async {
+                                setState(() {
+                                  isLiked = !isLiked; // Cambia el estado visual inmediatamente
+                                });
+
                                 try {
                                   final token = PrefManager(null).token ?? '';
-                                  await newsCardsService.likeQuestion(
-                                      token, question.questionUuid);
+                                  await newsCardsService.likeQuestion(token, question.questionUuid);
                                   _refreshQuestions();
                                 } on SocketException {
+                                  setState(() {
+                                    isLiked = !isLiked; // Revertir el cambio si falla por conexión
+                                  });
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'No se tiene conexión a Internet.')),
+                                    const SnackBar(content: Text('No se tiene conexión a Internet.')),
                                   );
                                 } catch (e) {
+                                  setState(() {
+                                    isLiked = !isLiked; // Revertir el cambio si ocurre otro error
+                                  });
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            e.toString())), // Mostrar el error
+                                    SnackBar(content: Text(e.toString())),
                                   );
                                 }
                               },
+
                             ),
                           ],
                         ),
